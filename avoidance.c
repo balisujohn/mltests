@@ -11,7 +11,7 @@ world * w = generateWorld();
 printWorldPop(w);
 initializeBasicWorld(w);
 printWorldPop(w);
-
+advanceWorldState(w);
 
 
 
