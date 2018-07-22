@@ -12,6 +12,11 @@ printWorldPop(w);
 initializeBasicWorld(w);
 printWorldPop(w);
 advanceWorldState(w);
+printWorldPop(w);
+
+
+
+
 
 
 

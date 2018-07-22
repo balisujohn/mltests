@@ -11,12 +11,14 @@
 
 struct object{
 	int type;
+	int age;
 	struct object * next;
+	struct object * prev;
 } typedef object;
 
 struct zone{
 	int objCount;
-	object * objects;
+	object * head;
 }typedef zone;
 
 struct world{
@@ -33,5 +35,9 @@ world * generateWorld();
 void printWorldPop(world * w);
 void initializeBasicWorld(world * w);
 void advanceWorldState(world * w);
+void removeObject(zone * z, object * o );
+void appendObject(zone * z, object * o);
+
+
 
 #endif
