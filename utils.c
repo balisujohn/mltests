@@ -1,5 +1,6 @@
 #include<stdio.h>
 #include<stdlib.h>
+#include<time.h>
 #include<limits.h>
 #include"utils.h"
 
@@ -12,7 +13,8 @@ int randRange(int limit)
 
 float randFloat()
 {
-return rand() / (float)INT_MAX;
+
+return (float)rand() / (float)RAND_MAX;
 
 }
 

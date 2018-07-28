@@ -24,6 +24,7 @@ brain * generateBasicBrain();
 void mutateBrain(brain * b);
 int advanceBrain(brain * b, int x1, int x2);
 brain * forkBrain(brain * oldBrain);
+void freeBrain(brain * b );
 
 
 #endif
