@@ -8,10 +8,14 @@
 #define TYPE_HUNTER  1 
 #define TYPE_AGENT  2
 
+ 
+
+
 
 struct object{
 	int type;
 	int age;
+	void * objectInfo;
 	struct object * next;
 	struct object * prev;
 } typedef object;
@@ -37,7 +41,7 @@ void initializeBasicWorld(world * w);
 void advanceWorldState(world * w);
 void removeObject(zone * z, object * o );
 void appendObject(zone * z, object * o);
-
-
+float randFloat();
+int randRange(int limit);
 
 #endif

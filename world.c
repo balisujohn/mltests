@@ -1,14 +1,9 @@
 #include<stdlib.h>
 #include<stdio.h>
+#include<limits.h>
 #include"world.h"
 #include"hunter.h"
-
-int randRange(int limit)
-{
-
-	return  rand() % limit;
-
-}
+#include"utils.h"
 
 world * generateWorld()
 {
@@ -117,8 +112,9 @@ void advanceObject(world * w, object * o, int x, int y)
 				break;
 
 		}
+		o->age++;
+
 	}
-	o->age++;
 
 }
 

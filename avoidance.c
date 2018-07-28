@@ -13,13 +13,14 @@ initializeBasicWorld(w);
 printWorldPop(w);
 advanceWorldState(w);
 printWorldPop(w);
-
-
-
-
-
-
-
+advanceWorldState(w);
+advanceWorldState(w);
+advanceWorldState(w);
+advanceWorldState(w);
+advanceWorldState(w);
+advanceWorldState(w);
+advanceWorldState(w);
+printWorldPop(w);
 
 exit(0);
 }
