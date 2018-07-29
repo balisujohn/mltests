@@ -134,7 +134,7 @@ int main (int argc, char * argv[])
 	printf("checkpoint0\n");
 	srand(time(0));
 
-	brain * best = /*generateBasicBrain();*/generateXorBrain();
+	brain * best = generateBasicBrain();//generateXorBrain();
 	int rigor = 100;
 	int score = 0;
 	int sum =0;
@@ -178,8 +178,10 @@ int main (int argc, char * argv[])
 	}
 
 
-
-
+	    FILE *fp;
+	    fp = fopen("log.txt", "w");
+	    printBrainToFile(best, fp);
+	    fclose(fp);
 
 
 	return 0;

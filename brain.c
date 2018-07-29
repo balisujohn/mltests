@@ -352,3 +352,26 @@ void printBrain(brain * b ){
 }
 
 
+void printBrainToFile(brain * b ,FILE * fp){
+	fprintf(fp, "ACTIVATION: ");
+	for(int i = 0; i < NEURON_COUNT; i++)
+	{
+		fprintf(fp,"%d", b->neurons[i].fired);	
+	}
+	printf("\n");	
+	for(int i = 0; i < NEURON_COUNT; i++)
+	{
+		fprintf(fp, "NEURON %d: %f\n",i, b->neurons[i].activationPotential);	
+		for(int c = 0; c < b->neurons[i].targetCount; c++)
+		{
+			fprintf(fp,"TARGET: %d, WEIGHT :%f\n",b->neurons[i].targets[c],b->neurons[i].potentialWeights[c]);
+
+		}	
+	}
+
+
+
+}
+
+
+

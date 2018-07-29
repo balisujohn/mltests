@@ -28,7 +28,7 @@ int advanceBrain(brain * b, int x1, int x2);
 brain * forkBrain(brain * oldBrain);
 void freeBrain(brain * b );
 void printBrain(brain * b );
-
+void printBrainToFile(brain * b, FILE * fp);
 
 
 #endif
