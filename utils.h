@@ -5,7 +5,7 @@
 
 float randFloat();
 int randRange(int limit);
-
+int coinFlip();
 
 
 
