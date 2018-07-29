@@ -29,7 +29,7 @@ int evaluateXorPerformance(brain * b , int rigor)
 
 		}
 		freeBrain(testInstance);
-		if (result==1/*expectedResult*/)score++;
+		if (result == expectedResult)score++;
 	}
 
 	return score;
@@ -126,8 +126,8 @@ return 0;
  */
 int main (int argc, char * argv[])
 {
-	//	baseLineTest();
-	//	exit(0);
+		//baseLineTest();
+		//exit(0);
 
 
 
@@ -156,11 +156,11 @@ int main (int argc, char * argv[])
 
 		if (newScore >= score)
 		{
-			//			printf("NEW BEST SCORE: %d\n" , newScore);
+						printf("NEW BEST SCORE: %d\n" , newScore);
 			score = newScore;
 			freeBrain(best);
 			best =candidate;
-			printBrain(best);
+			//printBrain(best);
 			validated = (10000 == evaluateXorPerformance(best,10000));
 			printf("VALIDATION RUN: %d\n" ,  evaluateXorPerformance(best,10000));
 
@@ -169,7 +169,7 @@ int main (int argc, char * argv[])
 		counter++;
 		if (counter == 100)
 		{
-			printf("LAST 100 AVERAGE: %f\n", sum/100.0);
+			//printf("LAST 100 AVERAGE: %f\n", sum/100.0);
 
 
 			sum = 0;
