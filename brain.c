@@ -197,7 +197,7 @@ void mutateBrain(brain * b){
 	{
 		if(b->neurons[i].targetCount)
 		{
-			if (coinFlip()*coinFlip()*coinFlip()*coinFlip())
+			if (coinFlip()*coinFlip())
 			{
 
 
@@ -238,7 +238,7 @@ void mutateBrain(brain * b){
 			b->neurons[i].potentialWeights = realloc(b->neurons[i].potentialWeights,sizeof(float) * b->neurons[i].targetCount);
 			b->neurons[i].potentialTimes = realloc(b->neurons[i].potentialTimes,sizeof(float) * b->neurons[i].targetCount);
 			b->neurons[i].targets[b->neurons[i].targetCount-1] = randRange(NEURON_COUNT);
-			b->neurons[i].potentialWeights[b->neurons[i].targetCount-1]  = randFloat();
+			b->neurons[i].potentialWeights[b->neurons[i].targetCount-1]  = (randFloat()*2)-1;
 
 
 		}
@@ -249,12 +249,12 @@ void mutateBrain(brain * b){
 	{
 		if(b->neurons[i].targetCount)
 		{
-			int mutations = randRange(b->neurons[i].targetCount);
+			int mutations = 1;//randRange(b->neurons[i].targetCount);
 			for (int c = 0 ; c < mutations; c++)
 			{
 				//TODO add soft boundary
 
-				b->neurons[i].potentialWeights[randRange(b->neurons[i].targetCount)] += ((randFloat() *2)-1)*.1;
+				b->neurons[i].potentialWeights[randRange(b->neurons[i].targetCount)] += ((randFloat() *2)-1)*.3;
 			}
 		}
 	}
