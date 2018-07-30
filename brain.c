@@ -222,23 +222,23 @@ void mutateBrain(brain * b){
 
 				}
 
-			
+
 
 			}
-		if(coinFlip()*coinFlip())
-		{
-		b->neurons[i].targets[randRange(b->neurons[i].targetCount)] = randRange(NEURON_COUNT);
-		}
+			if(coinFlip()*coinFlip())
+			{
+				b->neurons[i].targets[randRange(b->neurons[i].targetCount)] = randRange(NEURON_COUNT);
+			}
 
 		}
 		else if(coinFlip() * coinFlip() )
 		{
 			b->neurons[i].targetCount++;
-					b->neurons[i].targets = realloc(b->neurons[i].targets, sizeof(int) * b->neurons[i].targetCount);
-					b->neurons[i].potentialWeights = realloc(b->neurons[i].potentialWeights,sizeof(float) * b->neurons[i].targetCount);
-					b->neurons[i].potentialTimes = realloc(b->neurons[i].potentialTimes,sizeof(float) * b->neurons[i].targetCount);
-					b->neurons[i].targets[b->neurons[i].targetCount-1] = randRange(NEURON_COUNT);
-					b->neurons[i].potentialWeights[b->neurons[i].targetCount-1]  = randFloat();
+			b->neurons[i].targets = realloc(b->neurons[i].targets, sizeof(int) * b->neurons[i].targetCount);
+			b->neurons[i].potentialWeights = realloc(b->neurons[i].potentialWeights,sizeof(float) * b->neurons[i].targetCount);
+			b->neurons[i].potentialTimes = realloc(b->neurons[i].potentialTimes,sizeof(float) * b->neurons[i].targetCount);
+			b->neurons[i].targets[b->neurons[i].targetCount-1] = randRange(NEURON_COUNT);
+			b->neurons[i].potentialWeights[b->neurons[i].targetCount-1]  = randFloat();
 
 
 		}
@@ -261,29 +261,42 @@ void mutateBrain(brain * b){
 
 }
 
+void inputBrain(brain * b, int * targets, int targetCount)
+{
+	for(int i = 0; i < targetCount; i++)
+	{
+		b->neurons[targets[i]].excitation =b->neurons[targets[i]].activationPotential + 1 ;
+
+	}
+
+}
 
 
 // we're going to ignore temporal stuff as well for the moment
 //we're temporarily inputting neuronal activations as inputs
-int advanceBrain(brain * b, int x1, int x2)
+void advanceBrain(brain * b, int  inputs[], int inputCount, int  outputs[], int outputCount)
 {
 	//float nextAge = b->age + 1;
 
 	//sense(brain * b);
 	// for now we will hardcode sensory input
 	//	{
-	if (x1)
-	{		
+	/*	if (x1)
+		{		
 		b->neurons[0].excitation  = b->neurons[0].activationPotential +1;
-	}
-	if (x2)
-	{		
+		}
+		if (x2)
+		{		
 		b->neurons[1].excitation  = b->neurons[1].activationPotential +1;
-	}
+		}
+	 */
+	//int inputs[] = {x1,x2};
+	inputBrain(b,inputs, 2);
+
 
 	//	}
 
-	int outputFlag = 0;
+	//int outputFlag = 0;
 
 	float * sums = malloc(sizeof(float) * NEURON_COUNT);
 	for(int i = 0; i < NEURON_COUNT;i++)
@@ -296,7 +309,7 @@ int advanceBrain(brain * b, int x1, int x2)
 		b->neurons[i].fired = 0;
 		//		if (b->neurons[i].age >= nextAge) continue;
 		if (b->neurons[i].excitation > b->neurons[i].activationPotential ){
-			if (i == NEURON_COUNT-1)outputFlag = 1;
+	//		if (i == NEURON_COUNT-1)outputFlag = 1;
 			for(int c = 0; c < b->neurons[i].targetCount; c++)
 			{
 				/*	b->neurons[b->neurons[i].targets[c]].excitation*/ sums[b->neurons[i].targets[c]] += b->neurons[i].potentialWeights[c];
@@ -318,11 +331,18 @@ int advanceBrain(brain * b, int x1, int x2)
 	}
 
 
+
+	assert(outputCount <= NEURON_COUNT);
+	int start = NEURON_COUNT - outputCount;
+	for (int i = 0; i < outputCount; i++)
+	{
+	outputs[i] = b->neurons[start+i].fired;
+	}
 	//for now we'll hard code actuation
 	//actuate(brain * b )
 	//	{
 
-	return outputFlag;
+	//return outputFlag;
 
 	//	}
 

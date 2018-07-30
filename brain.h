@@ -24,7 +24,7 @@ float age;
 brain * generateBasicBrain();
 brain * generateXorBrain();
 void mutateBrain(brain * b);
-int advanceBrain(brain * b, int x1, int x2);
+void advanceBrain(brain * b, int inputs[], int inputCount,int outputs[], int outputCount);
 brain * forkBrain(brain * oldBrain);
 void freeBrain(brain * b );
 void printBrain(brain * b );
