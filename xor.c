@@ -3,7 +3,7 @@
 #include<time.h>
 #include"brain.h"
 #include"utils.h"
-
+#include"analysis.h"
 
 
 /*
@@ -260,13 +260,13 @@ int multiSucc()
 
 
 
-	brain  ** children = malloc(sizeof(brain * ) * 5);
+	brain  ** children = malloc(sizeof(brain * ) * 500);
 
 	while (!validated)
 	{
 		//		printf("checkpoint1\n");
 
-		for(int i = 0 ; i < 5; i ++)
+		for(int i = 0 ; i < 500; i ++)
 		{
 
 			children[i] = forkBrain(best);
@@ -276,7 +276,7 @@ int multiSucc()
 		int childScore = 0;
 		brain * bestChild;	
 
-		for(int i = 0 ; i < 5; i++ )
+		for(int i = 0 ; i < 500; i++ )
 		{
 			brain * candidate = forkBrain(best);
 
@@ -303,7 +303,7 @@ int multiSucc()
 
 			}
 		}
-		if (childScore >= score)
+		if (childScore > score)
 		{
 
 			printf("NEW BEST SCORE: %d\n" , childScore);
@@ -311,7 +311,7 @@ int multiSucc()
 			freeBrain(best);
 			best =bestChild;
 			//printBrain(best);
-			validated = (rigor == score);
+			validated = (4 == score);
 
 		}
 		sum += childScore;
@@ -398,7 +398,8 @@ int main (int argc, char * argv[])
 	fp = fopen("log.txt", "w+");
 	printBrainToFile(best, fp);
 	fclose(fp);
-
+	
+	//analyzeBrain(best,2,1);
 
 	return 0;
 }
