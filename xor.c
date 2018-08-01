@@ -6,7 +6,7 @@
 
 
 
-
+/*
 int evaluateXorPerformance(brain * b , int rigor)
 {
 	int score = 0;
@@ -19,23 +19,204 @@ int evaluateXorPerformance(brain * b , int rigor)
 		int x1 = coinFlip();
 		int x2 = coinFlip();
 		int expectedResult = (x1 ^ x2);
-		//			printf("X0: %d X2: %d EXPECTED: %d\n", x1, x2, expectedResult);
-		int result[] = {0};
+					printf("X0: %d X2: %d EXPECTED: %d\n", x1, x2, expectedResult);
+		int result = 0;
 		for(int c = 0; c < 3; c++)
 		{
-			int inputs[] = { x1*(c==0),x2*(c==0) };
-			/*result =*/ advanceBrain(testInstance, inputs,2, result, 1);
+			int inputs[] = {x1*(c==0),x2*(c==0) };
+			/result =/ advanceBrain(testInstance, inputs,2, &result, 1);
 			//	printBrain(testInstance);
 			//printBrain(testInstance);
 
 		}
 		freeBrain(testInstance);
-		if (result[0] == expectedResult)score++;
+		if (result == expectedResult)score++;
+		printf("RESULT: %d EXPECTED RESULT: %d\n", result, expectedResult);
 	}
 
 	return score;
 
+}*/
+
+int evaluateAndPerformance(brain * b , int rigor)
+{
+	int score = 0;
+
+
+	brain * testInstance = forkBrain(b);
+	brain * testInstance2 = forkBrain(b);
+	brain * testInstance3 = forkBrain(b);
+	brain * testInstance4 = forkBrain(b);
+
+	int result = 0;
+	int result2   = 0;
+	int result3 = 0;
+	int result4  = 0;
+
+	int inputs[] = { 1,0 };
+	int inputs2[] = { 0,0 };
+	int inputs3[] = { 1,1 };
+	int inputs4[] = { 0,1 };
+
+
+	int expectedResult = 0;
+	int expectedResult2 = 0;
+	int expectedResult3 = 1;
+	int expectedResult4 = 0;
+
+
+	for(int c = 0; c < 3; c++)
+	{
+		advanceBrain(testInstance, inputs,2, &result, 1);
+		advanceBrain(testInstance2, inputs2,2, &result2, 1);
+		advanceBrain(testInstance3, inputs3,2, &result3, 1);
+		advanceBrain(testInstance4, inputs4,2, &result4, 1);
+
+
+
+		//	printBrain(testInstance);
+		//printBrain(testInstance);
+
+	}
+	freeBrain(testInstance);
+	freeBrain(testInstance2);
+	freeBrain(testInstance3);
+	freeBrain(testInstance4);
+
+
+
+
+	if (result==expectedResult)score++;
+	if (result2==expectedResult2)score++;
+	if (result3==expectedResult3)score++;
+	if (result4==expectedResult4)score++;
+
+
+
+	return score;
+
 }
+
+
+int evaluateOrPerformance(brain * b , int rigor)
+{
+	int score = 0;
+
+
+	brain * testInstance = forkBrain(b);
+	brain * testInstance2 = forkBrain(b);
+	brain * testInstance3 = forkBrain(b);
+	brain * testInstance4 = forkBrain(b);
+
+	int result = 0;
+	int result2   = 0;
+	int result3 = 0;
+	int result4  = 0;
+
+	int inputs[] = { 1,0 };
+	int inputs2[] = { 0,0 };
+	int inputs3[] = { 1,1 };
+	int inputs4[] = { 0,1 };
+
+
+	int expectedResult = 1;
+	int expectedResult2 = 0;
+	int expectedResult3 = 1;
+	int expectedResult4 = 1;
+
+
+	for(int c = 0; c < 3; c++)
+	{
+		advanceBrain(testInstance, inputs,2, &result, 1);
+		advanceBrain(testInstance2, inputs2,2, &result2, 1);
+		advanceBrain(testInstance3, inputs3,2, &result3, 1);
+		advanceBrain(testInstance4, inputs4,2, &result4, 1);
+
+
+
+		//	printBrain(testInstance);
+		//printBrain(testInstance);
+
+	}
+	freeBrain(testInstance);
+	freeBrain(testInstance2);
+	freeBrain(testInstance3);
+	freeBrain(testInstance4);
+
+
+
+
+	if (result==expectedResult)score++;
+	if (result2==expectedResult2)score++;
+	if (result3==expectedResult3)score++;
+	if (result4==expectedResult4)score++;
+
+
+
+	return score;
+
+}
+
+
+int evaluateXorPerformance(brain * b , int rigor)
+{
+	int score = 0;
+
+
+	brain * testInstance = forkBrain(b);
+	brain * testInstance2 = forkBrain(b);
+	brain * testInstance3 = forkBrain(b);
+	brain * testInstance4 = forkBrain(b);
+
+	int result = 0;
+	int result2   = 0;
+	int result3 = 0;
+	int result4  = 0;
+
+	int inputs[] = { 1,0 };
+	int inputs2[] = { 0,0 };
+	int inputs3[] = { 1,1 };
+	int inputs4[] = { 0,1 };
+
+
+	int expectedResult = 1;
+	int expectedResult2 = 0;
+	int expectedResult3 = 0;
+	int expectedResult4 = 1;
+
+
+	for(int c = 0; c < 3; c++)
+	{
+		advanceBrain(testInstance, inputs,2, &result, 1);
+		advanceBrain(testInstance2, inputs2,2, &result2, 1);
+		advanceBrain(testInstance3, inputs3,2, &result3, 1);
+		advanceBrain(testInstance4, inputs4,2, &result4, 1);
+
+
+
+		//	printBrain(testInstance);
+		//printBrain(testInstance);
+
+	}
+	freeBrain(testInstance);
+	freeBrain(testInstance2);
+	freeBrain(testInstance3);
+	freeBrain(testInstance4);
+
+
+
+
+	if (result==expectedResult)score++;
+	if (result2==expectedResult2)score++;
+	if (result3==expectedResult3)score++;
+	if (result4==expectedResult4)score++;
+
+
+
+	return score;
+
+}
+
 /*
    void teste()
    {
@@ -157,11 +338,11 @@ int multiSucc()
 
 int main (int argc, char * argv[])
 {
-//	baseLineTest();
-//	exit(0);
+	//	baseLineTest();
+	//	exit(0);
 
-//	multiSucc();
-//	exit(0);
+//		multiSucc();
+//		exit(0);
 
 	printf("checkpoint0\n");
 	srand(time(0));
@@ -189,7 +370,7 @@ int main (int argc, char * argv[])
 
 		int newScore = evaluateXorPerformance(testInstance,rigor);
 
-		if (newScore >= score)
+		if (newScore > score)
 		{
 
 			printf("NEW BEST SCORE: %d\n" , newScore);
@@ -197,7 +378,7 @@ int main (int argc, char * argv[])
 			freeBrain(best);
 			best =candidate;
 			//printBrain(best);
-			validated = (rigor == score);
+			validated = (4 == score);
 
 		}
 		sum += newScore;

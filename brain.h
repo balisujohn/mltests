@@ -1,7 +1,7 @@
 #ifndef BRAIN_H
 #define BRAIN_H
 
-#define NEURON_COUNT 25
+#define NEURON_COUNT 5
 
 struct neuron{
 float age;

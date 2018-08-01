@@ -261,11 +261,14 @@ void mutateBrain(brain * b){
 
 }
 
-void inputBrain(brain * b, int * targets, int targetCount)
+void inputBrain(brain * b, int * inputs, int targetCount)
 {
+
+	assert(targetCount <= NEURON_COUNT);
 	for(int i = 0; i < targetCount; i++)
 	{
-		b->neurons[targets[i]].excitation =b->neurons[targets[i]].activationPotential + 1 ;
+		
+		b->neurons[i].excitation = inputs[i] * (b->neurons[i].activationPotential + 1) ;
 
 	}
 
