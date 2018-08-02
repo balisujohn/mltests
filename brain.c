@@ -4,8 +4,6 @@
 #include"utils.h"
 #include<assert.h>
 
-//ASSUMPTIONS: brain fully connected except for self-edges
-//not tested yet
 brain * forkBrain(brain * oldBrain)
 {
 	brain * b  = malloc(sizeof(brain));
@@ -22,7 +20,6 @@ brain * forkBrain(brain * oldBrain)
 		b->neurons[i].activationDuration=oldBrain->neurons[i].activationDuration;
 		b->neurons[i].mostRecentActivation= oldBrain->neurons[i].mostRecentActivation;
 		b->neurons[i].targets = malloc(sizeof(int)*( b->neurons[i].targetCount));
-		//int target = 0;
 		for (int c = 0; c < b->neurons[i].targetCount;c++)
 		{
 			b->neurons[i].targets[c] = oldBrain->neurons[i].targets[c];
@@ -81,7 +78,6 @@ brain * generateBasicBrain()
 		for (int c = 0; c < b->neurons[i].targetCount;c++)
 		{
 
-			//if (c == i) target++;
 			do
 			{ 
 				b->neurons[i].targets[c] = randRange(NEURON_COUNT);
@@ -102,7 +98,6 @@ brain * generateBasicBrain()
 		}
 
 	} 
-	printf("checkpoint0.5\n");
 	return b;
 
 }
@@ -255,31 +250,9 @@ void inputBrain(brain * b, int * inputs, int targetCount)
 }
 
 
-// we're going to ignore temporal stuff as well for the moment
-//we're temporarily inputting neuronal activations as inputs
 void advanceBrain(brain * b, int  inputs[], int inputCount, int  outputs[], int outputCount)
 {
-	//float nextAge = b->age + 1;
-
-	//sense(brain * b);
-	// for now we will hardcode sensory input
-	//	{
-	/*	if (x1)
-		{		
-		b->neurons[0].excitation  = b->neurons[0].activationPotential +1;
-		}
-		if (x2)
-		{		
-		b->neurons[1].excitation  = b->neurons[1].activationPotential +1;
-		}
-	 */
-	//int inputs[] = {x1,x2};
 	inputBrain(b,inputs, 2);
-
-
-	//	}
-
-	//int outputFlag = 0;
 
 	float * sums = malloc(sizeof(float) * NEURON_COUNT);
 	for(int i = 0; i < NEURON_COUNT;i++)
@@ -290,12 +263,10 @@ void advanceBrain(brain * b, int  inputs[], int inputCount, int  outputs[], int 
 	for(int i = 0; i < NEURON_COUNT; i++)
 	{
 		b->neurons[i].fired = 0;
-		//		if (b->neurons[i].age >= nextAge) continue;
 		if (b->neurons[i].excitation > b->neurons[i].activationPotential ){
-	//		if (i == NEURON_COUNT-1)outputFlag = 1;
 			for(int c = 0; c < b->neurons[i].targetCount; c++)
 			{
-				/*	b->neurons[b->neurons[i].targets[c]].excitation*/ sums[b->neurons[i].targets[c]] += b->neurons[i].potentialWeights[c];
+			 sums[b->neurons[i].targets[c]] += b->neurons[i].potentialWeights[c];
 			}
 			b->neurons[i].excitation = 0.0;	
 			b->neurons[i].fired = 1;
@@ -321,14 +292,6 @@ void advanceBrain(brain * b, int  inputs[], int inputCount, int  outputs[], int 
 	{
 	outputs[i] = b->neurons[start+i].fired;
 	}
-	//for now we'll hard code actuation
-	//actuate(brain * b )
-	//	{
-
-	//return outputFlag;
-
-	//	}
-
 }
 
 

@@ -78,7 +78,6 @@ int multiSucc(int population)
 
 
 
-	printf("checkpoint0\n");
 	srand(time(0));
 
 	brain * best =generateBasicBrain();//generateXorBrain();
@@ -174,7 +173,6 @@ int main (int argc, char * argv[])
 	//	multiSucc(500);
 	//	exit(0);
 
-	printf("checkpoint0\n");
 	srand(time(0));
 
 	brain * best =generateBasicBrain();//generateXorBrain();

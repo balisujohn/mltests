@@ -1,0 +1,72 @@
+Hi All,
+
+
+
+Here is some c that makes a neural network and randomly mutates its weights and toplogy in the 
+hope of learning a good model of inputs to outputs. 
+
+
+
+Getting started:
+
+
+enter the following commands in bash, from the project directory
+
+make all
+chmod +x ./addition
+chmod +x ./xor 
+
+You're good to go!
+
+
+
+Basic Overview:
+
+
+the neural network is stored in a struct array
+
+currently neuron count is fixed and defined in brain.h
+(you this can be changed safely as anything that relies on a set neuron count will assert that the definition is correct)
+
+any  number of inputs and outputs can be specified when advancing the neural network,  the inputs are applied starting
+at index 0 and the outputs are measured starting at index NEURON_COUNT - outputCount
+
+any neuron can point any other neuron, so the network is not feed forward and could be capable of holding state. 
+
+
+
+Mutation:
+
+There is no mutation oversight algorithm of simulated annleaing, it's just based on
+fixed global parameters. This will need work.
+
+
+weight change mutation, connection target change mutation, and connection addition/removal mutation. In 
+the future, neuron addition/removal mutations will be necesarry
+
+
+
+Known Issues:
+
+If there are no input activations, the network will always produce only zeroes, as there is no hardcoded or mutable 
+capacity for the system to have a bias node. 
+
+The network will sometimes get stuck on xor, but when it does succeed it often does so very fast. Adding propper population
+management to the algorithm will fix this.
+
+Addition doesn't seem to learn effectively. This is an interesting challenge.
+
+
+Questions/concerns:
+
+please ask in signal chat
+
+
+
+Cheers,
+
+
+
+John
+
+

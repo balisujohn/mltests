@@ -195,7 +195,6 @@ int  baseLineXorTest()
 
 int xorMultiSucc()
 {
-	printf("checkpoint0\n");
 	srand(time(0));
 
 	brain * best =generateBasicBrain();
@@ -273,7 +272,6 @@ int xorMultiSucc()
 
 int xorLearn()
 {
-	printf("checkpoint0\n");
 	srand(time(0));
 
 	brain * best =generateBasicBrain();//generateXorBrain();
