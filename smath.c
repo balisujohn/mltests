@@ -11,36 +11,40 @@ int evaluateAdditionPerformance(brain * b , int rigor)
 {
 	int score = 0;
 
-	for(int i = 0; i < rigor; i ++)	
+	//	for(int i = 0; i < rigor; i ++)	
+	//	{
+	for(int x1 = 0; x1 < 8; x1++)	
 	{
-		brain * testInstance = forkBrain(b);
+		for(int x2 = 0; x2 < 8; x2++)	
+		{	
+			brain * testInstance = forkBrain(b);
 
-		//		printf("checkpoint2\n");
-		int x1 = randRange(8);
-		int x2 = randRange(8);
-		int expectedResult = (x1 + x2);
-		//			printf("X0: %d X2: %d EXPECTED: %d\n", x1, x2, expectedResult);
-		int result[] = {0,0,0,0};
-		for(int c = 0; c < 10; c++)
-		{
-			int inputs[] = {  x1 & 1, x1>>1 &1, x1>>2&1, x2 & 1, x2>>1 &1, x2>>2&1};
-			/*result =*/ advanceBrain(testInstance, inputs,6, result, 4);
-			//	printBrain(testInstance);
-			//printBrain(testInstance);
+			//		printf("checkpoint2\n");
+			//	int x1 = randRange(8);
+			//	int x2 = randRange(8);
+			int expectedResult = (x1 + x2);
+			//			printf("X0: %d X2: %d EXPECTED: %d\n", x1, x2, expectedResult);
+			int result[] = {0,0,0,0};
+			for(int c = 0; c < 20; c++)
+			{
+				int inputs[] = {  x1 & 1, (x1>>1) &1, (x1>>2)&1, x2 & 1,( x2>>1)  &1, (x2>>2)&1};
+				/*result =*/ advanceBrain(testInstance, inputs,6, result, 4);
+				//	printBrain(testInstance);
+				//printBrain(testInstance);
 
+			}
+			freeBrain(testInstance);
+
+			if (!((result[0] ^ (expectedResult >>3)) & 1 ))score++;
+			if (!((result[1] ^ (expectedResult >>2)) & 1 ))score++;
+			if (!((result[2] ^ (expectedResult >>1)) & 1 ))score++;
+			if (!( (coinFlip() ^  expectedResult) & 1 ))score++;
 		}
-		freeBrain(testInstance);
-
-		if (!((result[0] ^ (expectedResult >>3)) & 1 ))score++;
-		if (!((result[1] ^ (expectedResult >>2)) & 1 ))score++;
-		if (!((result[2] ^ (expectedResult >>1)) & 1 ))score++;
-		if (!( (coinFlip() ^  expectedResult) & 1 ))score++;
-
-
-		
 	}
 
-	return score/4;
+	//	}
+
+	return score;
 
 }
 /*
@@ -129,7 +133,7 @@ int multiSucc(int population)
 
 			}
 		}
-		if (childScore >= score)
+		if (childScore > score)
 		{
 
 			printf("NEW BEST SCORE: %d\n" , childScore);
@@ -137,7 +141,7 @@ int multiSucc(int population)
 			freeBrain(best);
 			best =bestChild;
 			//printBrain(best);
-			validated = (rigor == score);
+			validated = (64 == score);
 
 		}
 		sum += childScore;
@@ -167,14 +171,14 @@ int main (int argc, char * argv[])
 	//	baseLineTest();
 	//	exit(0);
 
-		multiSucc(500);
-		exit(0);
+	//	multiSucc(500);
+	//	exit(0);
 
 	printf("checkpoint0\n");
 	srand(time(0));
 
 	brain * best =generateBasicBrain();//generateXorBrain();
-	int rigor = 1000;
+	int rigor = 100;
 	int score = 0;
 	int sum =0;
 	int counter=0;
@@ -196,7 +200,7 @@ int main (int argc, char * argv[])
 
 		int newScore = evaluateAdditionPerformance(testInstance,rigor);
 
-		if (newScore >= score)
+		if (newScore > score)
 		{
 
 			printf("NEW BEST SCORE: %d\n" , newScore);

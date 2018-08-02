@@ -5,7 +5,7 @@
 
 
 
-// needs to be fixed
+
 void analyzeBrain(brain * b , int inputCount, int outputCount)
 {
 
@@ -14,9 +14,8 @@ void analyzeBrain(brain * b , int inputCount, int outputCount)
 	int run = 1;
 
 	char userInputs[1000] = {""};
-	int  inputs[inputCount];// = malloc(sizeof(int) * inputCount);
-	int  outputs[outputCount];//] = malloc(sizeof(int)* outputCount);
-	//char userInputField[1000] = {""};
+	int  inputs[inputCount];
+	int  outputs[outputCount];
 
 
 	while(run)
@@ -40,22 +39,22 @@ void analyzeBrain(brain * b , int inputCount, int outputCount)
 			else
 			{
 				printf("INPUT STRING: %c INVALID, RESTARTING\n", userInputs[i] );
-				free(testInstance);
-				exit(1);
+				run = 0;
 			}
 
+
 		}
-		
+		if(!run)break;
 
 
 		int advanceTo = 0;
 
 		while(!advanceTo > 0)
 		{
-		printf("PLEASE SPECIFY THE NUMBER OF DESIRED TIME-SLICES:\n");
-		stdin = freopen(NULL,"r",stdin);
-		fgets(userInputs, 20, stdin);
-		 advanceTo = atoi(userInputs);
+			printf("PLEASE SPECIFY THE NUMBER OF DESIRED TIME-SLICES:\n");
+			stdin = freopen(NULL,"r",stdin);
+			fgets(userInputs, 20, stdin);
+			advanceTo = atoi(userInputs);
 		}
 
 		for(int i = 0; i < advanceTo; i++)

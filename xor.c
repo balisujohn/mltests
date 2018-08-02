@@ -5,39 +5,6 @@
 #include"utils.h"
 #include"analysis.h"
 
-
-/*
-int evaluateXorPerformance(brain * b , int rigor)
-{
-	int score = 0;
-
-	for(int i = 0; i < rigor; i ++)	
-	{
-		brain * testInstance = forkBrain(b);
-
-		//		printf("checkpoint2\n");
-		int x1 = coinFlip();
-		int x2 = coinFlip();
-		int expectedResult = (x1 ^ x2);
-					printf("X0: %d X2: %d EXPECTED: %d\n", x1, x2, expectedResult);
-		int result = 0;
-		for(int c = 0; c < 3; c++)
-		{
-			int inputs[] = {x1*(c==0),x2*(c==0) };
-			/result =/ advanceBrain(testInstance, inputs,2, &result, 1);
-			//	printBrain(testInstance);
-			//printBrain(testInstance);
-
-		}
-		freeBrain(testInstance);
-		if (result == expectedResult)score++;
-		printf("RESULT: %d EXPECTED RESULT: %d\n", result, expectedResult);
-	}
-
-	return score;
-
-}*/
-
 int evaluateAndPerformance(brain * b , int rigor)
 {
 	int score = 0;
@@ -192,11 +159,7 @@ int evaluateXorPerformance(brain * b , int rigor)
 		advanceBrain(testInstance3, inputs3,2, &result3, 1);
 		advanceBrain(testInstance4, inputs4,2, &result4, 1);
 
-
-
-		//	printBrain(testInstance);
-		//printBrain(testInstance);
-
+	
 	}
 	freeBrain(testInstance);
 	freeBrain(testInstance2);
@@ -213,27 +176,16 @@ int evaluateXorPerformance(brain * b , int rigor)
 
 
 
-	return score;
+	return (score/4.0 ) * 100.0;
 
 }
-
-/*
-   void teste()
-   {
-   brain * b = generateBasicBrain(); 
-   int sum = 0;
-   for (int i = 0 ; i < 10000; +)
-
-
-
-   }
- */
-
-void baseLineTest()
+int  baseLineXorTest()
 {
 	brain * baseLine = generateXorBrain();
 	brain * testInstance = forkBrain(baseLine);
-	printf("SCORE: %d\n",evaluateXorPerformance(testInstance, 100));
+	int output = evaluateXorPerformance(testInstance,100);
+	printf("SCORE: %d\n", output);
+	return output == 100;
 
 
 
@@ -241,17 +193,12 @@ void baseLineTest()
 
 
 
-int multiSucc()
+int xorMultiSucc()
 {
-	//baseLineTest();
-	//exit(0);
-
-
-
 	printf("checkpoint0\n");
 	srand(time(0));
 
-	brain * best =generateBasicBrain();//generateXorBrain();
+	brain * best =generateBasicBrain();
 	int rigor = 10000;
 	int score = 0;
 	int sum =0;
@@ -264,7 +211,6 @@ int multiSucc()
 
 	while (!validated)
 	{
-		//		printf("checkpoint1\n");
 
 		for(int i = 0 ; i < 500; i ++)
 		{
@@ -273,26 +219,13 @@ int multiSucc()
 			mutateBrain(children[i]);
 		}
 
-		int childScore = 0;
+		int childScore = score;
 		brain * bestChild;	
 
 		for(int i = 0 ; i < 500; i++ )
 		{
 			brain * candidate = forkBrain(best);
-
-			//		printf("checkpoint1.5\n");
-
 			mutateBrain(candidate);
-
-
-
-
-			//brain * testInstance = forkBrain(candidate);
-			//		printf("checkpoint1.75\n");
-
-			//		int newScore = evaluateXorPerformance(testInstance, rigor);
-			//			printf("NEW SCORE: %d\n" , newScore);
-
 
 			int newChildScore = evaluateXorPerformance(candidate,rigor);
 			if (newChildScore >  childScore)
@@ -311,7 +244,7 @@ int multiSucc()
 			freeBrain(best);
 			best =bestChild;
 			//printBrain(best);
-			validated = (4 == score);
+			validated = (100 == score);
 
 		}
 		sum += childScore;
@@ -333,17 +266,13 @@ int multiSucc()
 	fclose(fp);
 
 
+	analyzeBrain(best, 2, 1);
+
 	return 0;
 }
 
-int main (int argc, char * argv[])
+int xorLearn()
 {
-	//	baseLineTest();
-	//	exit(0);
-
-//		multiSucc();
-//		exit(0);
-
 	printf("checkpoint0\n");
 	srand(time(0));
 
@@ -378,7 +307,7 @@ int main (int argc, char * argv[])
 			freeBrain(best);
 			best =candidate;
 			//printBrain(best);
-			validated = (4 == score);
+			validated = (100 == score);
 
 		}
 		sum += newScore;

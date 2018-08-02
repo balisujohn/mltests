@@ -117,17 +117,10 @@ brain * generateXorBrain()
 		b->neurons[i].fired = 0;	
 		b->neurons[i].age=0;
 		b->neurons[i].activationPotential = 1.0;
-		b->neurons[i].excitation = 0.0 ;//randFloat();
+		b->neurons[i].excitation = 0.0 ;
 		b->neurons[i].activationDuration=0.05;
 		b->neurons[i].mostRecentActivation= -100.0;
-		//b->neurons[i].targetCount = randRange(NEURON_COUNT-1)/2;
-		//b->neurons[i].targets = malloc(sizeof(int)*(b->neurons[i].targetCount));
-
-
-		//		b->neurons[i].potentialWeights = malloc(sizeof(float) * (NEURON_COUNT-1));
-		//		b->neurons[i].potentialTimes = malloc(sizeof(float) * (NEURON_COUNT-1));
-
-	} 
+		} 
 
 	neuron * neurons = b->neurons;
 	neurons[0].targetCount = 2;
@@ -138,7 +131,6 @@ brain * generateXorBrain()
 	neurons[0].targets[1] = 3;
 	neurons[0].potentialWeights[0] =  1.0;
 	neurons[0].potentialWeights[1] = -2.0;
-	printf("checkpoint0.5\n");
 
 
 	neurons[1].targetCount = 2;
@@ -149,7 +141,6 @@ brain * generateXorBrain()
 	neurons[1].targets[1] = 3;
 	neurons[1].potentialWeights[0] =  -2.0;
 	neurons[1].potentialWeights[1] = 1.0;
-	printf("checkpoint0.5\n");
 
 
 	neurons[2].targetCount = 1;
@@ -158,7 +149,6 @@ brain * generateXorBrain()
 	neurons[2].potentialTimes = malloc(sizeof(float) * neurons[2].targetCount); 
 	neurons[2].targets[0] = 4;
 	neurons[2].potentialWeights[0] =  1.0;
-	printf("checkpoint0.5\n");
 
 	neurons[3].targetCount = 1;
 	neurons[3].targets = malloc(sizeof(int) *  neurons[3].targetCount);
@@ -166,16 +156,8 @@ brain * generateXorBrain()
 	neurons[3].potentialTimes = malloc(sizeof(float) * neurons[3].targetCount); 
 	neurons[3].targets[0] = 4;
 	neurons[3].potentialWeights[0] =  1.0;
-	printf("checkpoint0.5\n");
 
 	neurons[4].targetCount = 0;
-	/*neurons[4].targets = malloc(sizeof(int) *  neurons[4].targetCount);
-	  neurons[4].potentialWeights = malloc(sizeof(float) * neurons[4].targetCount);
-	  neurons[4].potentialTimes = malloc(sizeof(float) * neurons[4].targetCount); 
-	  neurons[4].targets[0] = 4;
-	  neurons[4].potentialWeights[0] =  0.0;
-	  printf("checkpoint0.5\n");*/
-
 
 
 
@@ -188,8 +170,6 @@ brain * generateXorBrain()
 
 
 
-//will need to be rebuilt in a less lazy way
-//for now we're only going to mutate the weights
 void mutateBrain(brain * b){
 
 
@@ -249,12 +229,12 @@ void mutateBrain(brain * b){
 	{
 		if(b->neurons[i].targetCount)
 		{
-			int mutations = 1;//randRange(b->neurons[i].targetCount);
+			int mutations = randRange(b->neurons[i].targetCount);
 			for (int c = 0 ; c < mutations; c++)
 			{
 				//TODO add soft boundary
 
-				b->neurons[i].potentialWeights[randRange(b->neurons[i].targetCount)] += ((randFloat() *2)-1)*.3;
+				b->neurons[i].potentialWeights[randRange(b->neurons[i].targetCount)] += ((randFloat() *2)-1)*.1;
 			}
 		}
 	}
