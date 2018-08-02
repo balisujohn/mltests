@@ -38,10 +38,10 @@ void analyzeBrain(brain * b , int inputCount, int outputCount)
 			}
 			else
 			{
-				printf("INPUT STRING: %c INVALID, RESTARTING\n", userInputs[i] );
+				printf("INPUT STRING: %c INVALID, TERMINATING\n", userInputs[i] );
 				run = 0;
 			}
-
+			if(!run)break;
 
 		}
 		if(!run)break;
