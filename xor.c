@@ -399,7 +399,7 @@ int main (int argc, char * argv[])
 	printBrainToFile(best, fp);
 	fclose(fp);
 	
-	//analyzeBrain(best,2,1);
+	analyzeBrain(best,2,1);
 
 	return 0;
 }
