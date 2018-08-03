@@ -47,18 +47,6 @@ int evaluateAdditionPerformance(brain * b , int rigor)
 	return score;
 
 }
-/*
-   void teste()
-   {
-   brain * b = generateBasicBrain(); 
-   int sum = 0;
-   for (int i = 0 ; i < 10000; +)
-
-
-
-   }
- */
-
 void baseLineTest()
 {
 	brain * baseLine = generateXorBrain();
@@ -140,7 +128,7 @@ int multiSucc(int population)
 			freeBrain(best);
 			best =bestChild;
 			//printBrain(best);
-			validated = (64 == score);
+			validated = ((4*64) == score);
 
 		}
 		sum += childScore;

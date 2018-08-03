@@ -1,0 +1,30 @@
+
+
+Here is a general list of planned tasks. Feel free to suggest tasks that you feel are interesting/useful
+
+
+Simple logic gates (or, and, not, unary identity, nor, ): STATUS: mostly done
+
+needs bias node to successfully learn not and nor
+a proper population management algorithm will necesarry to virtually guarantee timely success(xor sometimes gets stuck)
+
+
+Addition: STATUS: incomplete
+
+this is an open problem, currently the brain does not learn a model for addition in linear time.
+mutation params need to be refactored to be mutable, and this problem will also likely benefit from subpopulation
+
+
+
+
+survival microworld: STATUS: incomplete
+
+the most interested open problem here. Much more valuable as and excersice than the addition problem, as a discrete mapping of states couldn't possible 
+work in a sufficently complicated microworld. 
+
+
+goal tiles need to be added to microworld
+a survival time assesment function needs to be added to the microworld
+
+
+
