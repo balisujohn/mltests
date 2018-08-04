@@ -19,12 +19,12 @@ mutation params need to be refactored to be mutable, and this problem will also 
 
 survival microworld: STATUS: incomplete
 
-the most interested open problem here. Much more valuable as and excersice than the addition problem, as a discrete mapping of states couldn't possible 
+the most interesting open problem here. Much more valuable as and excercise than the addition problem, as a discrete mapping of states couldn't possible 
 work in a sufficently complicated microworld. 
 
 
 goal tiles need to be added to microworld
-a survival time assesment function needs to be added to the microworld
+a survival time assessment function needs to be added to the microworld
 
 
 
