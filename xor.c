@@ -341,7 +341,7 @@ int  baseLineXorTest()
 }
 
 
-
+/*
 int xorMultiSucc()
 {
 	srand(time(0));
@@ -478,4 +478,4 @@ int xorLearn( int (*f)(brain *), int inputCount, int outputCount)
 	analyzeBrain(best,2,1);
 
 	return 0;
-}
+}*/

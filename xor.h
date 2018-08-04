@@ -3,7 +3,7 @@
 
 
 int baseLineXorTest();
-void xorLearn();
+//void xorLearn();
 int xorMultiSucc();
 int evaluateOrPerformance(brain * b);
 int evaluateNotPerformance(brain * b);

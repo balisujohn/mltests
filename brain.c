@@ -1,8 +1,10 @@
 #include<stdlib.h>
 #include<stdio.h>
+#include<time.h>
+#include<assert.h>
 #include"brain.h"
 #include"utils.h"
-#include<assert.h>
+
 
 brain * forkBrain(brain * oldBrain)
 {
@@ -348,6 +350,5 @@ void printBrainToFile(brain * b ,FILE * fp){
 
 
 }
-
 
 

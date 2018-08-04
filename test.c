@@ -3,7 +3,7 @@
 #include<assert.h>
 #include"brain.h"
 #include"xor.h"
-
+#include"learning.h"
 
 //really basic tests
 
@@ -20,11 +20,11 @@ assert(baseLineXorTest());
 printf("PREMADE XOR NETWORK VERIFIED\n");
 
 printf("GENERATE RANDOM NETWORK , TRAIN ON XOR WITH SINGLE SUCCESSOR TECHNIQUE, OPEN ANALYSIS DIALOG\n");
-xorLearn(evaluateXorPerformance,2,1);
+learn(evaluateXorPerformance,2,1);
 
 
 printf("GENERATE RANDOM NETWORK , TRAIN ON XOR WITH MULTI SUCCESSOR TECHNIQUE, OPEN ANALYSIS DIALOG\n");
-xorMultiSucc();
+multiSucc(evaluateXorPerformance,2,1);
 
 
 
