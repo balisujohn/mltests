@@ -264,7 +264,7 @@ void inputBrain(brain * b, int * inputs, int targetCount)
 
 void advanceBrain(brain * b, int  inputs[], int inputCount, int  outputs[], int outputCount)
 {
-	inputBrain(b,inputs, 2);
+	inputBrain(b,inputs, inputCount);
 
 	float * sums = malloc(sizeof(float) * NEURON_COUNT);
 	for(int i = 0; i < NEURON_COUNT;i++)

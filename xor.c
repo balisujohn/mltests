@@ -5,7 +5,7 @@
 #include"utils.h"
 #include"analysis.h"
 
-int evaluateAndPerformance(brain * b , int rigor)
+int evaluateAndPerformance(brain * b)
 {
 	int score = 0;
 
@@ -66,7 +66,7 @@ int evaluateAndPerformance(brain * b , int rigor)
 
 
 
-int evaluateNorPerformance(brain * b , int rigor)
+int evaluateNorPerformance(brain * b )
 {
 	int score = 0;
 
@@ -126,7 +126,7 @@ int evaluateNorPerformance(brain * b , int rigor)
 }
 
 
-int evaluateIdentityPerformance(brain * b , int rigor)
+int evaluateIdentityPerformance(brain * b )
 {
 	int score = 0;
 
@@ -169,21 +169,19 @@ int evaluateIdentityPerformance(brain * b , int rigor)
 }
 
 
-int evaluateNotPerformance(brain * b , int rigor)
+int evaluateNotPerformance(brain * b)
 {
 	int score = 0;
 
 
 	brain * testInstance = forkBrain(b);
 	brain * testInstance2 = forkBrain(b);
-	brain * testInstance3 = forkBrain(b);
-	brain * testInstance4 = forkBrain(b);
 
 	int result = 0;
 	int result2   = 0;
 
-	int inputs[] = { 1 };
-	int inputs2[] = { 0 };
+	int inputs = { 1 };
+	int inputs2 = { 0 };
 
 
 	int expectedResult = 0;
@@ -192,8 +190,8 @@ int evaluateNotPerformance(brain * b , int rigor)
 
 	for(int c = 0; c < 100; c++)
 	{
-		advanceBrain(testInstance, inputs,1, &result, 1);
-		advanceBrain(testInstance2, inputs2,1, &result2, 1);
+		advanceBrain(testInstance, &inputs,1, &result, 1);
+		advanceBrain(testInstance2, &inputs2,1, &result2, 1);
 
 
 		//	printBrain(testInstance);
@@ -209,7 +207,7 @@ int evaluateNotPerformance(brain * b , int rigor)
 	if (result2==expectedResult2)score++;
 
 
-	return (score/2) * 100; // calculated like this for clarity
+	return (score/2.0) * 100; // calculated like this for clarity
 
 }
 
@@ -274,7 +272,7 @@ int evaluateOrPerformance(brain * b)
 }
 
 
-int evaluateXorPerformance(brain * b , int rigor)
+int evaluateXorPerformance(brain * b)
 {
 	int score = 0;
 
@@ -332,7 +330,7 @@ int  baseLineXorTest()
 {
 	brain * baseLine = generateXorBrain();
 	brain * testInstance = forkBrain(baseLine);
-	int output = evaluateXorPerformance(testInstance,100);
+	int output = evaluateXorPerformance(testInstance);
 	printf("SCORE: %d\n", output);
 	return output == 100;
 

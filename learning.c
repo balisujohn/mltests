@@ -64,7 +64,7 @@ void learn( int (*f)(brain *), int inputCount, int outputCount)
 	printBrainToFile(best, fp);
 	fclose(fp);
 	printBrain(best);
-	analyzeBrain(best,2,1);
+	//analyzeBrain(best,inputCount,outputCount);
 
 }
 
@@ -138,9 +138,9 @@ void multiSucc( int (*f)(brain *), int inputCount, int outputCount)
 	fp = fopen("log.txt", "w+");
 	printBrainToFile(best, fp);
 	fclose(fp);
+	printBrain(best);
 
-
-	analyzeBrain(best, 2, 1);
+	//analyzeBrain(best, inputCount, outputCount);
 
 }
 
