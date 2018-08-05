@@ -18,6 +18,7 @@ float * potentialTimes;
 
 struct brain{
 neuron * neurons;
+int neuronCount;
 float age;
 } typedef brain;
 

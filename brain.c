@@ -9,8 +9,9 @@
 brain * forkBrain(brain * oldBrain)
 {
 	brain * b  = malloc(sizeof(brain));
-	b->neurons = malloc(sizeof(neuron) * NEURON_COUNT);
-	for(int i = 0; i < NEURON_COUNT; i++)
+	b->neuronCount = oldBrain->neuronCount;
+	b->neurons = malloc(sizeof(neuron) * oldBrain->neuronCount);
+	for(int i = 0; i < oldBrain->neuronCount; i++)
 	{
 
 
@@ -45,7 +46,7 @@ void freeBrain(brain * b )
 {
 
 
-	for(int i = 0 ; i < NEURON_COUNT; i++)
+	for(int i = 0 ; i < b->neuronCount; i++)
 
 	{
 		free(b->neurons[i].potentialWeights);
@@ -64,6 +65,7 @@ void freeBrain(brain * b )
 brain * generateBasicBrain()
 {
 	brain * b  = malloc(sizeof(brain));
+	b->neuronCount = NEURON_COUNT;
 	b->neurons = malloc(sizeof(neuron) * NEURON_COUNT);
 	for(int i = 0; i < NEURON_COUNT; i++)
 	{
@@ -106,8 +108,8 @@ brain * generateBasicBrain()
 
 brain * generateXorBrain()
 {
-	assert(NEURON_COUNT==6);
 	brain * b  = malloc(sizeof(brain));
+	b->neuronCount = 6;
 	b->neurons = malloc(sizeof(neuron) * 6);
 	for(int i = 0; i < 6; i++)
 	{
@@ -177,7 +179,7 @@ brain * generateXorBrain()
 void mutateBrain(brain * b){
 
 
-	for(int i = 0 ; i < NEURON_COUNT; i++)
+	for(int i = 0 ; i < b->neuronCount; i++)
 	{
 		if(b->neurons[i].targetCount)
 		{
@@ -193,7 +195,7 @@ void mutateBrain(brain * b){
 					b->neurons[i].targets = realloc(b->neurons[i].targets, sizeof(int) * b->neurons[i].targetCount);
 					b->neurons[i].potentialWeights = realloc(b->neurons[i].potentialWeights,sizeof(float) * b->neurons[i].targetCount);
 					b->neurons[i].potentialTimes = realloc(b->neurons[i].potentialTimes,sizeof(float) * b->neurons[i].targetCount);
-					b->neurons[i].targets[b->neurons[i].targetCount-1] = randRange(NEURON_COUNT);
+					b->neurons[i].targets[b->neurons[i].targetCount-1] = randRange(b->neuronCount);
 					b->neurons[i].potentialWeights[b->neurons[i].targetCount-1]  = randFloat();
 				}
 				else	
@@ -211,7 +213,7 @@ void mutateBrain(brain * b){
 			}
 			if(coinFlip()*coinFlip())
 			{
-				b->neurons[i].targets[randRange(b->neurons[i].targetCount)] = randRange(NEURON_COUNT);
+				b->neurons[i].targets[randRange(b->neurons[i].targetCount)] = randRange(b->neuronCount);
 			}
 
 		}
@@ -221,7 +223,7 @@ void mutateBrain(brain * b){
 			b->neurons[i].targets = realloc(b->neurons[i].targets, sizeof(int) * b->neurons[i].targetCount);
 			b->neurons[i].potentialWeights = realloc(b->neurons[i].potentialWeights,sizeof(float) * b->neurons[i].targetCount);
 			b->neurons[i].potentialTimes = realloc(b->neurons[i].potentialTimes,sizeof(float) * b->neurons[i].targetCount);
-			b->neurons[i].targets[b->neurons[i].targetCount-1] = randRange(NEURON_COUNT);
+			b->neurons[i].targets[b->neurons[i].targetCount-1] = randRange(b->neuronCount);
 			b->neurons[i].potentialWeights[b->neurons[i].targetCount-1]  = (randFloat()*2)-1;
 
 
@@ -229,7 +231,7 @@ void mutateBrain(brain * b){
 	}
 
 
-	for(int i = 0 ; i < NEURON_COUNT; i++)
+	for(int i = 0 ; i < b->neuronCount; i++)
 	{
 		if(b->neurons[i].targetCount)
 		{
@@ -248,7 +250,7 @@ void mutateBrain(brain * b){
 void inputBrain(brain * b, int * inputs, int targetCount)
 {
 
-	assert(targetCount <= NEURON_COUNT-1);
+	assert(targetCount <= b->neuronCount-1);
 
 	b->neurons[0].excitation = b->neurons[0].activationPotential + 1;// here we activate the bias neuron
 
@@ -266,13 +268,13 @@ void advanceBrain(brain * b, int  inputs[], int inputCount, int  outputs[], int 
 {
 	inputBrain(b,inputs, inputCount);
 
-	float * sums = malloc(sizeof(float) * NEURON_COUNT);
-	for(int i = 0; i < NEURON_COUNT;i++)
+	float * sums = malloc(sizeof(float) * b->neuronCount);
+	for(int i = 0; i < b->neuronCount;i++)
 	{
 		sums[i] = 0.0;
 	}
 
-	for(int i = 0; i < NEURON_COUNT; i++)
+	for(int i = 0; i < b->neuronCount; i++)
 	{
 		b->neurons[i].fired = 0;
 		if (b->neurons[i].excitation > b->neurons[i].activationPotential ){
@@ -287,7 +289,7 @@ void advanceBrain(brain * b, int  inputs[], int inputCount, int  outputs[], int 
 
 	}
 
-	for(int i = 0; i < NEURON_COUNT; i++)
+	for(int i = 0; i < b->neuronCount; i++)
 	{
 		for(int c = 0; c < b->neurons[i].targetCount; c++)
 		{
@@ -298,8 +300,8 @@ void advanceBrain(brain * b, int  inputs[], int inputCount, int  outputs[], int 
 
 
 
-	assert(outputCount <= NEURON_COUNT);
-	int start = NEURON_COUNT - outputCount;
+	assert(outputCount <= b->neuronCount);
+	int start = b->neuronCount - outputCount;
 	for (int i = 0; i < outputCount; i++)
 	{
 	outputs[i] = b->neurons[start+i].fired;
@@ -310,12 +312,12 @@ void advanceBrain(brain * b, int  inputs[], int inputCount, int  outputs[], int 
 
 void printBrain(brain * b ){
 	printf("ACTIVATION: ");
-	for(int i = 0; i < NEURON_COUNT; i++)
+	for(int i = 0; i < b->neuronCount; i++)
 	{
 		printf("%d", b->neurons[i].fired);	
 	}
 	printf("\n");	
-	for(int i = 0; i < NEURON_COUNT; i++)
+	for(int i = 0; i < b->neuronCount; i++)
 	{
 		printf("NEURON %d: %f\n",i, b->neurons[i].activationPotential);	
 		for(int c = 0; c < b->neurons[i].targetCount; c++)
@@ -332,12 +334,12 @@ void printBrain(brain * b ){
 
 void printBrainToFile(brain * b ,FILE * fp){
 	fprintf(fp, "ACTIVATION: ");
-	for(int i = 0; i < NEURON_COUNT; i++)
+	for(int i = 0; i < b->neuronCount; i++)
 	{
 		fprintf(fp,"%d", b->neurons[i].fired);	
 	}
 	printf("\n");	
-	for(int i = 0; i < NEURON_COUNT; i++)
+	for(int i = 0; i < b->neuronCount; i++)
 	{
 		fprintf(fp, "NEURON %d: %f\n",i, b->neurons[i].activationPotential);	
 		for(int c = 0; c < b->neurons[i].targetCount; c++)
