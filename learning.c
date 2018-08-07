@@ -64,7 +64,7 @@ void learn( int (*f)(brain *), int inputCount, int outputCount)
 	printBrainToFile(best, fp);
 	fclose(fp);
 	printBrain(best);
-	//analyzeBrain(best,inputCount,outputCount);
+	analyzeBrain(best,inputCount,outputCount);
 
 }
 

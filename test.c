@@ -31,7 +31,7 @@ multiSucc(evaluateIdentityPerformance,1,1);
 
 
 
-/*
+
 printf("GENERATE RANDOM NETWORK , TRAIN ON NOT WITH SINGLE SUCCESSOR TECHNIQUE, OPEN ANALYSIS DIALOG\n");
 learn(evaluateNotPerformance,1,1);
 
@@ -68,7 +68,7 @@ learn(evaluateXorPerformance,2,1);
 printf("GENERATE RANDOM NETWORK , TRAIN ON XOR WITH MULTI SUCCESSOR TECHNIQUE, OPEN ANALYSIS DIALOG\n");
 multiSucc(evaluateXorPerformance,2,1);
 
-*/
+
 
 printf("GENERATE RANDOM NETWORK , TRAIN ON ADDITION WITH SINGLE SUCCESSOR TECHNIQUE, OPEN ANALYSIS DIALOG\n");
 learn(evaluateAdditionPerformance,6,4);
