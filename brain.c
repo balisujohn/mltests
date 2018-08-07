@@ -133,8 +133,8 @@ brain * generateXorBrain()
 	neurons[1].targets = malloc(sizeof(int) *  neurons[1].targetCount);
 	neurons[1].potentialWeights = malloc(sizeof(float) * neurons[1].targetCount);
 	neurons[1].potentialTimes = malloc(sizeof(float) * neurons[1].targetCount); 
-	neurons[1].targets[0] = 3;
-	neurons[1].targets[1] = 4;
+	neurons[1].targets[0] = 4;
+	neurons[1].targets[1] = 5;
 	neurons[1].potentialWeights[0] =  1.0;
 	neurons[1].potentialWeights[1] = -2.0;
 
@@ -143,27 +143,29 @@ brain * generateXorBrain()
 	neurons[2].targets = malloc(sizeof(int) *  neurons[2].targetCount);
 	neurons[2].potentialWeights = malloc(sizeof(float) * neurons[2].targetCount);
 	neurons[2].potentialTimes = malloc(sizeof(float) * neurons[2].targetCount); 
-	neurons[2].targets[0] = 3;
-	neurons[2].targets[1] = 4;
+	neurons[2].targets[0] = 4;
+	neurons[2].targets[1] = 5;
 	neurons[2].potentialWeights[0] =  -2.0;
 	neurons[2].potentialWeights[1] = 1.0;
 
 
-	neurons[3].targetCount = 1;
-	neurons[3].targets = malloc(sizeof(int) *  neurons[3].targetCount);
-	neurons[3].potentialWeights = malloc(sizeof(float) * neurons[3].targetCount);
-	neurons[3].potentialTimes = malloc(sizeof(float) * neurons[3].targetCount); 
-	neurons[3].targets[0] = 5;
-	neurons[3].potentialWeights[0] =  1.0;
+	neurons[3].targetCount = 0;
+
 
 	neurons[4].targetCount = 1;
 	neurons[4].targets = malloc(sizeof(int) *  neurons[4].targetCount);
 	neurons[4].potentialWeights = malloc(sizeof(float) * neurons[4].targetCount);
 	neurons[4].potentialTimes = malloc(sizeof(float) * neurons[4].targetCount); 
-	neurons[4].targets[0] = 5;
+	neurons[4].targets[0] = 3;
 	neurons[4].potentialWeights[0] =  1.0;
 
-	neurons[5].targetCount = 0;
+
+	neurons[5].targetCount = 1;
+	neurons[5].targets = malloc(sizeof(int) *  neurons[5].targetCount);
+	neurons[5].potentialWeights = malloc(sizeof(float) * neurons[5].targetCount);
+	neurons[5].potentialTimes = malloc(sizeof(float) * neurons[5].targetCount); 
+	neurons[5].targets[0] = 3;
+	neurons[5].potentialWeights[0] =  1.0;
 
 
 
@@ -300,8 +302,8 @@ void advanceBrain(brain * b, int  inputs[], int inputCount, int  outputs[], int 
 
 
 
-	assert(outputCount <= b->neuronCount);
-	int start = b->neuronCount - outputCount;
+	assert(outputCount + inputCount +1 <= b->neuronCount);
+	int start = inputCount +1;
 	for (int i = 0; i < outputCount; i++)
 	{
 	outputs[i] = b->neurons[start+i].fired;
