@@ -46,6 +46,12 @@ void learn( int (*f)(brain *), int inputCount, int outputCount)
 			validated = (100 == score);
 
 		}
+		else
+		{
+		freeBrain(candidate);
+
+	
+		}
 		sum += newScore;
 		counter++;
 		if (counter == 100)
@@ -64,7 +70,8 @@ void learn( int (*f)(brain *), int inputCount, int outputCount)
 	printBrainToFile(best, fp);
 	fclose(fp);
 	printBrain(best);
-	analyzeBrain(best,inputCount,outputCount);
+//	analyzeBrain(best,inputCount,outputCount);
+	freeBrain(best);
 
 }
 

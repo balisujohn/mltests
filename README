@@ -12,9 +12,8 @@ Getting started:
 
 enter the following commands in bash, from the project directory
 
-make all
-chmod +x ./addition
-chmod +x ./xor 
+make
+chmod +x ./test
 
 You're good to go!
 

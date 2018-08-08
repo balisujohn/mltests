@@ -5,7 +5,7 @@ Here is a general list of planned tasks. Feel free to suggest tasks that you fee
 
 Simple logic gates (or, and, not, unary identity, nor, ) : STATUS: almost completely done
 
-needs bias node to successfully learn not and nor
+COMPLETED: needs bias node to successfully learn not and nor
 a proper population management algorithm will necesarry to virtually guarantee timely success(xor sometimes gets stuck)
 
 
@@ -13,6 +13,8 @@ Addition: STATUS: incomplete
 
 this is an open problem, currently the brain does not learn a model for addition in linear time.
 mutation params need to be refactored to be mutable, and this problem will also likely benefit from subpopulation
+
+best acheived accuracy is 78%
 
 
 
