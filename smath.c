@@ -27,7 +27,7 @@ int evaluateAdditionPerformance(brain * b)
 			int result[] = {0,0,0,0};
 			for(int c = 0; c < 4; c++)
 			{
-				int inputs[] = {  x1 & 1, (x1>>1) &1, (x1>>2)&1, x2 & 1,( x2>>1)  &1, (x2>>2)&1};
+				int inputs[] = {  (x1>>2)&1, (x1>>1) &1, x1 & 1,  (x2>>2)&1,( x2>>1)  &1, x2 & 1};
 				/*result =*/ advanceBrain(testInstance, inputs,6, result, 4);
 				//	printBrain(testInstance);
 				//printBrain(testInstance);

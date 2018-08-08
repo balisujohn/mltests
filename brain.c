@@ -256,19 +256,25 @@ void mutateBrain(brain * b){
 	}
 
 
-	/*
-	   if(coinFlip() * coinFlip() * coinFlip())
-	   {
-	   if(coinFlip())
-	   {
-	   b->neuronCount++;
-	   b->neurons = realloc(b->neurons, sizeof(neuron) * b->neuronCount);
-	   }	
+
+	if(coinFlip() * coinFlip() * coinFlip())
+	{
+		if(coinFlip())
+		{
+			b->neuronCount++;
+			b->neurons = realloc(b->neurons, sizeof(neuron) * b->neuronCount);
+			initializeNeuron(&(b->neurons[b->neuronCount-1]), b->neuronCount);
+		}	
+		else 
+		{
+			b->neuronCount--;
+			b->neurons = realloc(b->neurons, sizeof(neuron)* b->neuronCount);
+
+		}
 
 
 
-
-	   }*/
+	}
 
 }
 
@@ -291,6 +297,12 @@ void inputBrain(brain * b, int * inputs, int targetCount)
 
 void advanceBrain(brain * b, int  inputs[], int inputCount, int  outputs[], int outputCount)
 {
+
+	//if we've been passed a brain with too few neurons we will do nothing
+
+	if (b->neuronCount < inputCount+outputCount+1)return;
+
+
 	inputBrain(b,inputs, inputCount);
 
 	float * sums = malloc(sizeof(float) * b->neuronCount);
@@ -305,7 +317,13 @@ void advanceBrain(brain * b, int  inputs[], int inputCount, int  outputs[], int 
 		if (b->neurons[i].excitation > b->neurons[i].activationPotential ){
 			for(int c = 0; c < b->neurons[i].targetCount; c++)
 			{
-				sums[b->neurons[i].targets[c]] += b->neurons[i].potentialWeights[c];
+
+
+				if(b->neurons[i].targets[c] < b->neuronCount)
+				{
+					sums[b->neurons[i].targets[c]] += b->neurons[i].potentialWeights[c];
+
+				}
 			}
 			b->neurons[i].excitation = 0.0;	
 			b->neurons[i].fired = 1;
@@ -318,10 +336,15 @@ void advanceBrain(brain * b, int  inputs[], int inputCount, int  outputs[], int 
 	{
 		for(int c = 0; c < b->neurons[i].targetCount; c++)
 		{
-			b->neurons[b->neurons[i].targets[c]].excitation += sums[b->neurons[i].targets[c]];
+
+			if(b->neurons[i].targets[c] < b->neuronCount)
+			{
+				b->neurons[b->neurons[i].targets[c]].excitation += sums[b->neurons[i].targets[c]];
+			}
 		}
 
 	}
+
 
 
 

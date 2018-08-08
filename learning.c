@@ -18,9 +18,10 @@ void learn( int (*f)(brain *), int inputCount, int outputCount)
 	int sum =0;
 	int counter=0;
 	int validated = 0;
-	while (!validated)
-	{
+	while (!validated )
+	{	
 		//		printf("checkpoint1\n");
+	
 		brain * candidate = forkBrain(best);
 
 		//		printf("checkpoint1.5\n");
@@ -34,7 +35,7 @@ void learn( int (*f)(brain *), int inputCount, int outputCount)
 
 
 		int newScore = (*f)(testInstance);//evaluateOrPerformance(testInstance,rigor);
-
+		freeBrain(testInstance);
 		if (newScore > score)
 		{
 
@@ -56,7 +57,7 @@ void learn( int (*f)(brain *), int inputCount, int outputCount)
 		counter++;
 		if (counter == 100)
 		{
-			//printf("LAST 100 AVERAGE: %f\n", sum/100.0);
+			printf("LAST 100 AVERAGE: %f\n", sum/100.0);
 
 
 			sum = 0;
@@ -70,7 +71,7 @@ void learn( int (*f)(brain *), int inputCount, int outputCount)
 	printBrainToFile(best, fp);
 	fclose(fp);
 	printBrain(best);
-//	analyzeBrain(best,inputCount,outputCount);
+	//analyzeBrain(best,inputCount,outputCount);
 	freeBrain(best);
 
 }
