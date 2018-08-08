@@ -5,7 +5,9 @@
 #include"brain.h"
 #include"utils.h"
 
-
+/*
+copies an existing brain, preserving state;
+*/
 brain * forkBrain(brain * oldBrain)
 {
 	brain * b  = malloc(sizeof(brain));
@@ -41,7 +43,10 @@ brain * forkBrain(brain * oldBrain)
 
 }
 
+/*
+frees a brain struct
 
+*/
 void freeBrain(brain * b )
 {
 
@@ -60,6 +65,11 @@ void freeBrain(brain * b )
 }
 
 
+
+/*
+initializes a random neuron. requires the number of other neurons as
+a range for selecting targets
+*/
 
 void initializeNeuron(neuron * n,  int neuronCount )
 {
@@ -99,7 +109,9 @@ void initializeNeuron(neuron * n,  int neuronCount )
 
 }
 
-//makes a brain
+/*
+allocates and initializes a basic random brain with NEURON_COUNT starting neurons
+*/
 brain * generateBasicBrain()
 {
 	brain * b  = malloc(sizeof(brain));
@@ -114,6 +126,9 @@ brain * generateBasicBrain()
 
 }
 
+/*
+generates a brain hardcoded to perform Xor
+*/
 brain * generateXorBrain()
 {
 	brain * b  = malloc(sizeof(brain));
@@ -184,7 +199,9 @@ brain * generateXorBrain()
 }
 
 
-
+/*
+randomly mutates a brain. TODO add mutation params
+*/
 
 void mutateBrain(brain * b){
 
@@ -278,6 +295,11 @@ void mutateBrain(brain * b){
 
 }
 
+/*
+applies inputs to a brain. inputs will be applied to neurons 1-targetCount
+
+*/
+
 void inputBrain(brain * b, int * inputs, int targetCount)
 {
 
@@ -294,7 +316,10 @@ void inputBrain(brain * b, int * inputs, int targetCount)
 
 }
 
+/*
+advances the brain forward 1 discrete fram of time
 
+*/
 void advanceBrain(brain * b, int  inputs[], int inputCount, int  outputs[], int outputCount)
 {
 
@@ -357,7 +382,11 @@ void advanceBrain(brain * b, int  inputs[], int inputCount, int  outputs[], int 
 }
 
 
+/*
+displays a brain's structure and weights
 
+
+*/
 void printBrain(brain * b ){
 	printf("ACTIVATION: ");
 	for(int i = 0; i < b->neuronCount; i++)
@@ -379,7 +408,10 @@ void printBrain(brain * b ){
 
 }
 
+/*
+saves a brain to file
 
+*/
 void printBrainToFile(brain * b ,FILE * fp){
 	fprintf(fp, "ACTIVATION: ");
 	for(int i = 0; i < b->neuronCount; i++)

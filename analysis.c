@@ -3,9 +3,12 @@
 #include<assert.h>
 #include"brain.h"
 
+/*
+here we allow the user to probe a network to ensure that it works correctly. 
+Right now the way to quit the dialog is by entering an invalid character.
 
 
-
+*/
 void analyzeBrain(brain * b , int inputCount, int outputCount)
 {
 

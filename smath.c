@@ -6,7 +6,13 @@
 
 
 
+/*
+evaluates the correctness of adding two integers each represented by 3 bits
+an example input output would be 
 
+001001 -> 0010 which is 1 + 1 = 2 
+
+*/
 int evaluateAdditionPerformance(brain * b)
 {
 	int score = 0;

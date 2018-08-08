@@ -7,12 +7,20 @@
 #include"learning.h"
 
 
-//general learning function
+/*
+simple greedy  learning algorithm. 
+
+GENERATE RANDOM -> MUTATE -> REPLACE ORIGINAL IF MUTATE OFFSPRING SCORES HIGHER
+
+
+
+
+*/
 void learn( int (*f)(brain *), int inputCount, int outputCount)
 {
 	srand(time(0));
 
-	brain * best =generateBasicBrain();//generateXorBrain();
+	brain * best =generateBasicBrain();
 	int rigor = 10000;
 	int score = 0;
 	int sum =0;
@@ -20,21 +28,16 @@ void learn( int (*f)(brain *), int inputCount, int outputCount)
 	int validated = 0;
 	while (!validated )
 	{	
-		//		printf("checkpoint1\n");
 	
 		brain * candidate = forkBrain(best);
 
-		//		printf("checkpoint1.5\n");
 
 		mutateBrain(candidate);
 		brain * testInstance = forkBrain(candidate);
-		//		printf("checkpoint1.75\n");
-
-		//		int newScore = evaluateXorPerformance(testInstance, rigor);
-		//			printf("NEW SCORE: %d\n" , newScore);
 
 
-		int newScore = (*f)(testInstance);//evaluateOrPerformance(testInstance,rigor);
+
+		int newScore = (*f)(testInstance);
 		freeBrain(testInstance);
 		if (newScore > score)
 		{
@@ -76,6 +79,15 @@ void learn( int (*f)(brain *), int inputCount, int outputCount)
 
 }
 
+
+/*
+simple greedy  learning algorithm. 
+GENERATE RANDOM -> MUTATE -> REPLACE ORIGINAL WITH BEST MUTATION AFTER N MUTATIOBS IF MUTATE OFFSPRING SCORES HIGHER
+
+*/
+
+
+
 void multiSucc( int (*f)(brain *), int inputCount, int outputCount)
 {
 	srand(time(0));
@@ -109,7 +121,7 @@ void multiSucc( int (*f)(brain *), int inputCount, int outputCount)
 			brain * candidate = forkBrain(best);
 			mutateBrain(candidate);
 
-			int newChildScore = (*f)(candidate);//evaluateXorPerformance(candidate,rigor);
+			int newChildScore = (*f)(candidate);
 			if (newChildScore >  childScore)
 			{
 				printf("CHILD ACCEPTED: %d\n", newChildScore);

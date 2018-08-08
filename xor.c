@@ -5,6 +5,14 @@
 #include"utils.h"
 #include"analysis.h"
 
+
+/*
+
+evaluates a brain's performance on binary and,
+returns percent correctness
+
+
+*/
 int evaluateAndPerformance(brain * b)
 {
 	int score = 0;
@@ -41,8 +49,6 @@ int evaluateAndPerformance(brain * b)
 
 
 
-		//	printBrain(testInstance);
-		//printBrain(testInstance);
 
 	}
 	freeBrain(testInstance);
@@ -64,6 +70,13 @@ int evaluateAndPerformance(brain * b)
 
 }
 
+/*
+
+evaluates a brain's performance on binary nor,
+returns percent correctness
+
+
+*/
 
 
 int evaluateNorPerformance(brain * b )
@@ -102,8 +115,6 @@ int evaluateNorPerformance(brain * b )
 
 
 
-		//	printBrain(testInstance);
-		//printBrain(testInstance);
 
 	}
 	freeBrain(testInstance);
@@ -124,6 +135,14 @@ int evaluateNorPerformance(brain * b )
 	return (score/4.0) * 100;
 
 }
+
+/*
+
+evaluates a brain's performance on unary identity,
+returns percent correctness
+
+
+*/
 
 
 int evaluateIdentityPerformance(brain * b )
@@ -151,8 +170,6 @@ int evaluateIdentityPerformance(brain * b )
 		advanceBrain(testInstance2, inputs2,1, &result2, 1);
 
 
-		//	printBrain(testInstance);
-		//printBrain(testInstance);
 
 	}
 	freeBrain(testInstance);
@@ -168,6 +185,13 @@ int evaluateIdentityPerformance(brain * b )
 
 }
 
+/*
+
+evaluates a brain's performance on unary  not,
+returns percent correctness
+
+
+*/
 
 int evaluateNotPerformance(brain * b)
 {
@@ -194,8 +218,6 @@ int evaluateNotPerformance(brain * b)
 		advanceBrain(testInstance2, &inputs2,1, &result2, 1);
 
 
-		//	printBrain(testInstance);
-		//printBrain(testInstance);
 
 	}
 	freeBrain(testInstance);
@@ -210,6 +232,15 @@ int evaluateNotPerformance(brain * b)
 	return (score/2.0) * 100; // calculated like this for clarity
 
 }
+
+
+/*
+
+evaluates a brain's performance on binary or,
+returns percent correctness
+
+
+*/
 
 
 int evaluateOrPerformance(brain * b)
@@ -248,8 +279,6 @@ int evaluateOrPerformance(brain * b)
 
 
 
-		//	printBrain(testInstance);
-		//printBrain(testInstance);
 
 	}
 	freeBrain(testInstance);
@@ -270,6 +299,14 @@ int evaluateOrPerformance(brain * b)
 	return (score/4.0) * 100;
 
 }
+
+/*
+
+evaluates a brain's performance on binary Xor,
+returns percent correctness
+
+
+*/
 
 
 int evaluateXorPerformance(brain * b)
@@ -326,6 +363,11 @@ int evaluateXorPerformance(brain * b)
 	return (score/4.0 ) * 100.0;
 
 }
+
+
+/*
+verifies that the hardcoded xor network still works. If this is broken, nothing else is guaranteed to work
+*/
 int  baseLineXorTest()
 {
 	brain * baseLine = generateXorBrain();
