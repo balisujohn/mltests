@@ -8,14 +8,14 @@
 
 
 /*
-simple greedy  learning algorithm. 
+   simple greedy  learning algorithm. 
 
-GENERATE RANDOM -> MUTATE -> REPLACE ORIGINAL IF MUTATE OFFSPRING SCORES HIGHER
-
-
+   GENERATE RANDOM -> MUTATE -> REPLACE ORIGINAL IF MUTATE OFFSPRING SCORES HIGHER
 
 
-*/
+
+
+ */
 void learn( int (*f)(brain *), int inputCount, int outputCount)
 {
 	srand(time(0));
@@ -28,7 +28,7 @@ void learn( int (*f)(brain *), int inputCount, int outputCount)
 	int validated = 0;
 	while (!validated )
 	{	
-	
+
 		brain * candidate = forkBrain(best);
 
 
@@ -52,9 +52,9 @@ void learn( int (*f)(brain *), int inputCount, int outputCount)
 		}
 		else
 		{
-		freeBrain(candidate);
+			freeBrain(candidate);
 
-	
+
 		}
 		sum += newScore;
 		counter++;
@@ -74,17 +74,17 @@ void learn( int (*f)(brain *), int inputCount, int outputCount)
 	printBrainToFile(best, fp);
 	fclose(fp);
 	printBrain(best);
-	//analyzeBrain(best,inputCount,outputCount);
+	analyzeBrain(best,inputCount,outputCount);
 	freeBrain(best);
 
 }
 
 
 /*
-simple greedy  learning algorithm. 
-GENERATE RANDOM -> MUTATE -> REPLACE ORIGINAL WITH BEST MUTATION AFTER N MUTATIOBS IF MUTATE OFFSPRING SCORES HIGHER
+   simple greedy  learning algorithm. 
+   GENERATE RANDOM -> MUTATE -> REPLACE ORIGINAL WITH BEST MUTATION AFTER N MUTATIOBS IF MUTATE OFFSPRING SCORES HIGHER
 
-*/
+ */
 
 
 
@@ -161,6 +161,119 @@ void multiSucc( int (*f)(brain *), int inputCount, int outputCount)
 	printBrain(best);
 
 	//analyzeBrain(best, inputCount, outputCount);
+
+}
+
+void populationLearn( int (*f)(brain *), int inputCount, int outputCount, int populationCount, int generations)
+{
+	srand(time(0));
+
+
+	int bestScore[populationCount];
+	int avgScore[populationCount];
+	int stddev[populationCount];
+
+	int improvementLikelyhoodHeuristic[populationCount];
+
+
+	brain * bestPopulationBrain;
+	int bestPopulationScore = 0;
+
+
+
+
+	brain ** population = malloc(sizeof(brain *) * populationCount);
+	for (int i = 0 ; i < populationCount; i++)
+	{
+		bestScore[i] = 0;
+		population[i] = generateBasicBrain();	
+	}
+
+
+
+	int brainIndex = 0;
+	while(bestPopulationScore < 100)
+	{
+		int sum = 0;
+		int counter = 0;
+
+		for(int i = 0 ; i < generations; i ++)
+		{
+
+			brain * candidate = forkBrain(population[brainIndex]);
+
+
+			mutateBrain(candidate);
+			brain * testInstance = forkBrain(candidate);
+
+
+
+			int newScore = (*f)(testInstance);
+			freeBrain(testInstance);
+			if (newScore > bestScore[i])
+			{
+
+				printf("NEW BEST SCORE: %d\n" , newScore);
+				bestScore[i] = newScore;
+
+
+					freeBrain(population[brainIndex]);
+
+				population[brainIndex] =candidate;
+				if (bestScore[i] > bestPopulationScore)
+				{
+					bestPopulationScore = bestScore[i];
+					bestPopulationBrain = population[brainIndex];
+					if(newScore == 100)
+					{
+					break;
+
+					}
+				}
+				//printBrain(best);
+
+			}
+			else
+			{
+				freeBrain(candidate);
+
+
+			}
+			sum += newScore;
+			counter++;
+			if (counter == 100)
+			{
+				printf("LAST 100 AVERAGE: %f\n", sum/100.0);
+
+
+				sum = 0;
+				counter = 0;
+			}
+
+
+
+		}	
+
+
+
+
+		brainIndex++;
+		if (brainIndex == populationCount)
+		{
+			brainIndex = 0;
+		}
+	}
+
+
+
+
+	FILE *fp;
+	fp = fopen("log.txt", "w+");
+	printBrainToFile(bestPopulationBrain, fp);
+	fclose(fp);
+	printBrain(bestPopulationBrain);
+	//analyzeBrain(bestPopulationBrain,inputCount,outputCount);
+	freeBrain(bestPopulationBrain);
 
 }
 
