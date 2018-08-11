@@ -32,7 +32,7 @@ void learn( int (*f)(brain *), int inputCount, int outputCount)
 		brain * candidate = forkBrain(best);
 
 
-		mutateBrain(candidate);
+		mutateBrain(candidate,inputCount,outputCount);
 		brain * testInstance = forkBrain(candidate);
 
 
@@ -110,7 +110,7 @@ void multiSucc( int (*f)(brain *), int inputCount, int outputCount)
 		{
 
 			children[i] = forkBrain(best);
-			mutateBrain(children[i]);
+			mutateBrain(children[i],inputCount,outputCount);
 		}
 
 		int childScore = score;
@@ -119,7 +119,7 @@ void multiSucc( int (*f)(brain *), int inputCount, int outputCount)
 		for(int i = 0 ; i < 500; i++ )
 		{
 			brain * candidate = forkBrain(best);
-			mutateBrain(candidate);
+			mutateBrain(candidate,inputCount,outputCount);
 
 			int newChildScore = (*f)(candidate);
 			if (newChildScore >  childScore)
@@ -176,13 +176,13 @@ void populationLearn( int (*f)(brain *), int inputCount, int outputCount, int po
 	int improvementLikelyhoodHeuristic[populationCount];
 
 
-	brain * bestPopulationBrain;
+	brain * bestPopulationBrain = NULL;
 	int bestPopulationScore = 0;
 
 
 
-
-	brain ** population = malloc(sizeof(brain *) * populationCount);
+	brain ** population;
+	assert(population =  malloc(sizeof(brain *) * populationCount));
 	for (int i = 0 ; i < populationCount; i++)
 	{
 		bestScore[i] = 0;
@@ -203,7 +203,7 @@ void populationLearn( int (*f)(brain *), int inputCount, int outputCount, int po
 			brain * candidate = forkBrain(population[brainIndex]);
 
 
-			mutateBrain(candidate);
+			mutateBrain(candidate,inputCount,outputCount);
 			brain * testInstance = forkBrain(candidate);
 
 
@@ -217,20 +217,23 @@ void populationLearn( int (*f)(brain *), int inputCount, int outputCount, int po
 				bestScore[i] = newScore;
 
 
-					freeBrain(population[brainIndex]);
+				freeBrain(population[brainIndex]);
 
 				population[brainIndex] =candidate;
 				if (bestScore[i] > bestPopulationScore)
 				{
 					bestPopulationScore = bestScore[i];
-					bestPopulationBrain = population[brainIndex];
+					if(bestPopulationBrain)
+					{					
+						freeBrain(bestPopulationBrain);
+					}
+					bestPopulationBrain = forkBrain(population[brainIndex]);
 					if(newScore == 100)
 					{
-					break;
+						break;
 
 					}
 				}
-				//printBrain(best);
 
 			}
 			else
@@ -241,9 +244,14 @@ void populationLearn( int (*f)(brain *), int inputCount, int outputCount, int po
 			}
 			sum += newScore;
 			counter++;
-			if (counter == 100)
+			if (counter == generations)
+
+
+
+
+
 			{
-				printf("LAST 100 AVERAGE: %f\n", sum/100.0);
+				printf("LAST %d AVERAGE: %f\n", generations ,sum/(float)generations);
 
 
 				sum = 0;
@@ -262,6 +270,11 @@ void populationLearn( int (*f)(brain *), int inputCount, int outputCount, int po
 		{
 			brainIndex = 0;
 		}
+	}
+
+	for (int i = 0 ; i < populationCount; i++)
+	{
+		freeBrain(population[i]);	
 	}
 
 

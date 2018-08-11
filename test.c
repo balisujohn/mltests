@@ -28,28 +28,28 @@ populationLearn(evaluateAdditionPerformance,1,1,100,100);
 
 
 printf("GENERATE RANDOM NETWORK , TRAIN ON XOR WITH POPULATION TECHNIQUE, OPEN ANALYSIS DIALOG\n");
-populationLearn(evaluateXorPerformance,2,1,100,100);
+populationLearn(evaluateXorPerformance,2,1,10,10);
 
 printf("GENERATE RANDOM NETWORK , TRAIN ON AND WITH POPULATION TECHNIQUE, OPEN ANALYSIS DIALOG\n");
-populationLearn(evaluateAndPerformance,2,1,100,100);
+populationLearn(evaluateAndPerformance,2,1,10,10);
 
 printf("GENERATE RANDOM NETWORK , TRAIN ON OR WITH POPULATION TECHNIQUE, OPEN ANALYSIS DIALOG\n");
-populationLearn(evaluateOrPerformance,2,1,100,100);
+populationLearn(evaluateOrPerformance,2,1,10,10);
 
 printf("GENERATE RANDOM NETWORK , TRAIN ON NOR WITH POPULATION TECHNIQUE, OPEN ANALYSIS DIALOG\n");
-populationLearn(evaluateNorPerformance,2,1,100,100);
+populationLearn(evaluateNorPerformance,2,1,10,10);
 
 printf("GENERATE RANDOM NETWORK , TRAIN ON NOT WITH POPULATION TECHNIQUE, OPEN ANALYSIS DIALOG\n");
-populationLearn(evaluateNotPerformance,1,1,100,100);
+populationLearn(evaluateNotPerformance,1,1,10,10);
 
 printf("GENERATE RANDOM NETWORK , TRAIN ON IDENTITY WITH POPULATION TECHNIQUE, OPEN ANALYSIS DIALOG\n");
-populationLearn(evaluateIdentityPerformance,1,1,100,100);
+populationLearn(evaluateIdentityPerformance,1,1,10,10);
 
 
 
 
 
-/*
+
 
 
 printf("GENERATE RANDOM NETWORK , TRAIN ON IDENTITY WITH SINGLE SUCCESSOR TECHNIQUE, OPEN ANALYSIS DIALOG\n");
@@ -106,7 +106,7 @@ learn(evaluateAdditionPerformance,6,4);
 
 
 
-*/
+
 
 exit(0);
 }

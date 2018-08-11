@@ -1,7 +1,7 @@
 #ifndef BRAIN_H
 #define BRAIN_H
 
-#define NEURON_COUNT 17
+#define NEURON_COUNT 20
 
 struct neuron{
 float age;
@@ -24,7 +24,7 @@ float age;
 
 brain * generateBasicBrain();
 brain * generateXorBrain();
-void mutateBrain(brain * b);
+void mutateBrain(brain * b,int minInputCount,int minOutputCount);
 void advanceBrain(brain * b, int inputs[], int inputCount,int outputs[], int outputCount);
 brain * forkBrain(brain * oldBrain);
 void freeBrain(brain * b );

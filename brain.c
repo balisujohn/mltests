@@ -114,6 +114,9 @@ allocates and initializes a basic random brain with NEURON_COUNT starting neuron
 */
 brain * generateBasicBrain()
 {
+	assert(NEURON_COUNT > 1);
+
+
 	brain * b  = malloc(sizeof(brain));
 	b->neuronCount = NEURON_COUNT;
 	b->neurons = malloc(sizeof(neuron) * NEURON_COUNT);
@@ -203,7 +206,7 @@ brain * generateXorBrain()
 randomly mutates a brain. TODO add mutation params
 */
 
-void mutateBrain(brain * b){
+void mutateBrain(brain * b, int minInputCount, int minOutputCount){
 
 
 	for(int i = 0 ; i < b->neuronCount; i++)
@@ -282,7 +285,7 @@ void mutateBrain(brain * b){
 			b->neurons = realloc(b->neurons, sizeof(neuron) * b->neuronCount);
 			initializeNeuron(&(b->neurons[b->neuronCount-1]), b->neuronCount);
 		}	
-		else 
+		else if(b->neuronCount > 1 + minInputCount +  minOutputCount) 
 		{
 			b->neuronCount--;
 			b->neurons = realloc(b->neurons, sizeof(neuron)* b->neuronCount);
@@ -325,7 +328,7 @@ void advanceBrain(brain * b, int  inputs[], int inputCount, int  outputs[], int 
 
 	//if we've been passed a brain with too few neurons we will do nothing
 
-	if (b->neuronCount < inputCount+outputCount+1)return;
+	assert(! (b->neuronCount < inputCount+outputCount+1));
 
 
 	inputBrain(b,inputs, inputCount);
