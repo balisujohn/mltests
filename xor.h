@@ -1,6 +1,10 @@
 #ifndef XOR_H
 #define XOR_H
 
+//John Balis 2018
+//for support email balisujohn@gmail.com
+
+
 
 int baseLineXorTest();
 //void xorLearn();

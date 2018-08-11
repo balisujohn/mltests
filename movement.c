@@ -2,6 +2,12 @@
 #include<stdio.h>
 #include"world.h"
 
+
+//John Balis 2018
+//for support email balisujohn@gmail.com
+
+
+
 //For now wraparound is not considered, a crafty agent could learn to exploit this,
 void moveTowards(int myX, int myY, int targetX, int targetY, int * resultX, int * resultY){
 

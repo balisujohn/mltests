@@ -5,6 +5,11 @@
 #include"hunter.h"
 #include"utils.h"
 
+
+//John Balis 2018
+//for support email balisujohn@gmail.com
+
+
 world * generateWorld()
 {
 	world * w = malloc(sizeof(world));

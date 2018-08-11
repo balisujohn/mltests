@@ -7,6 +7,12 @@
 #include"learning.h"
 
 
+
+//John Balis 2018
+//for support email balisujohn@gmail.com 
+
+
+
 /*
    simple greedy  learning algorithm. 
 
@@ -74,7 +80,7 @@ void learn( int (*f)(brain *), int inputCount, int outputCount)
 	printBrainToFile(best, fp);
 	fclose(fp);
 	printBrain(best);
-	analyzeBrain(best,inputCount,outputCount);
+	//analyzeBrain(best,inputCount,outputCount);
 	freeBrain(best);
 
 }

@@ -5,7 +5,11 @@
 #include"xor.h"
 #include"learning.h"
 #include"smath.h"
-//really basic tests
+
+
+//John Balis 2018
+//for support email balisujohn@gmail.com
+
 
 int main (int argc, char *  argv[])
 {
@@ -21,7 +25,7 @@ printf("PREMADE XOR NETWORK VERIFIED\n");
 
 /*
 printf("GENERATE RANDOM NETWORK , TRAIN ON IDENTITY WITH POPULATION TECHNIQUE, OPEN ANALYSIS DIALOG\n");
-populationLearn(evaluateAdditionPerformance,1,1,100,100);
+populationLearn(evaluateAdditionPerformance,1,1,10,10);
 */
 
 

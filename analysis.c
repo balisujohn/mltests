@@ -3,6 +3,10 @@
 #include<assert.h>
 #include"brain.h"
 
+//John Balis 2018
+//for support email balisujohn@gmail.com 
+
+
 /*
 here we allow the user to probe a network to ensure that it works correctly. 
 Right now the way to quit the dialog is by entering an invalid character.

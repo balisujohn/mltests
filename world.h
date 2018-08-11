@@ -9,6 +9,8 @@
 #define TYPE_AGENT  2
 
  
+//John Balis 2018
+//for support email balisujohn@gmail.com
 
 
 

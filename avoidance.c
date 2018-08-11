@@ -2,7 +2,8 @@
 #include<stdio.h>
 #include"world.h"
 
-
+//John Balis 2018
+//for support email balisujohn@gmail.com 
 
 int main(int arc, char * argv[])
 {

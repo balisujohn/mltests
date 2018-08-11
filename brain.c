@@ -5,6 +5,11 @@
 #include"brain.h"
 #include"utils.h"
 
+//John Balis 2018
+//for support email balisujohn@gmail.com
+
+
+
 /*
 copies an existing brain, preserving state;
 */

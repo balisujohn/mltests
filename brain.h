@@ -3,6 +3,10 @@
 
 #define NEURON_COUNT 20
 
+//John Balis 2018
+//for support email balisujohn@gmail.com 
+
+
 struct neuron{
 float age;
 int targetCount;

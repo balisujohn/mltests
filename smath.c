@@ -5,6 +5,10 @@
 #include"utils.h"
 
 
+//John Balis 2018
+//for support email balisujohn@gmail.com
+
+
 
 /*
 evaluates the correctness of adding two integers each represented by 3 bits

@@ -2,6 +2,9 @@
 #define MOVEMENT_H
 
 
+//John Balis 2018
+//for support email balisujohn@gmail.com 
+
 void moveTowards(int myX, int myY, int targetX, int targetY, int * resultX, int * resultY);
 
 #endif

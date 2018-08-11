@@ -6,6 +6,11 @@
 #include"analysis.h"
 
 
+//John Balis 2018
+//for support email balisujohn@gmail.com
+
+
+
 /*
 
 evaluates a brain's performance on binary and,
