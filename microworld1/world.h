@@ -5,13 +5,29 @@
 #define BOARD_SIZE 10
 
 
+
+#define TYPE_ANY 0
 #define TYPE_HUNTER  1 
 #define TYPE_AGENT  2
+
+
+#define DIRECTION_UP 0
+#define DIRECTION_RIGHT 1
+#define DIRECTION_DOWN 2
+#define DIRECTION_LEFT 3
+
+#include"../brain.h"
 
  
 //John Balis 2018
 //for support email balisujohn@gmail.com
 
+
+
+struct agentInfo{
+int direction;
+int health;
+} typedef agentInfo;
 
 
 struct object{
@@ -40,7 +56,7 @@ struct world{
 world * generateWorld();
 void printWorldPop(world * w);
 void initializeBasicWorld(world * w);
-void advanceWorldState(world * w);
+void advanceWorldState(world * w, brain * b);
 void removeObject(zone * z, object * o );
 void appendObject(zone * z, object * o);
 float randFloat();
