@@ -2,13 +2,20 @@
 #define WORLD_H
 
 
-#define BOARD_SIZE 10
+#define BOARD_SIZE 7
 
 
 
 #define TYPE_ANY 0
 #define TYPE_HUNTER  1 
 #define TYPE_AGENT  2
+
+#define ACTION_MOVE_RIGHT 0
+#define ACTION_MOVE_LEFT 1
+#define ACTION_MOVE_FORWARD 2
+#define ACTION_MOVE_BACK 3
+#define ACTION_TURN_RIGHT 4
+#define ACTION_TURN_LEFT 5
 
 
 #define DIRECTION_UP 0

@@ -34,7 +34,7 @@ void printWorldPop(world * w)
 	{
 		for(int c = 0; c < BOARD_SIZE; c++)
 		{
-			fprintf(stdout,"%d",w->zones[i][c].objCount);
+			fprintf(stdout,"%d",w->zones[c][i].objCount);
 		}
 		fprintf(stdout,"\n");
 
@@ -110,9 +110,9 @@ void initializeBasicWorld(world * w)
 int atLocation(world * w, int objectType, int x , int y)
 {
 	zone * location = &(w->zones[x][y]);
-
 	object * curr = location->head;
-	while (curr = curr->next) 
+	printf("X: %d , Y : %d\n",x ,y);
+	while (curr = curr->next)
 	{
 		if (objectType == TYPE_ANY)
 		{
@@ -143,6 +143,8 @@ int painSignal(world * w, int x, int y)
 */ 
 int lookDistance(world * w, agentInfo * a, int direction, int x, int y)
 {
+
+
 	switch (a->direction){
 
 		case DIRECTION_UP:
@@ -152,17 +154,17 @@ int lookDistance(world * w, agentInfo * a, int direction, int x, int y)
 			return 1;
 			}
 			
-			for (int i = y; i--; y>=0)
+			for (int i = y-1; i>=0;i--)
 			{
 				if (atLocation(w,TYPE_ANY,x,i))
 				{
 				return abs(y-i);
 				}
-
+			
 
 			}
-
-			return y;
+			printf("reached\n");
+			return y + 1;
 
 			
 
@@ -173,7 +175,7 @@ int lookDistance(world * w, agentInfo * a, int direction, int x, int y)
 			return 1;
 			}
 			
-			for (int i = x; i++; x<BOARD_SIZE)
+			for (int i = x +1; i<BOARD_SIZE; i++)
 			{
 				if (atLocation(w,TYPE_ANY,i,y))
 				{
@@ -182,14 +184,13 @@ int lookDistance(world * w, agentInfo * a, int direction, int x, int y)
 
 
 			}
-
-			return BOARD_SIZE-x;
-
-
+			printf("reached\n");
+			return (BOARD_SIZE-x); 
 
 
 
-			break;
+
+
 
 		case DIRECTION_LEFT:
 
@@ -198,20 +199,19 @@ int lookDistance(world * w, agentInfo * a, int direction, int x, int y)
 			return 1;
 			}
 			
-			for (int i = x; i--; y>=0)
+			for (int i = x-1; i>=0;i--)
 			{
 				if (atLocation(w,TYPE_ANY,i,y))
 				{
-				return abs(x-i);
+				return abs(x-i) + 1;
 				}
 
 
 			}
+			printf("reached\n");
+			return x + 1 ;
 
-			return x;
 
-
-			break;
 
 		case DIRECTION_DOWN:
 
@@ -220,7 +220,7 @@ int lookDistance(world * w, agentInfo * a, int direction, int x, int y)
 			return 1;
 			}
 			
-			for (int i = y; i++; y<BOARD_SIZE)
+			for (int i = y+1; i<BOARD_SIZE;i++)
 			{
 				if (atLocation(w,TYPE_ANY,x,i))
 				{
@@ -229,16 +229,14 @@ int lookDistance(world * w, agentInfo * a, int direction, int x, int y)
 
 
 			}
-
-			return BOARD_SIZE-y;
-
+			printf("reached\n");
+			return (BOARD_SIZE-y);
 
 
 
 
 
 	}
-
 
 
 }
@@ -299,8 +297,12 @@ void advanceObject(world * w, object * o, brain * b,  int x, int y)
 				}
 				printf("\n");
 				printf("OUTPUT MODE: %d\n", outputMode);
+				/*case outputMode{
+				
 
 
+				}
+*/
 				break;
 
 		}

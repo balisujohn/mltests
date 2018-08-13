@@ -80,7 +80,7 @@ void learn( int (*f)(brain *), int inputCount, int outputCount)
 	printBrainToFile(best, fp);
 	fclose(fp);
 	printBrain(best);
-	//analyzeBrain(best,inputCount,outputCount);
+	analyzeBrain(best,inputCount,outputCount);
 	freeBrain(best);
 
 }
@@ -166,7 +166,7 @@ void multiSucc( int (*f)(brain *), int inputCount, int outputCount)
 	fclose(fp);
 	printBrain(best);
 
-	//analyzeBrain(best, inputCount, outputCount);
+	analyzeBrain(best, inputCount, outputCount);
 
 }
 
@@ -291,7 +291,7 @@ void populationLearn( int (*f)(brain *), int inputCount, int outputCount, int po
 	printBrainToFile(bestPopulationBrain, fp);
 	fclose(fp);
 	printBrain(bestPopulationBrain);
-	//analyzeBrain(bestPopulationBrain,inputCount,outputCount);
+	analyzeBrain(bestPopulationBrain,inputCount,outputCount);
 	freeBrain(bestPopulationBrain);
 
 }

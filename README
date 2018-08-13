@@ -45,10 +45,8 @@ weight change mutation, connection target change mutation, neuron addition/remov
 Known Issues:
 
 
-The network will sometimes get stuck on xor, but when it does succeed it often does so very fast. Adding propper population
-management to the algorithm will fix this.
-
-
+malloc is not entirely used safely, this can result in segfaults if the program runs out of memory. This, along with memory leak issues, is 
+something I plan to address soon.
 
 Questions/concerns:
 

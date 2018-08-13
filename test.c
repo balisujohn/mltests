@@ -16,8 +16,6 @@ int main (int argc, char *  argv[])
 
 
 
-// this tests our existing xor code
-// might get stuck sometimes with current techniques
 
 printf("VERIFYING PREMADE XOR NETWORK\n");
 assert(baseLineXorTest());

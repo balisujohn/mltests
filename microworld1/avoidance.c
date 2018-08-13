@@ -20,15 +20,18 @@ advanceWorldState(w,b);
 printWorldPop(w);
 
 advanceWorldState(w,b);
-advanceWorldState(w,b);
-advanceWorldState(w,b);
-advanceWorldState(w,b);
-advanceWorldState(w,b);
-advanceWorldState(w,b);
-advanceWorldState(w,b);
-advanceWorldState(w,b);
+printWorldPop(w);
 advanceWorldState(w,b);
 printWorldPop(w);
+advanceWorldState(w,b);
+printWorldPop(w);
+advanceWorldState(w,b);
+printWorldPop(w);
+advanceWorldState(w,b);
+printWorldPop(w);
+advanceWorldState(w,b);
+printWorldPop(w);
+
 
 exit(0);
 }
