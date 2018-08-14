@@ -18,14 +18,13 @@ int main (int argc, char *  argv[])
 
 
 printf("VERIFYING PREMADE XOR NETWORK\n");
-assert(baseLineXorTest());
+//assert(baseLineXorTest());
 printf("PREMADE XOR NETWORK VERIFIED\n");
 
-/*
-printf("GENERATE RANDOM NETWORK , TRAIN ON IDENTITY WITH POPULATION TECHNIQUE, OPEN ANALYSIS DIALOG\n");
-populationLearn(evaluateAdditionPerformance,1,1,10,10);
-*/
 
+
+printf("GENERATE RANDOM NETWORK , TRAIN ON ADDITION WITH POPULATION TECHNIQUE, OPEN ANALYSIS DIALOG\n");
+multiSucc(evaluateAdditionPerformance,6,4);
 
 
 
@@ -46,9 +45,6 @@ populationLearn(evaluateNotPerformance,1,1,10,10);
 
 printf("GENERATE RANDOM NETWORK , TRAIN ON IDENTITY WITH POPULATION TECHNIQUE, OPEN ANALYSIS DIALOG\n");
 populationLearn(evaluateIdentityPerformance,1,1,10,10);
-
-
-
 
 
 
@@ -102,8 +98,8 @@ multiSucc(evaluateXorPerformance,2,1);
 
 
 
-printf("GENERATE RANDOM NETWORK , TRAIN ON ADDITION WITH SINGLE SUCCESSOR TECHNIQUE, OPEN ANALYSIS DIALOG\n");
-learn(evaluateAdditionPerformance,6,4);
+//printf("GENERATE RANDOM NETWORK , TRAIN ON ADDITION WITH SINGLE SUCCESSOR TECHNIQUE, OPEN ANALYSIS DIALOG\n");
+//learn(evaluateAdditionPerformance,6,4);
 
 
 

@@ -2,6 +2,7 @@
 #include<stdlib.h>
 #include<time.h>
 #include<limits.h>
+#include <math.h>
 #include"utils.h"
 
 
@@ -41,4 +42,15 @@ returns 1 or 0 with a 50-50 probablitiy
 int coinFlip()
 {
 return ((rand()-rand())>0);
+}
+
+
+float sigmoid(float x)
+{
+     return 1 / (1 + exp((double) -x));
+}
+
+float mytanh(float x)
+{
+	return 2*sigmoid(2*x)-1;
 }

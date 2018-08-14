@@ -8,6 +8,8 @@
 float randFloat();
 int randRange(int limit);
 int coinFlip();
+float sigmoid(float x);
+float mytanh(float x);
 
 
 

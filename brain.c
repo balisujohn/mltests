@@ -347,7 +347,7 @@ void advanceBrain(brain * b, int  inputs[], int inputCount, int  outputs[], int 
 	for(int i = 0; i < b->neuronCount; i++)
 	{
 		b->neurons[i].fired = 0;
-		if (b->neurons[i].excitation > b->neurons[i].activationPotential ){
+		if (mytanh(b->neurons[i].excitation) > b->neurons[i].activationPotential ){ // TODO: Think about the gate function (mytanh)
 			for(int c = 0; c < b->neurons[i].targetCount; c++)
 			{
 
