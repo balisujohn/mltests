@@ -54,6 +54,7 @@ struct world{
 	int agentX;
 	int agentY;
 	int age;
+	int dead;
 	zone zones[BOARD_SIZE][BOARD_SIZE];
 
 }typedef world;
@@ -63,6 +64,7 @@ struct world{
 world * generateWorld();
 void printWorldPop(world * w);
 void initializeBasicWorld(world * w);
+void freeWorld(world * w);
 void advanceWorldState(world * w, brain * b);
 void removeObject(zone * z, object * o );
 void appendObject(zone * z, object * o);

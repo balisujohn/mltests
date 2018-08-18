@@ -3,6 +3,7 @@
 #include<limits.h>
 #include"world.h"
 #include"hunter.h"
+#include"agent.h"
 #include"../utils.h"
 #include"../brain.h"
 
@@ -16,6 +17,7 @@ world * generateWorld()
 	w->agentX = -1;
 	w->agentY = -1;
 	w->age = 0;
+	w->dead = 0;
 	for(int i = 0; i < BOARD_SIZE; i++)
 	{
 		for(int c = 0; c < BOARD_SIZE; c++)
@@ -27,6 +29,32 @@ world * generateWorld()
 	}
 	return w;
 }
+
+/*
+   frees a world
+ */
+void freeWorld(world * w)
+{
+	for(int i = 0; i < BOARD_SIZE; i++)
+	{
+		for(int c = 0; c < BOARD_SIZE; c++)
+		{
+
+			object * curr = w->zones[i][c].head->next;
+			while(curr)
+			{	
+				object * temp  = curr->next;
+				free(curr);
+				curr = temp;			
+			}
+		}
+
+	}
+	free(w);
+
+
+}
+
 
 void printWorldPop(world * w)
 {
@@ -140,7 +168,7 @@ int painSignal(world * w, int x, int y)
 
 /*
    returns the distance to the nearest object, objects occupying the same zone are not visible
-*/ 
+ */ 
 int lookDistance(world * w, agentInfo * a, int direction, int x, int y)
 {
 
@@ -151,40 +179,47 @@ int lookDistance(world * w, agentInfo * a, int direction, int x, int y)
 
 			if (y == 0)
 			{
-			return 1;
+				printf("WALL OBSERVED\n");
+				return 1;
 			}
-			
+
 			for (int i = y-1; i>=0;i--)
 			{
 				if (atLocation(w,TYPE_ANY,x,i))
 				{
-				return abs(y-i);
+					printf("OBJECT OBSERVED\n");
+					return abs(y-i);
 				}
-			
+
 
 			}
-			printf("reached\n");
+			printf("WALL OBSERVED\n");
 			return y + 1;
 
-			
+
 
 		case DIRECTION_RIGHT:
 
 			if (x == BOARD_SIZE-1)
 			{
-			return 1;
+
+				printf("WALL OBSERVED\n");
+				return 1;
 			}
-			
+
 			for (int i = x +1; i<BOARD_SIZE; i++)
 			{
 				if (atLocation(w,TYPE_ANY,i,y))
 				{
-				return abs(x-i);
+					printf("OBJECT OBSERVED\n");
+
+					return abs(x-i);
 				}
 
 
 			}
-			printf("reached\n");
+
+			printf("WALL OBSERVED\n");
 			return (BOARD_SIZE-x); 
 
 
@@ -196,19 +231,25 @@ int lookDistance(world * w, agentInfo * a, int direction, int x, int y)
 
 			if (x == 0)
 			{
-			return 1;
+
+				printf("WALL OBSERVED\n");
+
+				return 1;
 			}
-			
+
 			for (int i = x-1; i>=0;i--)
 			{
 				if (atLocation(w,TYPE_ANY,i,y))
 				{
-				return abs(x-i) + 1;
+					printf("OBJECT OBSERVED\n");
+
+					return abs(x-i);
 				}
 
 
 			}
-			printf("reached\n");
+			printf("WALL OBSERVED\n");
+
 			return x + 1 ;
 
 
@@ -217,19 +258,23 @@ int lookDistance(world * w, agentInfo * a, int direction, int x, int y)
 
 			if (y == BOARD_SIZE-1)
 			{
-			return 1;
+				printf("WALL OBSERVED\n");
+
+				return 1;
 			}
-			
+
 			for (int i = y+1; i<BOARD_SIZE;i++)
 			{
 				if (atLocation(w,TYPE_ANY,x,i))
 				{
-				return abs(y-i);
+					printf("OBJECT OBSERVED\n");
+
+					return abs(y-i);
 				}
 
 
 			}
-			printf("reached\n");
+			printf("WALL OBSERVED\n");
 			return (BOARD_SIZE-y);
 
 
@@ -271,38 +316,87 @@ void advanceObject(world * w, object * o, brain * b,  int x, int y)
 				}
 
 				int distance = lookDistance(w, info,info->direction,x,y);
-				
+
 				if(distance > 7)
 				{
-				inputs[1] = 1;
-				inputs[2] = 1;
-				inputs[3] = 1;
+					inputs[1] = 1;
+					inputs[2] = 1;
+					inputs[3] = 1;
 				}
 				else
 				{
 
-				inputs[1] =(distance >>2) & 1;
-				inputs[2] =(distance >>1) & 1;
-				inputs[3] =distance  & 1;
+					inputs[1] =(distance >>2) & 1;
+					inputs[2] =(distance >>1) & 1;
+					inputs[3] =distance  & 1;
 				}
 
 				advanceBrain(b,inputs,4,outputs,3);
-				
+
 				int outputMode = (outputs[0]) | (outputs[1]<<1) | (outputs[2]<<2);
 				printf("DIRECTION: %d\n", info->direction);
 				printf("INPUT MODE: ");
 				for(int i = 0; i < 4; i++ )
 				{
-				printf("%d", inputs[i]);
+					printf("%d", inputs[i]);
 				}
 				printf("\n");
 				printf("OUTPUT MODE: %d\n", outputMode);
-				/*case outputMode{
-				
+				int movementDirection;
+				switch (outputMode){
+					case 0:
 
+						if(++(info->direction) >=4)
+						{
+							info->direction = 0;
+						} 
+						break;
+
+					case 1: 
+						if(--(info->direction) < 0)
+						{
+							info->direction = 3;
+						} 
+						break;
+
+					case 2:
+						moveAgent(w,o,x,y,info->direction);
+						break; 
+					case 3: 
+						movementDirection = info->direction;
+						if((movementDirection += 1) >= 4 )
+							movementDirection = 0;
+						moveAgent(w,o,x,y,movementDirection);
+						break;
+					case 4: 
+						movementDirection = info->direction;
+						if ((movementDirection += 2)>= 4)
+						{	
+							movementDirection = movementDirection -4;
+
+						}
+						moveAgent(w,o,x,y,movementDirection);
+						break;
+					case 5:
+						movementDirection = info->direction;
+						if ((movementDirection -= 1) <  0)
+						{	
+							movementDirection = 3;
+
+						}
+						moveAgent(w,o,x,y,movementDirection);
+						break;
 
 				}
-*/
+
+				//check for death
+				if(info->health <= 0)	
+				{
+					w->dead = 1;
+				}	
+
+
+
 				break;
 
 		}
@@ -323,6 +417,7 @@ void advanceWorldState(world * w, brain * b)
 			object  * curr = w->zones[i][c].head->next;
 			while (curr)
 			{
+				printf("%p\n",curr);
 				advanceObject(w,  curr,b, i , c);
 				curr = curr->next;
 			}
