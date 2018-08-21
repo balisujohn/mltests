@@ -22,13 +22,13 @@
 
 
  */
-void learn( int (*f)(brain *), int inputCount, int outputCount)
+void learn( float (*f)(brain *), int inputCount, int outputCount)
 {
 	srand(time(0));
 
 	brain * best =generateBasicBrain();
 	int rigor = 10000;
-	int score = 0;
+	float score = 0;
 	int sum =0;
 	int counter=0;
 	int validated = 0;
@@ -43,12 +43,12 @@ void learn( int (*f)(brain *), int inputCount, int outputCount)
 
 
 
-		int newScore = (*f)(testInstance);
+		float newScore = (*f)(testInstance);
 		freeBrain(testInstance);
 		if (newScore > score)
 		{
 
-			printf("NEW BEST SCORE: %d\n" , newScore);
+			printf("NEW BEST SCORE: %f\n" , newScore);
 			score = newScore;
 			freeBrain(best);
 			best =candidate;
@@ -94,13 +94,13 @@ void learn( int (*f)(brain *), int inputCount, int outputCount)
 
 
 
-void multiSucc( int (*f)(brain *), int inputCount, int outputCount)
+void multiSucc( float (*f)(brain *), int inputCount, int outputCount)
 {
 	srand(time(0));
 
 	brain * best =generateBasicBrain();
 	int rigor = 10000;
-	int score = 0;
+	float score = 0;
 	int sum =0;
 	int counter=0;
 	int validated = 0;
@@ -119,7 +119,7 @@ void multiSucc( int (*f)(brain *), int inputCount, int outputCount)
 			mutateBrain(children[i],inputCount,outputCount);
 		}
 
-		int childScore = score;
+		float childScore = score;
 		brain * bestChild;	
 
 		for(int i = 0 ; i < 500; i++ )
@@ -127,10 +127,10 @@ void multiSucc( int (*f)(brain *), int inputCount, int outputCount)
 			brain * candidate = forkBrain(best);
 			mutateBrain(candidate,inputCount,outputCount);
 
-			int newChildScore = (*f)(candidate);
+			float newChildScore = (*f)(candidate);
 			if (newChildScore >  childScore)
 			{
-				printf("CHILD ACCEPTED: %d\n", newChildScore);
+				printf("CHILD ACCEPTED: %f\n", newChildScore);
 				childScore = newChildScore;
 				bestChild = candidate;
 
@@ -139,7 +139,7 @@ void multiSucc( int (*f)(brain *), int inputCount, int outputCount)
 		if (childScore > score)
 		{
 
-			printf("NEW BEST SCORE: %d\n" , childScore);
+			printf("NEW BEST SCORE: %f\n" , childScore);
 			score = childScore;
 			freeBrain(best);
 			best =bestChild;
@@ -170,20 +170,20 @@ void multiSucc( int (*f)(brain *), int inputCount, int outputCount)
 
 }
 
-void populationLearn( int (*f)(brain *), int inputCount, int outputCount, int populationCount, int generations)
+void populationLearn( float (*f)(brain *), int inputCount, int outputCount, int populationCount, int generations)
 {
 	srand(time(0));
 
 
-	int bestScore[populationCount];
-	int avgScore[populationCount];
-	int stddev[populationCount];
+	float bestScore[populationCount];
+	float avgScore[populationCount];
+	float stddev[populationCount];
 
-	int improvementLikelyhoodHeuristic[populationCount];
+	float improvementLikelyhoodHeuristic[populationCount];
 
 
 	brain * bestPopulationBrain = NULL;
-	int bestPopulationScore = 0;
+	float bestPopulationScore = 0;
 
 
 
@@ -214,12 +214,12 @@ void populationLearn( int (*f)(brain *), int inputCount, int outputCount, int po
 
 
 
-			int newScore = (*f)(testInstance);
+			float newScore = (*f)(testInstance);
 			freeBrain(testInstance);
 			if (newScore > bestScore[i])
 			{
 
-				printf("NEW BEST SCORE: %d\n" , newScore);
+				printf("NEW BEST SCORE: %f\n" , newScore);
 				bestScore[i] = newScore;
 
 

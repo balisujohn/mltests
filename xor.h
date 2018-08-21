@@ -8,13 +8,13 @@
 
 int baseLineXorTest();
 //void xorLearn();
-int xorMultiSucc();
-int evaluateOrPerformance(brain * b);
-int evaluateNotPerformance(brain * b);
-int evaluateNorPerformance(brain * b );
-int evaluateXorPerformance(brain * b);
-int evaluateAndPerformance(brain * b);
-int evaluateIdentityPerformance(brain * b);
+float xorMultiSucc();
+float evaluateOrPerformance(brain * b);
+float evaluateNotPerformance(brain * b);
+float evaluateNorPerformance(brain * b );
+float evaluateXorPerformance(brain * b);
+float evaluateAndPerformance(brain * b);
+float evaluateIdentityPerformance(brain * b);
 
 
 

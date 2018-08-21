@@ -5,6 +5,7 @@ Here is a general list of planned tasks. Feel free to suggest tasks that you fee
 
 -------------- GENERAL TODO --------------
 -- Make a clear function for the brain
+-- wrap mallocs with asserts
 -- Use arraylist structures for neurons
 -- Start thinking about Temporal stuff!  (John and Will have ideas about this)
 

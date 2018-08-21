@@ -9,9 +9,9 @@
 
 
 
-int evaluateMicroWorldPerformance(brain * b)
+float evaluateMicroWorldPerformance(brain * b)
 {
-	const int trials = 100;
+	const int trials = 1000;
 	const int survivalTime = 100;	
 
 
@@ -39,6 +39,7 @@ int main(int arc, char * argv[])
 {
 
 	srand(time(0));
+	//populationLearn(evaluateMicroWorldPerformance, 4,3,10,10);
 	learn(evaluateMicroWorldPerformance, 4,3);
 	/*
 

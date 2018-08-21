@@ -17,7 +17,7 @@ an example input output would be
 001001 -> 0010 which is 1 + 1 = 2 
 
 */
-int evaluateAdditionPerformance(brain * b)
+float evaluateAdditionPerformance(brain * b)
 {
 	int score = 0;
 

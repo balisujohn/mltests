@@ -5,6 +5,6 @@
 //for support email balisujohn@gmail.com
 
 
-int evaluateAdditionPerformance(brain * b );
+float evaluateAdditionPerformance(brain * b );
 
 #endif

@@ -18,7 +18,7 @@ returns percent correctness
 
 
 */
-int evaluateAndPerformance(brain * b)
+float evaluateAndPerformance(brain * b)
 {
 	int score = 0;
 
@@ -84,7 +84,7 @@ returns percent correctness
 */
 
 
-int evaluateNorPerformance(brain * b )
+float evaluateNorPerformance(brain * b )
 {
 	int score = 0;
 
@@ -150,7 +150,7 @@ returns percent correctness
 */
 
 
-int evaluateIdentityPerformance(brain * b )
+float evaluateIdentityPerformance(brain * b )
 {
 	int score = 0;
 
@@ -186,7 +186,7 @@ int evaluateIdentityPerformance(brain * b )
 	if (result2==expectedResult2)score++;
 
 
-	return (score/2) * 100; // calculated like this for clarity
+	return (score/2.0) * 100; // calculated like this for clarity
 
 }
 
@@ -198,7 +198,7 @@ returns percent correctness
 
 */
 
-int evaluateNotPerformance(brain * b)
+float evaluateNotPerformance(brain * b)
 {
 	int score = 0;
 
@@ -248,7 +248,7 @@ returns percent correctness
 */
 
 
-int evaluateOrPerformance(brain * b)
+float evaluateOrPerformance(brain * b)
 {
 	int score = 0;
 
@@ -314,7 +314,7 @@ returns percent correctness
 */
 
 
-int evaluateXorPerformance(brain * b)
+float evaluateXorPerformance(brain * b)
 {
 	int score = 0;
 
