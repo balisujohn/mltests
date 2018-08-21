@@ -13,7 +13,7 @@ int evaluateMicroWorldPerformance(brain * b)
 {
 	const int trials = 100;
 	const int survivalTime = 100;	
-		
+
 
 	int score = 0;
 	for(int i = 0; i < trials; i ++)
@@ -21,10 +21,11 @@ int evaluateMicroWorldPerformance(brain * b)
 		world * w = generateWorld();
 		initializeBasicWorld(w);
 		brain * testInstance = forkBrain(b);
-		while(w->age < survivalTime & !(w->dead))	
+		while(w->age < survivalTime && !(w->dead))	
 		{
 			printWorldPop(w);
 			advanceWorldState(w,b);
+
 		}
 		score += w->age;
 		freeWorld(w);
@@ -34,31 +35,31 @@ int evaluateMicroWorldPerformance(brain * b)
 }
 
 
-	int main(int arc, char * argv[])
-	{
+int main(int arc, char * argv[])
+{
 
-		srand(time(0));
-		learn(evaluateMicroWorldPerformance, 4,3);
+	srand(time(0));
+	learn(evaluateMicroWorldPerformance, 4,3);
+	/*
 
 
-/*
 
-		world * w = generateWorld();
-		brain * b = generateBasicBrain();
-		printWorldPop(w);
-		initializeBasicWorld(w);
-		printWorldPop(w);
-		advanceWorldState(w,b);
-		printWorldPop(w);
+	   world * w = generateWorld();
+	   brain * b = generateBasicBrain();
+	   printWorldPop(w);
+	   initializeBasicWorld(w);
+	   printWorldPop(w);
+	   advanceWorldState(w,b);
+	   printWorldPop(w);
 
-		advanceWorldState(w,b);
-		printWorldPop(w);
-		advanceWorldState(w,b);
-		printWorldPop(w);
-		advanceWorldState(w,b);
-		printWorldPop(w);
-		advanceWorldState(w,b);
-		printWorldPop(w);
-*/
-		exit(0);
-	}
+	   advanceWorldState(w,b);
+	   printWorldPop(w);
+	   advanceWorldState(w,b);
+	   printWorldPop(w);
+	   advanceWorldState(w,b);
+	   printWorldPop(w);
+	   advanceWorldState(w,b);
+	   printWorldPop(w);
+
+	 */		exit(0);
+}

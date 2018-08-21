@@ -1,6 +1,7 @@
 #include<stdlib.h>
 #include<stdio.h>
 #include<limits.h>
+#include<assert.h>
 #include"world.h"
 #include"hunter.h"
 #include"agent.h"
@@ -24,6 +25,9 @@ world * generateWorld()
 		{
 			w->zones[i][c].objCount = 0;
 			w->zones[i][c].head = malloc(sizeof(object));
+			w->zones[i][c].head->next = NULL;
+			w->zones[i][c].head->prev = NULL;
+			w->zones[i][c].head->objectInfo = NULL;
 		}
 
 	}
@@ -41,12 +45,18 @@ void freeWorld(world * w)
 		{
 
 			object * curr = w->zones[i][c].head->next;
-			while(curr)
+			while(curr != NULL)
 			{	
+				if(curr->objectInfo!= NULL)
+				{
+				free(curr->objectInfo);
+
+				}
 				object * temp  = curr->next;
 				free(curr);
 				curr = temp;			
 			}
+			free(w->zones[i][c].head);
 		}
 
 	}
@@ -62,22 +72,23 @@ void printWorldPop(world * w)
 	{
 		for(int c = 0; c < BOARD_SIZE; c++)
 		{
-			fprintf(stdout,"%d",w->zones[c][i].objCount);
+			//printf(stdout,"%d",w->zones[c][i].objCount);
 		}
-		fprintf(stdout,"\n");
+		//f//printf(stdout,"\n");
 
 	}
-	printf("-----------------\n");
+	//printf("-----------------\n");
 }
 
 
 void appendObject(zone * z, object * o)
 {
-
+	assert(o != NULL);
+	//printf("APPENDING!\n");
 	object * head = z->head;
 	o->next = head->next;
 
-	if(o->next)
+	if(o->next != NULL)
 	{
 		o->next->prev = o;
 	}
@@ -88,12 +99,19 @@ void appendObject(zone * z, object * o)
 
 void removeObject(zone * z, object * o){
 
+	
+
 	object * curr = z->head->next;
-	while(curr)
+	assert(curr != NULL);
+	while(curr != NULL)
 	{
+		////printf("%p == %p\n?", o, curr );
 		if (o == curr)
 		{
 			o->prev->next = o->next;
+			if(o->next != NULL){
+			o->next->prev = o->prev;
+			}
 			o->prev = NULL;
 			o->next = NULL;
 			z->objCount--;
@@ -102,6 +120,7 @@ void removeObject(zone * z, object * o){
 
 		curr = curr->next;
 	}
+	////printf("SHOULD NOT BE REACHED\n");
 }
 
 
@@ -110,6 +129,8 @@ void initializeBasicWorld(world * w)
 	object * agent = malloc(sizeof(object));
 	agent->type = TYPE_AGENT;
 	agent->age = w->age;
+	agent->next = NULL;
+	agent->prev = NULL;
 
 	agentInfo * info = malloc(sizeof(agentInfo));
 	info-> direction = randRange(4); // for reference, see direction flags in world.h
@@ -127,7 +148,9 @@ void initializeBasicWorld(world * w)
 	object * hunter = malloc(sizeof(object));
 	hunter->type = TYPE_HUNTER;
 	hunter->age = w->age;	
-
+	hunter->objectInfo = NULL;
+	hunter->next =NULL;
+	hunter->prev =NULL;
 	x = randRange(BOARD_SIZE);
 	y = randRange(BOARD_SIZE);
 	appendObject(&(w->zones[x][y]),hunter);
@@ -139,7 +162,7 @@ int atLocation(world * w, int objectType, int x , int y)
 {
 	zone * location = &(w->zones[x][y]);
 	object * curr = location->head;
-	printf("X: %d , Y : %d\n",x ,y);
+	////printf("X: %d , Y : %d\n",x ,y);
 	while (curr = curr->next)
 	{
 		if (objectType == TYPE_ANY)
@@ -179,7 +202,7 @@ int lookDistance(world * w, agentInfo * a, int direction, int x, int y)
 
 			if (y == 0)
 			{
-				printf("WALL OBSERVED\n");
+				////printf("WALL OBSERVED\n");
 				return 1;
 			}
 
@@ -187,13 +210,13 @@ int lookDistance(world * w, agentInfo * a, int direction, int x, int y)
 			{
 				if (atLocation(w,TYPE_ANY,x,i))
 				{
-					printf("OBJECT OBSERVED\n");
+					////printf("OBJECT OBSERVED\n");
 					return abs(y-i);
 				}
 
 
 			}
-			printf("WALL OBSERVED\n");
+			////printf("WALL OBSERVED\n");
 			return y + 1;
 
 
@@ -203,7 +226,7 @@ int lookDistance(world * w, agentInfo * a, int direction, int x, int y)
 			if (x == BOARD_SIZE-1)
 			{
 
-				printf("WALL OBSERVED\n");
+				////printf("WALL OBSERVED\n");
 				return 1;
 			}
 
@@ -211,7 +234,7 @@ int lookDistance(world * w, agentInfo * a, int direction, int x, int y)
 			{
 				if (atLocation(w,TYPE_ANY,i,y))
 				{
-					printf("OBJECT OBSERVED\n");
+					////printf("OBJECT OBSERVED\n");
 
 					return abs(x-i);
 				}
@@ -219,7 +242,7 @@ int lookDistance(world * w, agentInfo * a, int direction, int x, int y)
 
 			}
 
-			printf("WALL OBSERVED\n");
+			////printf("WALL OBSERVED\n");
 			return (BOARD_SIZE-x); 
 
 
@@ -232,7 +255,7 @@ int lookDistance(world * w, agentInfo * a, int direction, int x, int y)
 			if (x == 0)
 			{
 
-				printf("WALL OBSERVED\n");
+				//printf("WALL OBSERVED\n");
 
 				return 1;
 			}
@@ -241,14 +264,14 @@ int lookDistance(world * w, agentInfo * a, int direction, int x, int y)
 			{
 				if (atLocation(w,TYPE_ANY,i,y))
 				{
-					printf("OBJECT OBSERVED\n");
+					//printf("OBJECT OBSERVED\n");
 
 					return abs(x-i);
 				}
 
 
 			}
-			printf("WALL OBSERVED\n");
+			//printf("WALL OBSERVED\n");
 
 			return x + 1 ;
 
@@ -258,7 +281,7 @@ int lookDistance(world * w, agentInfo * a, int direction, int x, int y)
 
 			if (y == BOARD_SIZE-1)
 			{
-				printf("WALL OBSERVED\n");
+				//printf("WALL OBSERVED\n");
 
 				return 1;
 			}
@@ -267,14 +290,14 @@ int lookDistance(world * w, agentInfo * a, int direction, int x, int y)
 			{
 				if (atLocation(w,TYPE_ANY,x,i))
 				{
-					printf("OBJECT OBSERVED\n");
+					//printf("OBJECT OBSERVED\n");
 
 					return abs(y-i);
 				}
 
 
 			}
-			printf("WALL OBSERVED\n");
+			//printf("WALL OBSERVED\n");
 			return (BOARD_SIZE-y);
 
 
@@ -296,15 +319,17 @@ void advanceObject(world * w, object * o, brain * b,  int x, int y)
 
 	if (o->age < w->age)
 	{
+
+		agentInfo * info;
 		switch (o->type) {
 
 			case TYPE_HUNTER:
-				printf("ADVANCED HUNTER AT: %d, %d\n", x, y);
+				//printf("ADVANCED HUNTER AT: %d, %d\n", x, y);
 				advanceHunter(w,o,x,y);
 				break;
 			case TYPE_AGENT:
-				printf("ADVANCED AGENT AT: %d, %d\n", x, y);	
-				agentInfo * info = (agentInfo *)(o->objectInfo);
+				//printf("ADVANCED AGENT AT: %d, %d\n", x, y);	
+				 info = (agentInfo *)(o->objectInfo);
 
 				int inputs[4] = {0,0,0,0};  
 				int outputs[3] = {0,0,0};
@@ -334,14 +359,14 @@ void advanceObject(world * w, object * o, brain * b,  int x, int y)
 				advanceBrain(b,inputs,4,outputs,3);
 
 				int outputMode = (outputs[0]) | (outputs[1]<<1) | (outputs[2]<<2);
-				printf("DIRECTION: %d\n", info->direction);
-				printf("INPUT MODE: ");
+				//printf("DIRECTION: %d\n", info->direction);
+				//printf("INPUT MODE: ");
 				for(int i = 0; i < 4; i++ )
 				{
-					printf("%d", inputs[i]);
+					//printf("%d", inputs[i]);
 				}
-				printf("\n");
-				printf("OUTPUT MODE: %d\n", outputMode);
+				//printf("\n");
+				//printf("OUTPUT MODE: %d\n", outputMode);
 				int movementDirection;
 				switch (outputMode){
 					case 0:
@@ -415,11 +440,14 @@ void advanceWorldState(world * w, brain * b)
 		for(int c = 0; c < BOARD_SIZE; c++)
 		{
 			object  * curr = w->zones[i][c].head->next;
-			while (curr)
+			while (curr!=NULL)
 			{
-				printf("%p\n",curr);
+				object * temp = curr->next;
+				//printf("%p\n",curr);
+				//printf("i: %i, c: %i\n", i, c);
+				printWorldPop(w);
 				advanceObject(w,  curr,b, i , c);
-				curr = curr->next;
+				curr = temp;
 			}
 		}
 
