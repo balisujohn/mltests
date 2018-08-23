@@ -282,7 +282,7 @@ void populationLearn( float (*f)(brain *), int inputCount, int outputCount, int 
 	{
 		freeBrain(population[i]);	
 	}
-
+	free(population);
 
 
 

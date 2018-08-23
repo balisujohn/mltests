@@ -11,8 +11,8 @@
 
 
 /*
-copies an existing brain, preserving state;
-*/
+   copies an existing brain, preserving state;
+ */
 brain * forkBrain(brain * oldBrain)
 {
 	brain * b  = malloc(sizeof(brain));
@@ -48,21 +48,26 @@ brain * forkBrain(brain * oldBrain)
 
 }
 
-/*
-frees a brain struct
+void freeNeuron(neuron *  n)
+{
+	free(n->potentialWeights);
+	free(n->potentialTimes);
+	free(n->targets);
 
-*/
+}
+
+
+/*
+   frees a brain struct
+
+ */
 void freeBrain(brain * b )
 {
 
 
 	for(int i = 0 ; i < b->neuronCount; i++)
-
 	{
-		free(b->neurons[i].potentialWeights);
-		free(b->neurons[i].potentialTimes);
-		free(b->neurons[i].targets);
-
+		freeNeuron(&(b->neurons[i]));
 	}
 
 	free(b->neurons);
@@ -72,9 +77,9 @@ void freeBrain(brain * b )
 
 
 /*
-initializes a random neuron. requires the number of other neurons as
-a range for selecting targets
-*/
+   initializes a random neuron. requires the number of other neurons as
+   a range for selecting targets
+ */
 
 void initializeNeuron(neuron * n,  int neuronCount )
 {
@@ -115,8 +120,8 @@ void initializeNeuron(neuron * n,  int neuronCount )
 }
 
 /*
-allocates and initializes a basic random brain with NEURON_COUNT starting neurons
-*/
+   allocates and initializes a basic random brain with NEURON_COUNT starting neurons
+ */
 brain * generateBasicBrain()
 {
 	assert(NEURON_COUNT > 1);
@@ -135,8 +140,8 @@ brain * generateBasicBrain()
 }
 
 /*
-generates a brain hardcoded to perform Xor
-*/
+   generates a brain hardcoded to perform Xor
+ */
 brain * generateXorBrain()
 {
 	brain * b  = malloc(sizeof(brain));
@@ -208,8 +213,8 @@ brain * generateXorBrain()
 
 
 /*
-randomly mutates a brain. TODO add mutation params
-*/
+   randomly mutates a brain. TODO add mutation params
+ */
 
 void mutateBrain(brain * b, int minInputCount, int minOutputCount){
 
@@ -292,6 +297,8 @@ void mutateBrain(brain * b, int minInputCount, int minOutputCount){
 		}	
 		else if(b->neuronCount > 1 + minInputCount +  minOutputCount) 
 		{
+			
+			freeNeuron(&(b->neurons[b->neuronCount-1]));
 			b->neuronCount--;
 			b->neurons = realloc(b->neurons, sizeof(neuron)* b->neuronCount);
 
@@ -304,9 +311,9 @@ void mutateBrain(brain * b, int minInputCount, int minOutputCount){
 }
 
 /*
-applies inputs to a brain. inputs will be applied to neurons 1-targetCount
+   applies inputs to a brain. inputs will be applied to neurons 1-targetCount
 
-*/
+ */
 
 void inputBrain(brain * b, int * inputs, int targetCount)
 {
@@ -325,9 +332,9 @@ void inputBrain(brain * b, int * inputs, int targetCount)
 }
 
 /*
-advances the brain forward 1 discrete fram of time
+   advances the brain forward 1 discrete fram of time
 
-*/
+ */
 void advanceBrain(brain * b, int  inputs[], int inputCount, int  outputs[], int outputCount)
 {
 
@@ -387,14 +394,15 @@ void advanceBrain(brain * b, int  inputs[], int inputCount, int  outputs[], int 
 	{
 		outputs[i] = b->neurons[start+i].fired;
 	}
+	free(sums);
 }
 
 
 /*
-displays a brain's structure and weights
+   displays a brain's structure and weights
 
 
-*/
+ */
 void printBrain(brain * b ){
 	printf("ACTIVATION: ");
 	for(int i = 0; i < b->neuronCount; i++)
@@ -417,9 +425,9 @@ void printBrain(brain * b ){
 }
 
 /*
-saves a brain to file
+   saves a brain to file
 
-*/
+ */
 void printBrainToFile(brain * b ,FILE * fp){
 	fprintf(fp, "ACTIVATION: ");
 	for(int i = 0; i < b->neuronCount; i++)

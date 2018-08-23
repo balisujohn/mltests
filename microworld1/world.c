@@ -325,6 +325,7 @@ void advanceObject(world * w, object * o, brain * b,  int x, int y)
 
 			case TYPE_HUNTER:
 				//printf("ADVANCED HUNTER AT: %d, %d\n", x, y);
+				if(randFloat()>0.5)break;
 				advanceHunter(w,o,x,y);
 				break;
 			case TYPE_AGENT:
