@@ -51,8 +51,11 @@ void analyzeBrain(brain * b , int inputCount, int outputCount)
 			if(!run)break;
 
 		}
-		if(!run)break;
-
+		if(!run)
+		{
+		freeBrain(testInstance);	
+		break;
+		}
 
 		int advanceTo = 0;
 
@@ -76,7 +79,7 @@ void analyzeBrain(brain * b , int inputCount, int outputCount)
 			printf("%d",outputs[i]);
 		}
 		printf("\n");
-
+		freeBrain(testInstance);
 	}
 
 

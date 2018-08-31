@@ -49,7 +49,7 @@ learn(evaluateIdentityPerformance,1,1);
 
 
 printf("GENERATE RANDOM NETWORK , TRAIN ON IDENTITY WITH MULTI SUCCESSOR TECHNIQUE, OPEN ANALYSIS DIALOG\n");
-multiSucc(evaluateIdentityPerformance,1,1);
+multiSucc(evaluateIdentityPerformance,1,1,500);
 
 
 
@@ -59,28 +59,28 @@ learn(evaluateNotPerformance,1,1);
 
 
 printf("GENERATE RANDOM NETWORK , TRAIN ON NOT WITH MULTI SUCCESSOR TECHNIQUE, OPEN ANALYSIS DIALOG\n");
-multiSucc(evaluateNotPerformance,1,1);
+multiSucc(evaluateNotPerformance,1,1,500);
 
 printf("GENERATE RANDOM NETWORK , TRAIN ON AND WITH SINGLE SUCCESSOR TECHNIQUE, OPEN ANALYSIS DIALOG\n");
 learn(evaluateAndPerformance,2,1);
 
 
 printf("GENERATE RANDOM NETWORK , TRAIN ON AND WITH MULTI SUCCESSOR TECHNIQUE, OPEN ANALYSIS DIALOG\n");
-multiSucc(evaluateAndPerformance,2,1);
+multiSucc(evaluateAndPerformance,2,1,500);
 
 printf("GENERATE RANDOM NETWORK , TRAIN ON OR WITH SINGLE SUCCESSOR TECHNIQUE, OPEN ANALYSIS DIALOG\n");
 learn(evaluateOrPerformance,2,1);
 
 
 printf("GENERATE RANDOM NETWORK , TRAIN ON OR WITH MULTI SUCCESSOR TECHNIQUE, OPEN ANALYSIS DIALOG\n");
-multiSucc(evaluateOrPerformance,2,1);
+multiSucc(evaluateOrPerformance,2,1,500);
 
 printf("GENERATE RANDOM NETWORK , TRAIN ON NOR WITH SINGLE SUCCESSOR TECHNIQUE, OPEN ANALYSIS DIALOG\n");
 learn(evaluateNorPerformance,2,1);
 
 
 printf("GENERATE RANDOM NETWORK , TRAIN ON NOR WITH MULTI SUCCESSOR TECHNIQUE, OPEN ANALYSIS DIALOG\n");
-multiSucc(evaluateNorPerformance,2,1);
+multiSucc(evaluateNorPerformance,2,1,500);
 
 
 printf("GENERATE RANDOM NETWORK , TRAIN ON XOR WITH SINGLE SUCCESSOR TECHNIQUE, OPEN ANALYSIS DIALOG\n");
@@ -88,7 +88,7 @@ learn(evaluateXorPerformance,2,1);
 
 
 printf("GENERATE RANDOM NETWORK , TRAIN ON XOR WITH MULTI SUCCESSOR TECHNIQUE, OPEN ANALYSIS DIALOG\n");
-multiSucc(evaluateXorPerformance,2,1);
+multiSucc(evaluateXorPerformance,2,1,500);
 
 
 
@@ -96,7 +96,7 @@ multiSucc(evaluateXorPerformance,2,1);
 //learn(evaluateAdditionPerformance,6,4);
 
 printf("GENERATE RANDOM NETWORK , TRAIN ON ADDITION WITH POPULATION TECHNIQUE, OPEN ANALYSIS DIALOG\n");
-multiSucc(evaluateAdditionPerformance,6,4);
+multiSucc(evaluateAdditionPerformance,6,4,500);
 
 
 

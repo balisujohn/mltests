@@ -94,12 +94,11 @@ void learn( float (*f)(brain *), int inputCount, int outputCount)
 
 
 
-void multiSucc( float (*f)(brain *), int inputCount, int outputCount)
+void multiSucc( float (*f)(brain *), int inputCount, int outputCount, int childCount)
 {
 	srand(time(0));
 
-	brain * best =generateBasicBrain();
-	int rigor = 10000;
+	brain * best = generateBasicBrain();
 	float score = 0;
 	int sum =0;
 	int counter=0;
@@ -107,12 +106,12 @@ void multiSucc( float (*f)(brain *), int inputCount, int outputCount)
 
 
 
-	brain  ** children = malloc(sizeof(brain * ) * 500);
+	brain  ** children = malloc(sizeof(brain * ) * childCount);
 
 	while (!validated)
 	{
 
-		for(int i = 0 ; i < 500; i ++)
+		for(int i = 0 ; i < childCount; i ++)
 		{
 
 			children[i] = forkBrain(best);
@@ -120,21 +119,25 @@ void multiSucc( float (*f)(brain *), int inputCount, int outputCount)
 		}
 
 		float childScore = score;
-		brain * bestChild;	
+		brain * bestChild = NULL;	
 
-		for(int i = 0 ; i < 500; i++ )
+		for(int i = 0 ; i < childCount; i++ )
 		{
-			brain * candidate = forkBrain(best);
-			mutateBrain(candidate,inputCount,outputCount);
 
-			float newChildScore = (*f)(candidate);
+			float newChildScore = (*f)(children[i]);
 			if (newChildScore >  childScore)
 			{
 				printf("CHILD ACCEPTED: %f\n", newChildScore);
 				childScore = newChildScore;
-				bestChild = candidate;
+
+				if(bestChild != NULL)
+				{
+					freeBrain(bestChild);
+				}			
+				bestChild = forkBrain(children[i]);
 
 			}
+			freeBrain(children[i]);
 		}
 		if (childScore > score)
 		{
@@ -142,10 +145,14 @@ void multiSucc( float (*f)(brain *), int inputCount, int outputCount)
 			printf("NEW BEST SCORE: %f\n" , childScore);
 			score = childScore;
 			freeBrain(best);
-			best =bestChild;
+			best =forkBrain(bestChild);
 			//printBrain(best);
 			validated = (100 == score);
 
+		}
+		if(bestChild != NULL)
+		{
+		freeBrain(bestChild);
 		}
 		sum += childScore;
 		counter++;
@@ -159,15 +166,14 @@ void multiSucc( float (*f)(brain *), int inputCount, int outputCount)
 		}
 	}
 
-
+	free(children);
 	FILE *fp;
 	fp = fopen("log.txt", "w+");
 	printBrainToFile(best, fp);
 	fclose(fp);
 	printBrain(best);
-
 	analyzeBrain(best, inputCount, outputCount);
-
+	freeBrain(best);
 }
 
 void populationLearn( float (*f)(brain *), int inputCount, int outputCount, int populationCount, int generations)
@@ -229,7 +235,7 @@ void populationLearn( float (*f)(brain *), int inputCount, int outputCount, int 
 				if (bestScore[i] > bestPopulationScore)
 				{
 					bestPopulationScore = bestScore[i];
-					if(bestPopulationBrain)
+					if(bestPopulationBrain!=NULL)
 					{					
 						freeBrain(bestPopulationBrain);
 					}

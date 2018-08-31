@@ -1,7 +1,7 @@
 #ifndef BRAIN_H
 #define BRAIN_H
 
-#define NEURON_COUNT 8
+#define NEURON_COUNT 17
 
 //John Balis 2018
 //for support email balisujohn@gmail.com 
