@@ -31,7 +31,7 @@ float evaluateMicroWorldPerformance(brain * b)
 		freeWorld(w);
 		freeBrain(testInstance);
 	}	
-	return ((float)score /(trials * survivalTime)) * 100;
+	return (((float)score /(trials * survivalTime)) * 100)/.95;
 }
 
 

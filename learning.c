@@ -27,7 +27,6 @@ void learn( float (*f)(brain *), int inputCount, int outputCount)
 	srand(time(0));
 
 	brain * best =generateBasicBrain();
-	int rigor = 10000;
 	float score = 0;
 	int sum =0;
 	int counter=0;
@@ -53,7 +52,7 @@ void learn( float (*f)(brain *), int inputCount, int outputCount)
 			freeBrain(best);
 			best =candidate;
 			//printBrain(best);
-			validated = (100 == score);
+			validated = (100 <= score);
 
 		}
 		else
@@ -147,7 +146,7 @@ void multiSucc( float (*f)(brain *), int inputCount, int outputCount, int childC
 			freeBrain(best);
 			best =forkBrain(bestChild);
 			//printBrain(best);
-			validated = (100 == score);
+			validated = (100 <= score);
 
 		}
 		if(bestChild != NULL)
@@ -240,7 +239,7 @@ void populationLearn( float (*f)(brain *), int inputCount, int outputCount, int 
 						freeBrain(bestPopulationBrain);
 					}
 					bestPopulationBrain = forkBrain(population[brainIndex]);
-					if(newScore == 100)
+					if(newScore >= 100)
 					{
 						break;
 

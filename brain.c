@@ -120,6 +120,29 @@ void initializeNeuron(neuron * n,  int neuronCount )
 }
 
 /*
+copies the contents of a neuron into another neuron
+*/
+void copyNeuron(neuron * original, neuron * replica)
+{
+replica->age = original->age;
+replica->targetCount = original->targetCount;
+replica->fired = original->fired;
+replica->activationDuration = original->activationDuration;
+replica->activationPotential = original->activationPotential;
+replica->excitation = original->excitation;
+replica->mostRecentActivation= original->mostRecentActivation;
+replica->targets = original->targets;
+replica->potentialWeights= original->potentialWeights;
+replica->potentialTimes=original->potentialTimes;
+}
+
+
+
+
+
+
+
+/*
    allocates and initializes a basic random brain with NEURON_COUNT starting neurons
  */
 brain * generateBasicBrain()
@@ -140,7 +163,9 @@ brain * generateBasicBrain()
 }
 
 /*
-   generates a brain hardcoded to perform Xor
+ DEPRECATED:  
+ generates a brain hardcoded to perform Xor.
+ this doesn't work with a non-linear gate function, so it is deprecated
  */
 brain * generateXorBrain()
 {
@@ -285,6 +310,24 @@ void mutateBrain(brain * b, int minInputCount, int minOutputCount){
 		}
 	}
 
+
+	if(randFloat() > .9)
+	{
+		int index1 = randRange(b->neuronCount-1)+1;	
+		int index2 = randRange(b->neuronCount-1)+1;
+		while(index2 == index1)
+		{
+		index2 = randRange(b->neuronCount-1)+1;
+		}
+		neuron temp;
+		copyNeuron(&(b->neurons[index1]),&temp);
+		copyNeuron(&(b->neurons[index2]),&(b->neurons[index1]));
+		copyNeuron(&temp,&(b->neurons[index2]));
+	
+		
+
+
+	}
 
 
 	if(coinFlip() * coinFlip() * coinFlip())
