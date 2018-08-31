@@ -73,6 +73,7 @@ struct world{
 
 world * generateWorld();
 void printWorldPop(world * w);
+void printWorldInfo(world * w);
 void initializeBasicWorld(world * w);
 void freeWorld(world * w);
 void advanceWorldState(world * w, brain * b);

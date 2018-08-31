@@ -2,6 +2,7 @@
 #include<stdio.h>
 #include<time.h>
 #include"world.h"
+#include"m1analysis.h"
 #include"../brain.h"
 #include"../learning.h"
 //John Balis 2018
@@ -23,7 +24,7 @@ float evaluateMicroWorldPerformance(brain * b)
 		brain * testInstance = forkBrain(b);
 		while(w->age < survivalTime && !(w->dead))	
 		{
-			printWorldPop(w);
+			//printWorldPop(w);
 			advanceWorldState(w,b);
 
 		}
@@ -40,7 +41,9 @@ int main(int arc, char * argv[])
 
 	srand(time(0));
 	//populationLearn(evaluateMicroWorldPerformance, 4,3,10,10);
-	learn(evaluateMicroWorldPerformance, 4,3);
+        brain * resultBrain = learn(evaluateMicroWorldPerformance, 4,3);
+	analyzeBrainMicroWorld1(resultBrain);
+	
 	/*
 
 

@@ -6,9 +6,9 @@
 
 
 
-void learn( float (*f)(brain *), int inputCount, int outputCount);
-void multiSucc( float (*f)(brain *), int inputCount, int outputCount, int childCount);
-void populationLearn( float (*f)(brain *), int inputCount, int outputCount, int populationCount, int generations);
+brain * learn( float (*f)(brain *), int inputCount, int outputCount);
+brain *  multiSucc( float (*f)(brain *), int inputCount, int outputCount, int childCount);
+brain * populationLearn( float (*f)(brain *), int inputCount, int outputCount, int populationCount, int generations);
 
 
 

@@ -67,18 +67,71 @@ void freeWorld(world * w)
 }
 
 
+void printWorldInfo(world * w)
+{
+	for(int i = 0; i < BOARD_SIZE; i++)
+	{
+		for(int c = 0; c < BOARD_SIZE; c++)
+		{
+			if (i == w->agentX && c == w->agentY)
+			{
+				zone * agentZone = &(w->zones[i][c]);
+				object  * curr = agentZone->head->next;
+				while(curr->type != TYPE_AGENT)
+				{
+					curr = curr->next;
+				}
+				assert(curr != NULL);	
+
+				switch (((agentInfo * )(curr->objectInfo))->direction)
+				{
+
+					case DIRECTION_UP: 
+						printf("v");
+						break;
+
+					case DIRECTION_RIGHT: 
+						printf(">");
+						break;
+
+					case DIRECTION_DOWN: 
+						printf("^");
+						break;
+
+					case DIRECTION_LEFT: 
+						printf("<");
+						break;
+
+
+				}
+			}
+			else
+			{
+
+			printf("%d",w->zones[i][c].objCount);
+}		
+}
+		printf("\n");
+
+	}
+	printf("-----------------\n");
+
+
+}
+
+
 void printWorldPop(world * w)
 {
 	for(int i = 0; i < BOARD_SIZE; i++)
 	{
 		for(int c = 0; c < BOARD_SIZE; c++)
 		{
-			//printf(stdout,"%d",w->zones[c][i].objCount);
+			printf("%d",w->zones[c][i].objCount);
 		}
-		//f//printf(stdout,"\n");
+		printf("\n");
 
 	}
-	//printf("-----------------\n");
+	printf("-----------------\n");
 }
 
 
@@ -490,7 +543,7 @@ void advanceWorldState(world * w, brain * b)
 				object * temp = curr->next;
 				//printf("%p\n",curr);
 				//printf("i: %i, c: %i\n", i, c);
-				printWorldPop(w);
+				//printWorldPop(w);
 				advanceObject(w,  curr,b, i , c);
 				curr = temp;
 			}

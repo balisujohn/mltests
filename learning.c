@@ -22,7 +22,7 @@
 
 
  */
-void learn( float (*f)(brain *), int inputCount, int outputCount)
+brain * learn( float (*f)(brain *), int inputCount, int outputCount)
 {
 	srand(time(0));
 
@@ -80,7 +80,8 @@ void learn( float (*f)(brain *), int inputCount, int outputCount)
 	fclose(fp);
 	printBrain(best);
 	analyzeBrain(best,inputCount,outputCount);
-	freeBrain(best);
+	//freeBrain(best);
+	return best;
 
 }
 
@@ -93,7 +94,7 @@ void learn( float (*f)(brain *), int inputCount, int outputCount)
 
 
 
-void multiSucc( float (*f)(brain *), int inputCount, int outputCount, int childCount)
+brain * multiSucc( float (*f)(brain *), int inputCount, int outputCount, int childCount)
 {
 	srand(time(0));
 
@@ -172,10 +173,11 @@ void multiSucc( float (*f)(brain *), int inputCount, int outputCount, int childC
 	fclose(fp);
 	printBrain(best);
 	analyzeBrain(best, inputCount, outputCount);
-	freeBrain(best);
+//	freeBrain(best);
+	return best;
 }
 
-void populationLearn( float (*f)(brain *), int inputCount, int outputCount, int populationCount, int generations)
+brain * populationLearn( float (*f)(brain *), int inputCount, int outputCount, int populationCount, int generations)
 {
 	srand(time(0));
 
@@ -297,7 +299,8 @@ void populationLearn( float (*f)(brain *), int inputCount, int outputCount, int 
 	fclose(fp);
 	printBrain(bestPopulationBrain);
 	analyzeBrain(bestPopulationBrain,inputCount,outputCount);
-	freeBrain(bestPopulationBrain);
+	//freeBrain(bestPopulationBrain);
+	return bestPopulationBrain;
 
 }
 
