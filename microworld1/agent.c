@@ -19,9 +19,10 @@ void moveAgent(world * w, object * agent, int x, int y, int direction)
 		zone * currZone = &(w->zones[x][y]);
 		zone * destZone = &(w->zones[destX][destY]);
 //		printf("REMOVING AGENT FROM %i, %i\n", x, y);
-		removeObject(currZone, agent );
+//		removeObject(currZone, agent );
 //		printf("moveagent\n");
-		appendObject(destZone, agent);
+		pushMovement(w,currZone,destZone,agent);
+//		appendObject(destZone, agent);
 		w->agentX = destX;
 //		printf("moveagent\n");
 		w->agentY = destY;

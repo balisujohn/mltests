@@ -39,6 +39,7 @@ int health;
 
 struct object{
 	int type;
+	int actuation;
 	int age;
 	void * objectInfo;
 	struct object * next;
@@ -50,11 +51,20 @@ struct zone{
 	object * head;
 }typedef zone;
 
+struct movementQueueNode{
+	zone  * curr;
+	zone * dest;
+	object * o;	
+	struct movementQueueNode * next;
+} typedef movementQueueNode;
+
+
 struct world{
 	int agentX;
 	int agentY;
 	int age;
 	int dead;
+	movementQueueNode movementQueueHead;
 	zone zones[BOARD_SIZE][BOARD_SIZE];
 
 }typedef world;
@@ -68,7 +78,9 @@ void freeWorld(world * w);
 void advanceWorldState(world * w, brain * b);
 void removeObject(zone * z, object * o );
 void appendObject(zone * z, object * o);
-float randFloat();
+movementQueueNode * popMovement(world * w);
+void pushMovement(world * w, zone * curr, zone * dest, object * o);
+float randFloat(); // what is this
 int randRange(int limit);
 
 #endif

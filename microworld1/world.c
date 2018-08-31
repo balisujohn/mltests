@@ -19,6 +19,7 @@ world * generateWorld()
 	w->agentY = -1;
 	w->age = 0;
 	w->dead = 0;
+	w->movementQueueHead.next = NULL;
 	for(int i = 0; i < BOARD_SIZE; i++)
 	{
 		for(int c = 0; c < BOARD_SIZE; c++)
@@ -49,7 +50,7 @@ void freeWorld(world * w)
 			{	
 				if(curr->objectInfo!= NULL)
 				{
-				free(curr->objectInfo);
+					free(curr->objectInfo);
 
 				}
 				object * temp  = curr->next;
@@ -97,9 +98,40 @@ void appendObject(zone * z, object * o)
 	z->objCount++;
 }
 
+void pushMovement(world * w, zone * curr, zone * dest, object * o)
+{
+	assert(o != NULL);
+	//printf("APPENDING!\n");
+	movementQueueNode * newNode; 
+	assert( (newNode =malloc(sizeof(movementQueueNode)))!= NULL);
+	newNode->curr = curr;
+	newNode->dest = dest;
+	newNode->o = o;
+	movementQueueNode * head = &(w->movementQueueHead);
+	newNode->next = head->next;
+	head->next = newNode;
+}
+
+
+movementQueueNode * popMovement(world * w){
+
+	movementQueueNode * curr = w->movementQueueHead.next;
+	if (curr != NULL)
+	{
+		w->movementQueueHead.next = curr->next;
+		curr->next = NULL;
+	}
+
+
+	return curr;
+	////printf("SHOULD NOT BE REACHED\n");
+}
+
+
+
 void removeObject(zone * z, object * o){
 
-	
+
 
 	object * curr = z->head->next;
 	assert(curr != NULL);
@@ -110,7 +142,7 @@ void removeObject(zone * z, object * o){
 		{
 			o->prev->next = o->next;
 			if(o->next != NULL){
-			o->next->prev = o->prev;
+				o->next->prev = o->prev;
 			}
 			o->prev = NULL;
 			o->next = NULL;
@@ -121,6 +153,21 @@ void removeObject(zone * z, object * o){
 		curr = curr->next;
 	}
 	////printf("SHOULD NOT BE REACHED\n");
+}
+
+void applyMovementQueue(world * w)
+{
+
+	movementQueueNode * curr;
+
+	while ((curr = popMovement(w))!=NULL)
+	{
+		removeObject(curr->curr, curr->o);
+		appendObject(curr->dest, curr->o);
+		free(curr);
+	}
+
+
 }
 
 
@@ -311,9 +358,6 @@ int lookDistance(world * w, agentInfo * a, int direction, int x, int y)
 
 
 
-
-
-
 void advanceObject(world * w, object * o, brain * b,  int x, int y)
 {
 
@@ -325,12 +369,12 @@ void advanceObject(world * w, object * o, brain * b,  int x, int y)
 
 			case TYPE_HUNTER:
 				//printf("ADVANCED HUNTER AT: %d, %d\n", x, y);
-				if(randFloat()>0.5)break;
+				if(randFloat()>0.2)break;
 				advanceHunter(w,o,x,y);
 				break;
 			case TYPE_AGENT:
 				//printf("ADVANCED AGENT AT: %d, %d\n", x, y);	
-				 info = (agentInfo *)(o->objectInfo);
+				info = (agentInfo *)(o->objectInfo);
 
 				int inputs[4] = {0,0,0,0};  
 				int outputs[3] = {0,0,0};
@@ -451,7 +495,7 @@ void advanceWorldState(world * w, brain * b)
 				curr = temp;
 			}
 		}
-
+		applyMovementQueue(w);
 
 	}
 
