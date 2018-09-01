@@ -16,17 +16,18 @@ void analyzeBrainMicroWorld1(brain * b)
 	printWorldInfo(w);
 	while(run)
 	{
-	
 
-		userInput = fgetc(stdin);
 
-		if (userInput=='q')
+		userInput = getchar();
+		if(userInput != '\n')
 		{
-			break;
+			if (userInput=='q')
+			{
+				break;
+			}	
+			advanceWorldState(w,testInstance);
+			printWorldInfo(w);
 		}	
-	advanceWorldState(w,testInstance);
-	printWorldInfo(w);
-	
 
 	}
 
