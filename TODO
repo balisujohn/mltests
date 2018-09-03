@@ -41,10 +41,7 @@ Accuracy Leaderboard:
 the most interesting open problem here. Much more valuable as an excercise than the addition problem, as a discrete mapping of states couldn't possibly 
 work in a sufficently complicated microworld. 
 
-goal tiles need to be added to microworld
-a survival time assessment function needs to be added to the microworld
-
-
+the basic microworld has been completed, and brains have been successfully trained to survive to a satisfactory degree of success in the microworld.
 
 -------------- FINISHED STUFF --------------
 Simple logic gates (or, and, not, unary identity, nor)

@@ -2,7 +2,7 @@
 #define WORLD_H
 
 
-#define BOARD_SIZE 25
+#define BOARD_SIZE 7
 
 
 

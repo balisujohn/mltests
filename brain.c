@@ -242,6 +242,27 @@ brain * generateXorBrain()
  */
 
 void mutateBrain(brain * b, int minInputCount, int minOutputCount){
+	
+	if(coinFlip() * coinFlip() * coinFlip())
+	{
+		if(coinFlip())
+		{
+			b->neuronCount++;
+			b->neurons = realloc(b->neurons, sizeof(neuron) * b->neuronCount);
+			initializeNeuron(&(b->neurons[b->neuronCount-1]), b->neuronCount);
+		}	
+		else if(b->neuronCount > 1 + minInputCount +  minOutputCount) 
+		{
+			
+			freeNeuron(&(b->neurons[b->neuronCount-1]));
+			b->neuronCount--;
+			b->neurons = realloc(b->neurons, sizeof(neuron)* b->neuronCount);
+
+		}
+
+
+
+	}
 
 
 	for(int i = 0 ; i < b->neuronCount; i++)
@@ -329,27 +350,6 @@ void mutateBrain(brain * b, int minInputCount, int minOutputCount){
 
 	}
 
-
-	if(coinFlip() * coinFlip() * coinFlip())
-	{
-		if(coinFlip())
-		{
-			b->neuronCount++;
-			b->neurons = realloc(b->neurons, sizeof(neuron) * b->neuronCount);
-			initializeNeuron(&(b->neurons[b->neuronCount-1]), b->neuronCount);
-		}	
-		else if(b->neuronCount > 1 + minInputCount +  minOutputCount) 
-		{
-			
-			freeNeuron(&(b->neurons[b->neuronCount-1]));
-			b->neuronCount--;
-			b->neurons = realloc(b->neurons, sizeof(neuron)* b->neuronCount);
-
-		}
-
-
-
-	}
 
 }
 
