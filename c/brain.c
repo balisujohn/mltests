@@ -162,6 +162,26 @@ brain * generateBasicBrain()
 
 }
 
+//generates a brain with no connections
+brain * generateSparseBrain()
+{
+	assert(NEURON_COUNT > 1);
+
+
+	brain * b  = malloc(sizeof(brain));
+	b->neuronCount = NEURON_COUNT;
+	b->neurons = malloc(sizeof(neuron) * NEURON_COUNT);
+	for(int i = 0; i < NEURON_COUNT; i++)
+	{
+
+		initializeNeuron(&(b->neurons[i]), 2);
+	} 
+	return b;
+
+}
+
+
+
 /*
  DEPRECATED:  
  generates a brain hardcoded to perform Xor.

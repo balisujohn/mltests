@@ -26,7 +26,7 @@ brain * learn( float (*f)(brain *), int inputCount, int outputCount)
 {
 	srand(time(0));
 
-	brain * best =generateBasicBrain();
+	brain * best =generateSparseBrain();
 	float score = 0;
 	int sum =0;
 	int counter=0;

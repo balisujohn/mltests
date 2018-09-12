@@ -1,7 +1,7 @@
 #ifndef BRAIN_H
 #define BRAIN_H
 
-#define NEURON_COUNT 20
+#define NEURON_COUNT 8
 
 //John Balis 2018
 //for support email balisujohn@gmail.com 
@@ -27,6 +27,7 @@ float age;
 } typedef brain;
 
 brain * generateBasicBrain();
+brain * generateSparseBrain();
 brain * generateXorBrain();
 void mutateBrain(brain * b,int minInputCount,int minOutputCount);
 void advanceBrain(brain * b, int inputs[], int inputCount,int outputs[], int outputCount);
