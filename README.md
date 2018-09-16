@@ -6,7 +6,6 @@ This is a project with the loose goal of finding interested ways to generate int
 All of the meaningful code is currently in the c directory, as we have not yet ported the project to c++. The c folder contains 
 instructions regarding how to make and run the code. 
 
-Contributors:
-
-John Balis
-William Derksen
+Contributors:  
+John Balis   
+William Derksen  
