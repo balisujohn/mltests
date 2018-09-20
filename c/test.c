@@ -16,12 +16,11 @@ int main (int argc, char *  argv[])
 
 
 
-
-printf("VERIFYING PREMADE XOR NETWORK\n");
+//printf("VERIFYING PREMADE XOR NETWORK\n");
 //assert(baseLineXorTest());
-printf("PREMADE XOR NETWORK VERIFIED\n");
+//printf("PREMADE XOR NETWORK VERIFIED\n");
 
-
+/*
 printf("GENERATE RANDOM NETWORK , TRAIN ON XOR WITH POPULATION TECHNIQUE, OPEN ANALYSIS DIALOG\n");
 populationLearn(evaluateXorPerformance,2,1,10,10);
 
@@ -42,7 +41,7 @@ populationLearn(evaluateIdentityPerformance,1,1,10,10);
 
 
 
-
+*/
 
 printf("GENERATE RANDOM NETWORK , TRAIN ON IDENTITY WITH SINGLE SUCCESSOR TECHNIQUE, OPEN ANALYSIS DIALOG\n");
 learn(evaluateIdentityPerformance,1,1);

@@ -120,20 +120,20 @@ void initializeNeuron(neuron * n,  int neuronCount )
 }
 
 /*
-copies the contents of a neuron into another neuron
-*/
+   copies the contents of a neuron into another neuron
+ */
 void copyNeuron(neuron * original, neuron * replica)
 {
-replica->age = original->age;
-replica->targetCount = original->targetCount;
-replica->fired = original->fired;
-replica->activationDuration = original->activationDuration;
-replica->activationPotential = original->activationPotential;
-replica->excitation = original->excitation;
-replica->mostRecentActivation= original->mostRecentActivation;
-replica->targets = original->targets;
-replica->potentialWeights= original->potentialWeights;
-replica->potentialTimes=original->potentialTimes;
+	replica->age = original->age;
+	replica->targetCount = original->targetCount;
+	replica->fired = original->fired;
+	replica->activationDuration = original->activationDuration;
+	replica->activationPotential = original->activationPotential;
+	replica->excitation = original->excitation;
+	replica->mostRecentActivation= original->mostRecentActivation;
+	replica->targets = original->targets;
+	replica->potentialWeights= original->potentialWeights;
+	replica->potentialTimes=original->potentialTimes;
 }
 
 
@@ -183,9 +183,9 @@ brain * generateSparseBrain()
 
 
 /*
- DEPRECATED:  
- generates a brain hardcoded to perform Xor.
- this doesn't work with a non-linear gate function, so it is deprecated
+DEPRECATED:  
+generates a brain hardcoded to perform Xor.
+this doesn't work with a non-linear gate function, so it is deprecated
  */
 brain * generateXorBrain()
 {
@@ -257,15 +257,14 @@ brain * generateXorBrain()
 }
 
 
-/*
-   randomly mutates a brain. TODO add mutation params
- */
+//function to mutate neuron count, probability encodes the probability of occurance, and the bias encodes the 
+//probability of removing v.s. adding a neuron. 0 guarantees removal, 1 guarantees addition.
 
-void mutateBrain(brain * b, int minInputCount, int minOutputCount){
-	
-	if(coinFlip() * coinFlip() * coinFlip())
+void neuronCountMutation(brain * b, int minInputCount, int minOutputCount, float probability, float bias)
+{
+	if(randFloat() < probability )
 	{
-		if(coinFlip())
+		if(randFloat() < bias)
 		{
 			b->neuronCount++;
 			b->neurons = realloc(b->neurons, sizeof(neuron) * b->neuronCount);
@@ -273,7 +272,7 @@ void mutateBrain(brain * b, int minInputCount, int minOutputCount){
 		}	
 		else if(b->neuronCount > 1 + minInputCount +  minOutputCount) 
 		{
-			
+
 			freeNeuron(&(b->neurons[b->neuronCount-1]));
 			b->neuronCount--;
 			b->neurons = realloc(b->neurons, sizeof(neuron)* b->neuronCount);
@@ -284,8 +283,103 @@ void mutateBrain(brain * b, int minInputCount, int minOutputCount){
 
 	}
 
+}
+
+
+void targetMutation(brain * b, float targetCountProbability, float targetCountBias , float retargetProbability){
 
 	for(int i = 0 ; i < b->neuronCount; i++)
+	{
+		if(b->neurons[i].targetCount > 0)
+		{
+			if (targetCountProbability > randFloat())
+			{
+
+
+
+
+				if(targetCountBias > randFloat())
+				{
+					b->neurons[i].targetCount++;
+					b->neurons[i].targets = realloc(b->neurons[i].targets, sizeof(int) * b->neurons[i].targetCount);
+					b->neurons[i].potentialWeights = realloc(b->neurons[i].potentialWeights,sizeof(float) * b->neurons[i].targetCount);
+					b->neurons[i].potentialTimes = realloc(b->neurons[i].potentialTimes,sizeof(float) * b->neurons[i].targetCount);
+					b->neurons[i].targets[b->neurons[i].targetCount-1] = randRange(b->neuronCount);
+					b->neurons[i].potentialWeights[b->neurons[i].targetCount-1]  = randFloat();
+				}
+				else 	
+				{
+
+					b->neurons[i].targetCount--;
+					b->neurons[i].targets = realloc(b->neurons[i].targets, sizeof(int) * b->neurons[i].targetCount);
+					b->neurons[i].potentialWeights = realloc(b->neurons[i].potentialWeights,sizeof(float) * b->neurons[i].targetCount);
+					b->neurons[i].potentialTimes = realloc(b->neurons[i].potentialTimes,sizeof(float) * b->neurons[i].targetCount);
+
+				}
+
+
+
+			}
+			if(retargetProbability > randFloat() && b->neurons[i].targetCount>0)
+			{
+			b->neurons[i].targets[randRange(b->neurons[i].targetCount)] = randRange(b->neuronCount);
+			}
+
+		}
+		else if(targetCountProbability > randFloat())
+		{
+			b->neurons[i].targetCount++;
+			b->neurons[i].targets = realloc(b->neurons[i].targets, sizeof(int) * b->neurons[i].targetCount);
+			b->neurons[i].potentialWeights = realloc(b->neurons[i].potentialWeights,sizeof(float) * b->neurons[i].targetCount);
+			b->neurons[i].potentialTimes = realloc(b->neurons[i].potentialTimes,sizeof(float) * b->neurons[i].targetCount);
+			b->neurons[i].targets[b->neurons[i].targetCount-1] = randRange(b->neuronCount);
+			b->neurons[i].potentialWeights[b->neurons[i].targetCount-1]  = (randFloat()*2)-1;
+
+
+		}
+	}
+
+
+
+
+}
+
+
+
+/*
+   randomly mutates a brain. TODO add mutation params
+ */
+
+void mutateBrain(brain * b, int minInputCount, int minOutputCount){
+
+	//Neuron Additon or removal.
+
+	/*if(coinFlip() * coinFlip() * coinFlip())
+	  {
+	  if(coinFlip())
+	  {
+	  b->neuronCount++;
+	  b->neurons = realloc(b->neurons, sizeof(neuron) * b->neuronCount);
+	  initializeNeuron(&(b->neurons[b->neuronCount-1]), b->neuronCount);
+	  }	
+	  else if(b->neuronCount > 1 + minInputCount +  minOutputCount) 
+	  {
+
+	  freeNeuron(&(b->neurons[b->neuronCount-1]));
+	  b->neuronCount--;
+	  b->neurons = realloc(b->neurons, sizeof(neuron)* b->neuronCount);
+
+	  }
+
+
+
+	  }*/
+
+	neuronCountMutation( b, minInputCount, minOutputCount, .125, .5);
+	targetMutation(b, .25, .5,.25);
+
+	//add or remove targets form each neuron
+	/*for(int i = 0 ; i < b->neuronCount; i++)
 	{
 		if(b->neurons[i].targetCount)
 		{
@@ -335,8 +429,8 @@ void mutateBrain(brain * b, int minInputCount, int minOutputCount){
 
 		}
 	}
-
-
+*/
+	//mutates potential weights
 	for(int i = 0 ; i < b->neuronCount; i++)
 	{
 		if(b->neurons[i].targetCount)
@@ -351,21 +445,21 @@ void mutateBrain(brain * b, int minInputCount, int minOutputCount){
 		}
 	}
 
-
+	//Neuron swap
 	if(randFloat() > .9)
 	{
 		int index1 = randRange(b->neuronCount-1)+1;	
 		int index2 = randRange(b->neuronCount-1)+1;
 		while(index2 == index1)
 		{
-		index2 = randRange(b->neuronCount-1)+1;
+			index2 = randRange(b->neuronCount-1)+1;
 		}
 		neuron temp;
 		copyNeuron(&(b->neurons[index1]),&temp);
 		copyNeuron(&(b->neurons[index2]),&(b->neurons[index1]));
 		copyNeuron(&temp,&(b->neurons[index2]));
-	
-		
+
+
 
 
 	}

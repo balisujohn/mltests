@@ -1,28 +1,24 @@
 #ifndef BRAIN_H
 #define BRAIN_H
 
-#define NEURON_COUNT 8
-
-#define FLAG_MUTATION_PARAMS 1
+//#define NEURON_COUNT 9
 
 //John Balis 2018
 //for support email balisujohn@gmail.com 
 
+class Neuron
+{
+float age;
+int targetCount;
+int fired;
+float activationPotential;
+float excitation;
+Neuron 
+}
 
 
-struct mutationParams{
 
 
-}typedef mutationParams;
-
-
-struct learningParams{
-char CONTENTS_MASK;
-mutationParams m;
-int initialNeuronCount;
-
-
-};
 
 struct neuron{
 float age;

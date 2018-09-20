@@ -35,7 +35,7 @@ float evaluateAdditionPerformance(brain * b)
 			int expectedResult = (x1 + x2);
 			//			printf("X0: %d X2: %d EXPECTED: %d\n", x1, x2, expectedResult);
 			int result[] = {0,0,0,0};
-			for(int c = 0; c < 4; c++)
+			for(int c = 0; c < 6; c++)
 			{
 				int inputs[] = {  (x1>>2)&1, (x1>>1) &1, x1 & 1,  (x2>>2)&1,( x2>>1)  &1, x2 & 1};
 				/*result =*/ advanceBrain(testInstance, inputs,6, result, 4);

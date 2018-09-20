@@ -85,6 +85,70 @@ brain * learn( float (*f)(brain *), int inputCount, int outputCount)
 
 }
 
+brain * learnFromExistingBrain(brain * b,  float (*f)(brain *), int inputCount, int outputCount)
+{
+	srand(time(0));
+
+	brain * best = b;
+	float score = 0;
+	int sum =0;
+	int counter=0;
+	int validated = 0;
+	while (!validated )
+	{	
+
+		brain * candidate = forkBrain(best);
+
+
+		mutateBrain(candidate,inputCount,outputCount);
+		brain * testInstance = forkBrain(candidate);
+
+
+
+		float newScore = (*f)(testInstance);
+		freeBrain(testInstance);
+		if (newScore > score)
+		{
+
+			printf("NEW BEST SCORE: %f\n" , newScore);
+			score = newScore;
+			freeBrain(best);
+			best =candidate;
+			//printBrain(best);
+			validated = (100 <= score);
+
+		}
+		else
+		{
+			freeBrain(candidate);
+
+
+		}
+		sum += newScore;
+		counter++;
+		if (counter == 100)
+		{
+			printf("LAST 100 AVERAGE: %f\n", sum/100.0);
+
+
+			sum = 0;
+			counter = 0;
+		}
+	}
+
+
+	FILE *fp;
+	fp = fopen("log.txt", "w+");
+	printBrainToFile(best, fp);
+	fclose(fp);
+	printBrain(best);
+	analyzeBrain(best,inputCount,outputCount);
+	//freeBrain(best);
+	return best;
+
+}
+
+
 
 /*
    simple greedy  learning algorithm. 
