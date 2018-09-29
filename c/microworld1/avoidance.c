@@ -41,7 +41,10 @@ int main(int arc, char * argv[])
 
 	srand(time(0));
 	//populationLearn(evaluateMicroWorldPerformance, 4,3,10,10);
-        brain * resultBrain = learn(evaluateMicroWorldPerformance, 4,3);
+
+	params * p = initializeDefaultParams();
+
+        brain * resultBrain = learn(evaluateMicroWorldPerformance, p);
 	analyzeBrainMicroWorld1(resultBrain);
 	
 	/*

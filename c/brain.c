@@ -76,12 +76,51 @@ void freeBrain(brain * b )
 
 
 
+mutationParams *  initializeDefaultMutationParams()
+{
+
+	mutationParams * m = malloc(sizeof(mutationParams));
+	m->order = malloc(sizeof(char) * 6);
+	m->order[0] = 'c';
+	m->order[1] = 't';
+	m->order[2] = 'p';
+	m->order[3] = 's';
+	//m->order[4] = 'h';
+	m->order[4] = '\0';
+	m->swapProb = 0.1;
+	m->neuronCountProb = 0.125;
+	m->neuronCountBias = .5;
+	m->targetCountProb = 0.25;
+	m->targetCountBias = 0.5;
+	m->retargetProb = 0.25;
+	m->potentialProb = 0.1;
+	m->potentialStrength =0.1;
+	m->thresholdProb = 0.1;
+	m->thresholdStrength = 0.1;
+	m->initialNeuronCount = 10;
+	m->targetLimit = 10;
+	m->minInputCount = 5;
+	m->minOutputCount = 5;
+	return m;
+}
+
+
+
+params * initializeDefaultParams()
+{
+	params * p = malloc(sizeof(params));
+	p->mParams = initializeDefaultMutationParams();
+	p->CONTENT_MASK = 0;
+	return p;
+}
+
+
 /*
    initializes a random neuron. requires the number of other neurons as
    a range for selecting targets
  */
 
-void initializeNeuron(neuron * n,  int neuronCount )
+void initializeNeuron(neuron * n,  int neuronCount/* , int targetCountLimit*/)
 {
 	n->fired = 0;	
 	n->age=0;
@@ -286,7 +325,7 @@ void neuronCountMutation(brain * b, int minInputCount, int minOutputCount, float
 }
 
 
-void targetMutation(brain * b, float targetCountProbability, float targetCountBias , float retargetProbability){
+void targetMutation(brain * b, /*int targetCountLimit,*/ float targetCountProbability, float targetCountBias , float retargetProbability){
 
 	for(int i = 0 ; i < b->neuronCount; i++)
 	{
@@ -298,7 +337,7 @@ void targetMutation(brain * b, float targetCountProbability, float targetCountBi
 
 
 
-				if(targetCountBias > randFloat())
+				if(targetCountBias > randFloat() /* && b->neurons[i].targetCount < targetCountLimit*/)
 				{
 					b->neurons[i].targetCount++;
 					b->neurons[i].targets = realloc(b->neurons[i].targets, sizeof(int) * b->neurons[i].targetCount);
@@ -322,7 +361,7 @@ void targetMutation(brain * b, float targetCountProbability, float targetCountBi
 			}
 			if(retargetProbability > randFloat() && b->neurons[i].targetCount>0)
 			{
-			b->neurons[i].targets[randRange(b->neurons[i].targetCount)] = randRange(b->neuronCount);
+				b->neurons[i].targets[randRange(b->neurons[i].targetCount)] = randRange(b->neuronCount);
 			}
 
 		}
@@ -343,94 +382,16 @@ void targetMutation(brain * b, float targetCountProbability, float targetCountBi
 
 
 }
-
-
-
 /*
-   randomly mutates a brain. TODO add mutation params
+   Mutate Activation Potentials
+
+probability: 0-1
+strength: 0-infinity
+
  */
 
-void mutateBrain(brain * b, int minInputCount, int minOutputCount){
 
-	//Neuron Additon or removal.
-
-	/*if(coinFlip() * coinFlip() * coinFlip())
-	  {
-	  if(coinFlip())
-	  {
-	  b->neuronCount++;
-	  b->neurons = realloc(b->neurons, sizeof(neuron) * b->neuronCount);
-	  initializeNeuron(&(b->neurons[b->neuronCount-1]), b->neuronCount);
-	  }	
-	  else if(b->neuronCount > 1 + minInputCount +  minOutputCount) 
-	  {
-
-	  freeNeuron(&(b->neurons[b->neuronCount-1]));
-	  b->neuronCount--;
-	  b->neurons = realloc(b->neurons, sizeof(neuron)* b->neuronCount);
-
-	  }
-
-
-
-	  }*/
-
-	neuronCountMutation( b, minInputCount, minOutputCount, .125, .5);
-	targetMutation(b, .25, .5,.25);
-
-	//add or remove targets form each neuron
-	/*for(int i = 0 ; i < b->neuronCount; i++)
-	{
-		if(b->neurons[i].targetCount)
-		{
-			if (coinFlip()*coinFlip())
-			{
-
-
-
-
-				if(coinFlip)
-				{
-					b->neurons[i].targetCount++;
-					b->neurons[i].targets = realloc(b->neurons[i].targets, sizeof(int) * b->neurons[i].targetCount);
-					b->neurons[i].potentialWeights = realloc(b->neurons[i].potentialWeights,sizeof(float) * b->neurons[i].targetCount);
-					b->neurons[i].potentialTimes = realloc(b->neurons[i].potentialTimes,sizeof(float) * b->neurons[i].targetCount);
-					b->neurons[i].targets[b->neurons[i].targetCount-1] = randRange(b->neuronCount);
-					b->neurons[i].potentialWeights[b->neurons[i].targetCount-1]  = randFloat();
-				}
-				else	
-				{
-
-					b->neurons[i].targetCount--;
-					b->neurons[i].targets = realloc(b->neurons[i].targets, sizeof(int) * b->neurons[i].targetCount);
-					b->neurons[i].potentialWeights = realloc(b->neurons[i].potentialWeights,sizeof(float) * b->neurons[i].targetCount);
-					b->neurons[i].potentialTimes = realloc(b->neurons[i].potentialTimes,sizeof(float) * b->neurons[i].targetCount);
-
-				}
-
-
-
-			}
-			if(coinFlip()*coinFlip())
-			{
-				b->neurons[i].targets[randRange(b->neurons[i].targetCount)] = randRange(b->neuronCount);
-			}
-
-		}
-		else if(coinFlip() * coinFlip() )
-		{
-			b->neurons[i].targetCount++;
-			b->neurons[i].targets = realloc(b->neurons[i].targets, sizeof(int) * b->neurons[i].targetCount);
-			b->neurons[i].potentialWeights = realloc(b->neurons[i].potentialWeights,sizeof(float) * b->neurons[i].targetCount);
-			b->neurons[i].potentialTimes = realloc(b->neurons[i].potentialTimes,sizeof(float) * b->neurons[i].targetCount);
-			b->neurons[i].targets[b->neurons[i].targetCount-1] = randRange(b->neuronCount);
-			b->neurons[i].potentialWeights[b->neurons[i].targetCount-1]  = (randFloat()*2)-1;
-
-
-		}
-	}
-*/
-	//mutates potential weights
+void potentialsMutation(brain * b, float probability, float strength){
 	for(int i = 0 ; i < b->neuronCount; i++)
 	{
 		if(b->neurons[i].targetCount)
@@ -439,14 +400,50 @@ void mutateBrain(brain * b, int minInputCount, int minOutputCount){
 			for (int c = 0 ; c < mutations; c++)
 			{
 				//TODO add soft boundary
-
-				b->neurons[i].potentialWeights[randRange(b->neurons[i].targetCount)] += ((randFloat() *2)-1)*.1;
+				if(randFloat() < probability)
+				{	
+					b->neurons[i].potentialWeights[randRange(b->neurons[i].targetCount)] += ((randFloat() *2)-1)*strength;
+				}
 			}
 		}
 	}
 
-	//Neuron swap
-	if(randFloat() > .9)
+
+
+}
+
+void thresholdMutation(brain * b, float probability, float strength){
+	for(int i = 0 ; i < b->neuronCount; i++)
+	{
+		if(b->neurons[i].targetCount)
+		{
+			int mutations = randRange(b->neurons[i].targetCount);
+			for (int c = 0 ; c < mutations; c++)
+			{
+				//TODO add soft boundary
+				if(randFloat() < probability)
+				{	
+					b->neurons[i].activationPotential += ((randFloat() *2)-1)*strength;
+				}
+			}
+		}
+	}
+
+
+
+}
+
+
+
+
+/*
+   swaps some neurons
+
+
+ */
+void neuronSwapMutation(brain * b, float probability)
+{
+	if(randFloat() < probability)
 	{
 		int index1 = randRange(b->neuronCount-1)+1;	
 		int index2 = randRange(b->neuronCount-1)+1;
@@ -464,6 +461,67 @@ void mutateBrain(brain * b, int minInputCount, int minOutputCount){
 
 	}
 
+}
+
+/*
+   randomly mutates a brain.
+ */
+
+void mutateBrain(brain * b, mutationParams * m){
+
+	//historical presets, preserved for reference
+
+	/*neuronCountMutation( b, minInputCount, minOutputCount, .125, .5);
+	  targetMutation(b, .25, .5,.25);
+	  potentialsMutation(b, 1, .1);
+	  neuronSwapMutation(b, .1);*/
+
+
+
+	/*
+	   neuronSwapMutation(b, .1);
+	   neuronCountMutation( b, minInputCount, minOutputCount, .125, .5);
+	   targetMutation(b, .25, .5,.25);
+	   potentialsMutation(b, 1, .1);
+	   thresholdMutation(b,1,.1);
+	 */
+
+	char c;
+	int i = 0;
+	while((c = (m->order)[i]) != '\0'){
+	i += 1;
+	//printf("%c\n", c);
+	switch (c) {
+
+
+		case 's' :
+
+			neuronSwapMutation(b,m->swapProb);
+			break;
+
+		case 'c' :
+
+			neuronCountMutation(b, m->minInputCount, m->minOutputCount,m->neuronCountProb, m->neuronCountBias );
+			break;
+
+		case 't' : 
+
+			targetMutation(b, m->targetCountProb, m->targetCountBias, m->retargetProb);
+			break;
+
+		case 'p' :
+
+			potentialsMutation(b, m->potentialProb, m->potentialStrength);
+			break;	
+		case 'h' :
+
+			thresholdMutation(b, m->potentialProb, m->potentialStrength);
+			break;
+	}
+
+
+
+	}
 
 }
 

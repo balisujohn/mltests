@@ -22,7 +22,7 @@
 
 
  */
-brain * learn( float (*f)(brain *), int inputCount, int outputCount)
+brain * learn( float (*f)(brain *), params * p/*int inputCount, int outputCount*/)
 {
 	srand(time(0));
 
@@ -37,7 +37,7 @@ brain * learn( float (*f)(brain *), int inputCount, int outputCount)
 		brain * candidate = forkBrain(best);
 
 
-		mutateBrain(candidate,inputCount,outputCount);
+		mutateBrain(candidate,p->mParams);
 		brain * testInstance = forkBrain(candidate);
 
 
@@ -79,13 +79,13 @@ brain * learn( float (*f)(brain *), int inputCount, int outputCount)
 	printBrainToFile(best, fp);
 	fclose(fp);
 	printBrain(best);
-	analyzeBrain(best,inputCount,outputCount);
+	analyzeBrain(best,p->mParams->minInputCount,p->mParams->minOutputCount);
 	//freeBrain(best);
 	return best;
 
 }
 
-brain * learnFromExistingBrain(brain * b,  float (*f)(brain *), int inputCount, int outputCount)
+brain * learnFromExistingBrain(brain * b,  float (*f)(brain *), params * p/* int inputCount, int outputCount*/)
 {
 	srand(time(0));
 
@@ -100,7 +100,7 @@ brain * learnFromExistingBrain(brain * b,  float (*f)(brain *), int inputCount, 
 		brain * candidate = forkBrain(best);
 
 
-		mutateBrain(candidate,inputCount,outputCount);
+		mutateBrain(candidate,p->mParams);
 		brain * testInstance = forkBrain(candidate);
 
 
@@ -142,7 +142,7 @@ brain * learnFromExistingBrain(brain * b,  float (*f)(brain *), int inputCount, 
 	printBrainToFile(best, fp);
 	fclose(fp);
 	printBrain(best);
-	analyzeBrain(best,inputCount,outputCount);
+	analyzeBrain(best,p->mParams->minInputCount,p->mParams->minOutputCount);
 	//freeBrain(best);
 	return best;
 
@@ -157,7 +157,9 @@ brain * learnFromExistingBrain(brain * b,  float (*f)(brain *), int inputCount, 
  */
 
 
+//deprecated
 
+/*
 brain * multiSucc( float (*f)(brain *), int inputCount, int outputCount, int childCount)
 {
 	srand(time(0));
@@ -367,5 +369,5 @@ brain * populationLearn( float (*f)(brain *), int inputCount, int outputCount, i
 	return bestPopulationBrain;
 
 }
-
+*/
 

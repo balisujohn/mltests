@@ -15,87 +15,57 @@ int main (int argc, char *  argv[])
 {
 
 
+params * p = initializeDefaultParams();
 
-//printf("VERIFYING PREMADE XOR NETWORK\n");
-//assert(baseLineXorTest());
-//printf("PREMADE XOR NETWORK VERIFIED\n");
-
-/*
-printf("GENERATE RANDOM NETWORK , TRAIN ON XOR WITH POPULATION TECHNIQUE, OPEN ANALYSIS DIALOG\n");
-populationLearn(evaluateXorPerformance,2,1,10,10);
-
-printf("GENERATE RANDOM NETWORK , TRAIN ON AND WITH POPULATION TECHNIQUE, OPEN ANALYSIS DIALOG\n");
-populationLearn(evaluateAndPerformance,2,1,10,10);
-
-printf("GENERATE RANDOM NETWORK , TRAIN ON OR WITH POPULATION TECHNIQUE, OPEN ANALYSIS DIALOG\n");
-populationLearn(evaluateOrPerformance,2,1,10,10);
-
-printf("GENERATE RANDOM NETWORK , TRAIN ON NOR WITH POPULATION TECHNIQUE, OPEN ANALYSIS DIALOG\n");
-populationLearn(evaluateNorPerformance,2,1,10,10);
-
-printf("GENERATE RANDOM NETWORK , TRAIN ON NOT WITH POPULATION TECHNIQUE, OPEN ANALYSIS DIALOG\n");
-populationLearn(evaluateNotPerformance,1,1,10,10);
-
-printf("GENERATE RANDOM NETWORK , TRAIN ON IDENTITY WITH POPULATION TECHNIQUE, OPEN ANALYSIS DIALOG\n");
-populationLearn(evaluateIdentityPerformance,1,1,10,10);
-
-
-
-*/
+p->mParams->initialNeuronCount = 20;
+p->mParams->minInputCount = 1;
+p->mParams->minOutputCount = 1; 
 
 printf("GENERATE RANDOM NETWORK , TRAIN ON IDENTITY WITH SINGLE SUCCESSOR TECHNIQUE, OPEN ANALYSIS DIALOG\n");
-learn(evaluateIdentityPerformance,1,1);
+learn(evaluateIdentityPerformance,p);
 
 
-printf("GENERATE RANDOM NETWORK , TRAIN ON IDENTITY WITH MULTI SUCCESSOR TECHNIQUE, OPEN ANALYSIS DIALOG\n");
-multiSucc(evaluateIdentityPerformance,1,1,500);
-
-
-
+p->mParams->minInputCount = 1;
+p->mParams->minOutputCount = 1; 
 
 printf("GENERATE RANDOM NETWORK , TRAIN ON NOT WITH SINGLE SUCCESSOR TECHNIQUE, OPEN ANALYSIS DIALOG\n");
-learn(evaluateNotPerformance,1,1);
+learn(evaluateNotPerformance,p);
 
-
-printf("GENERATE RANDOM NETWORK , TRAIN ON NOT WITH MULTI SUCCESSOR TECHNIQUE, OPEN ANALYSIS DIALOG\n");
-multiSucc(evaluateNotPerformance,1,1,500);
+p->mParams->minInputCount = 2;
+p->mParams->minOutputCount = 1; 
 
 printf("GENERATE RANDOM NETWORK , TRAIN ON AND WITH SINGLE SUCCESSOR TECHNIQUE, OPEN ANALYSIS DIALOG\n");
-learn(evaluateAndPerformance,2,1);
+learn(evaluateAndPerformance,p);
 
 
-printf("GENERATE RANDOM NETWORK , TRAIN ON AND WITH MULTI SUCCESSOR TECHNIQUE, OPEN ANALYSIS DIALOG\n");
-multiSucc(evaluateAndPerformance,2,1,500);
+p->mParams->minInputCount = 2;
+p->mParams->minOutputCount = 1; 
 
 printf("GENERATE RANDOM NETWORK , TRAIN ON OR WITH SINGLE SUCCESSOR TECHNIQUE, OPEN ANALYSIS DIALOG\n");
-learn(evaluateOrPerformance,2,1);
+learn(evaluateOrPerformance,p);
 
 
-printf("GENERATE RANDOM NETWORK , TRAIN ON OR WITH MULTI SUCCESSOR TECHNIQUE, OPEN ANALYSIS DIALOG\n");
-multiSucc(evaluateOrPerformance,2,1,500);
+p->mParams->minInputCount = 2;
+p->mParams->minOutputCount = 1; 
 
 printf("GENERATE RANDOM NETWORK , TRAIN ON NOR WITH SINGLE SUCCESSOR TECHNIQUE, OPEN ANALYSIS DIALOG\n");
-learn(evaluateNorPerformance,2,1);
+learn(evaluateNorPerformance,p);
 
 
-printf("GENERATE RANDOM NETWORK , TRAIN ON NOR WITH MULTI SUCCESSOR TECHNIQUE, OPEN ANALYSIS DIALOG\n");
-multiSucc(evaluateNorPerformance,2,1,500);
-
+p->mParams->minInputCount = 2;
+p->mParams->minOutputCount = 1; 
 
 printf("GENERATE RANDOM NETWORK , TRAIN ON XOR WITH SINGLE SUCCESSOR TECHNIQUE, OPEN ANALYSIS DIALOG\n");
-learn(evaluateXorPerformance,2,1);
+learn(evaluateXorPerformance,p);
 
 
-printf("GENERATE RANDOM NETWORK , TRAIN ON XOR WITH MULTI SUCCESSOR TECHNIQUE, OPEN ANALYSIS DIALOG\n");
-multiSucc(evaluateXorPerformance,2,1,500);
+p->mParams->minInputCount = 6;
+p->mParams->minOutputCount = 4; 
+
+printf("GENERATE RANDOM NETWORK , TRAIN ON ADDITION WITH SINGLE SUCCESSOR TECHNIQUE, OPEN ANALYSIS DIALOG\n");
+learn(evaluateAdditionPerformance,p);
 
 
-
-//printf("GENERATE RANDOM NETWORK , TRAIN ON ADDITION WITH SINGLE SUCCESSOR TECHNIQUE, OPEN ANALYSIS DIALOG\n");
-//learn(evaluateAdditionPerformance,6,4);
-
-printf("GENERATE RANDOM NETWORK , TRAIN ON ADDITION WITH POPULATION TECHNIQUE, OPEN ANALYSIS DIALOG\n");
-multiSucc(evaluateAdditionPerformance,6,4,500);
 
 
 
