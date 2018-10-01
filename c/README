@@ -14,6 +14,9 @@ enter the following commands in bash, from the project directory
 
 make
 chmod +x ./test
+cd ./microworld1
+make
+chmod +x ./microworld1
 
 You're good to go!
 

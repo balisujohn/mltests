@@ -81,10 +81,10 @@ mutationParams *  initializeDefaultMutationParams()
 
 	mutationParams * m = malloc(sizeof(mutationParams));
 	m->order = malloc(sizeof(char) * 6);
-	m->order[0] = 'c';
+	m->order[1] = 'c';
 	m->order[1] = 't';
 	m->order[2] = 'p';
-	m->order[3] = 's';
+	m->order[0] = 's';
 	//m->order[4] = 'h';
 	m->order[4] = '\0';
 	m->swapProb = 0.1;

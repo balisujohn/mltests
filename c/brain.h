@@ -1,7 +1,7 @@
 #ifndef BRAIN_H
 #define BRAIN_H
 
-#define NEURON_COUNT 20
+#define NEURON_COUNT 11
 
 
 //John Balis 2018
