@@ -43,6 +43,7 @@ int main(int arc, char * argv[])
 	//populationLearn(evaluateMicroWorldPerformance, 4,3,10,10);
 
 	params * p = initializeDefaultParams();
+	p->mParams->initialNeuronCount = 11;
 
         brain * resultBrain = learn(evaluateMicroWorldPerformance, p);
 	analyzeBrainMicroWorld1(resultBrain);

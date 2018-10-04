@@ -9,3 +9,6 @@ instructions regarding how to make and run the code.
 Contributors:  
 John Balis   
 William Derksen  
+
+Inline dependencies:
+cJSON, courtesy of Dave Gamble and cJSON contributors

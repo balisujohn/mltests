@@ -25,8 +25,7 @@
 brain * learn( float (*f)(brain *), params * p/*int inputCount, int outputCount*/)
 {
 	srand(time(0));
-
-	brain * best =generateSparseBrain();
+	brain * best =generateSparseBrain(p->mParams);
 	float score = 0;
 	int sum =0;
 	int counter=0;
@@ -80,10 +79,22 @@ brain * learn( float (*f)(brain *), params * p/*int inputCount, int outputCount*
 	fclose(fp);
 	printBrain(best);
 	analyzeBrain(best,p->mParams->minInputCount,p->mParams->minOutputCount);
-	//freeBrain(best);
 	return best;
 
 }
+
+
+
+/*
+   simple greedy  learning algorithm. 
+
+   GENERATE RANDOM -> MUTATE -> REPLACE ORIGINAL IF MUTATE OFFSPRING SCORES HIGHER
+
+	takes existing brain and problem as in put and trains brain on problem. 
+
+
+ */
+
 
 brain * learnFromExistingBrain(brain * b,  float (*f)(brain *), params * p/* int inputCount, int outputCount*/)
 {
@@ -143,7 +154,6 @@ brain * learnFromExistingBrain(brain * b,  float (*f)(brain *), params * p/* int
 	fclose(fp);
 	printBrain(best);
 	analyzeBrain(best,p->mParams->minInputCount,p->mParams->minOutputCount);
-	//freeBrain(best);
 	return best;
 
 }
@@ -242,7 +252,7 @@ brain * multiSucc( float (*f)(brain *), int inputCount, int outputCount, int chi
 //	freeBrain(best);
 	return best;
 }
-
+//deprecated
 brain * populationLearn( float (*f)(brain *), int inputCount, int outputCount, int populationCount, int generations)
 {
 	srand(time(0));

@@ -48,6 +48,11 @@ brain * forkBrain(brain * oldBrain)
 
 }
 
+/*
+frees a neuron
+
+*/
+
 void freeNeuron(neuron *  n)
 {
 	free(n->potentialWeights);
@@ -74,8 +79,11 @@ void freeBrain(brain * b )
 	free(b);
 }
 
+/*
 
+sets mutation params to comfortable defaults
 
+*/
 mutationParams *  initializeDefaultMutationParams()
 {
 
@@ -98,14 +106,16 @@ mutationParams *  initializeDefaultMutationParams()
 	m->thresholdProb = 0.1;
 	m->thresholdStrength = 0.1;
 	m->initialNeuronCount = 10;
-	m->targetLimit = 10;
+	m->targetLimit = 5;
 	m->minInputCount = 5;
 	m->minOutputCount = 5;
 	return m;
 }
 
 
-
+/*
+sets general params to comfortable defaults
+*/
 params * initializeDefaultParams()
 {
 	params * p = malloc(sizeof(params));
@@ -124,7 +134,7 @@ void initializeNeuron(neuron * n,  int neuronCount/* , int targetCountLimit*/)
 {
 	n->fired = 0;	
 	n->age=0;
-	n->activationPotential = randFloat();//randFloat();;
+	n->activationPotential = randFloat();
 	n->excitation = 0.0 ;//randFloat();
 	n->activationDuration=0.05;
 	n->mostRecentActivation= -100.0;
@@ -201,16 +211,18 @@ brain * generateBasicBrain()
 
 }
 
-//generates a brain with no connections
-brain * generateSparseBrain()
+/*
+generates a brain with few connections
+*/
+brain * generateSparseBrain(mutationParams * m)
 {
-	assert(NEURON_COUNT > 1);
+	assert(m->initialNeuronCount > 1);
 
 
 	brain * b  = malloc(sizeof(brain));
-	b->neuronCount = NEURON_COUNT;
-	b->neurons = malloc(sizeof(neuron) * NEURON_COUNT);
-	for(int i = 0; i < NEURON_COUNT; i++)
+	b->neuronCount = m->initialNeuronCount;
+	b->neurons = malloc(sizeof(neuron) * m->initialNeuronCount );
+	for(int i = 0; i < m->initialNeuronCount ; i++)
 	{
 
 		initializeNeuron(&(b->neurons[i]), 2);
@@ -325,7 +337,7 @@ void neuronCountMutation(brain * b, int minInputCount, int minOutputCount, float
 }
 
 
-void targetMutation(brain * b, /*int targetCountLimit,*/ float targetCountProbability, float targetCountBias , float retargetProbability){
+void targetMutation(brain * b, int targetCountLimit, float targetCountProbability, float targetCountBias , float retargetProbability){
 
 	for(int i = 0 ; i < b->neuronCount; i++)
 	{
@@ -337,7 +349,7 @@ void targetMutation(brain * b, /*int targetCountLimit,*/ float targetCountProbab
 
 
 
-				if(targetCountBias > randFloat() /* && b->neurons[i].targetCount < targetCountLimit*/)
+				if(targetCountBias > randFloat()  && b->neurons[i].targetCount < targetCountLimit)
 				{
 					b->neurons[i].targetCount++;
 					b->neurons[i].targets = realloc(b->neurons[i].targets, sizeof(int) * b->neurons[i].targetCount);
@@ -506,7 +518,7 @@ void mutateBrain(brain * b, mutationParams * m){
 
 		case 't' : 
 
-			targetMutation(b, m->targetCountProb, m->targetCountBias, m->retargetProb);
+			targetMutation(b, m->targetLimit, m->targetCountProb, m->targetCountBias, m->retargetProb);
 			break;
 
 		case 'p' :
