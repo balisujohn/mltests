@@ -4,6 +4,7 @@
 #include<assert.h>
 #include"brain.h"
 #include"utils.h"
+#include"./cJSON/cJSON.h"
 
 //John Balis 2018
 //for support email balisujohn@gmail.com
@@ -652,28 +653,58 @@ void printBrain(brain * b ){
 }
 
 /*
-   saves a brain to file
+   saves a brain to file. Uses Javascript Object Notation. format template included in specs folder. 
 
  */
 void printBrainToFile(brain * b ,FILE * fp){
-	fprintf(fp, "ACTIVATION: ");
+	
+
+	cJSON * brainJSON = cJSON_CreateObject();
+	assert(brainJSON != NULL);
+	cJSON * neuronCountJSON = cJSON_CreateNumber(b->neuronCount);	
+	assert(neuronCountJSON != NULL);
+	cJSON_AddItemToObject(brainJSON, "neuronCount", neuronCountJSON);
+	cJSON * neuronsJSON = cJSON_CreateArray();
+	assert(neuronsJSON!=NULL);
 	for(int i = 0; i < b->neuronCount; i++)
 	{
-		fprintf(fp,"%d", b->neurons[i].fired);	
-	}
-	printf("\n");	
-	for(int i = 0; i < b->neuronCount; i++)
-	{
-		fprintf(fp, "NEURON %d: %f\n",i, b->neurons[i].activationPotential);	
+			cJSON * targetsJSON = cJSON_CreateArray();
+	                assert(targetsJSON!=NULL);
+			cJSON * weightsJSON = cJSON_CreateArray();
+			assert(weightsJSON!=NULL);
+			cJSON * thresholdJSON = cJSON_CreateNumber(b->neurons[i].activationPotential);	
+			assert(thresholdJSON!= NULL);
+
 		for(int c = 0; c < b->neurons[i].targetCount; c++)
 		{
-			fprintf(fp,"TARGET: %d, WEIGHT :%f\n",b->neurons[i].targets[c],b->neurons[i].potentialWeights[c]);
+			cJSON * newTargetJSON = cJSON_CreateNumber(b->neurons[i].targets[c]);
+			assert(newTargetJSON!=NULL);
+			cJSON_AddItemToArray(targetsJSON,newTargetJSON);
+			cJSON * newPotentialJSON = cJSON_CreateNumber(b->neurons[i].potentialWeights[c]);
+			assert(newPotentialJSON != NULL);
+			cJSON_AddItemToArray(weightsJSON,newPotentialJSON);
 
-		}	
+
+
+		}
+
+		cJSON * newNeuronJSON = cJSON_CreateObject();
+		assert(newNeuronJSON != NULL);	
+		cJSON_AddItemToObject(newNeuronJSON, "targets", targetsJSON);
+		cJSON_AddItemToObject(newNeuronJSON, "weights", weightsJSON);
+		cJSON_AddItemToObject(newNeuronJSON, "threshold", thresholdJSON);
+		cJSON_AddItemToArray(neuronsJSON, newNeuronJSON);
 	}
 
+	cJSON_AddItemToObject(brainJSON,"neurons", neuronsJSON);
+	char * resultString = NULL;
+	printf("REACHED!1\n");
+	resultString = cJSON_Print(brainJSON);
+	printf("REACHED!\n");
 
-
+ 	cJSON_Delete(brainJSON);
+	fprintf(fp, "%s", resultString);
+	free(resultString);
 }
 
 
