@@ -10,5 +10,5 @@ Contributors:
 John Balis   
 William Derksen  
 
-Inline dependencies:
+Inline dependencies:  
 cJSON, courtesy of Dave Gamble and cJSON contributors
