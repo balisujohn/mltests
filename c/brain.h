@@ -69,6 +69,7 @@ brain * forkBrain(brain * oldBrain);
 void freeBrain(brain * b );
 void printBrain(brain * b );
 void printBrainToFile(brain * b, FILE * fp); 
+brain * loadBrainFromFile(FILE * fp);
 mutationParams *  initializeDefaultMutationParams();
 
 #endif

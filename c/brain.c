@@ -653,7 +653,7 @@ void printBrain(brain * b ){
 }
 
 /*
-   saves a brain to file. Uses Javascript Object Notation. format template included in specs folder. 
+   saves a brain to file. Uses JavaScript Object Notation. format template included in specs folder. 
 
  */
 void printBrainToFile(brain * b ,FILE * fp){
@@ -674,7 +674,8 @@ void printBrainToFile(brain * b ,FILE * fp){
 			assert(weightsJSON!=NULL);
 			cJSON * thresholdJSON = cJSON_CreateNumber(b->neurons[i].activationPotential);	
 			assert(thresholdJSON!= NULL);
-
+			cJSON * targetCountJSON = cJSON_CreateNumber(b->neurons[i].targetCount);
+			assert(targetCountJSON != NULL);
 		for(int c = 0; c < b->neurons[i].targetCount; c++)
 		{
 			cJSON * newTargetJSON = cJSON_CreateNumber(b->neurons[i].targets[c]);
@@ -693,18 +694,99 @@ void printBrainToFile(brain * b ,FILE * fp){
 		cJSON_AddItemToObject(newNeuronJSON, "targets", targetsJSON);
 		cJSON_AddItemToObject(newNeuronJSON, "weights", weightsJSON);
 		cJSON_AddItemToObject(newNeuronJSON, "threshold", thresholdJSON);
+		cJSON_AddItemToObject(newNeuronJSON, "targetCount", targetCountJSON);
 		cJSON_AddItemToArray(neuronsJSON, newNeuronJSON);
 	}
 
 	cJSON_AddItemToObject(brainJSON,"neurons", neuronsJSON);
 	char * resultString = NULL;
-	printf("REACHED!1\n");
+	
 	resultString = cJSON_Print(brainJSON);
-	printf("REACHED!\n");
+	
 
  	cJSON_Delete(brainJSON);
 	fprintf(fp, "%s", resultString);
 	free(resultString);
 }
 
+brain * loadBrainFromFile(FILE * fp)
+{
+fseek(fp, 0L, SEEK_END);
+size_t size = ftell(fp)+1;
+rewind(fp);
+char * stringBuffer = malloc(sizeof(char) *size);
 
+fread((void *)stringBuffer, size,1,fp);
+stringBuffer[size-1] = '\0';
+
+cJSON * brainJSON = cJSON_Parse(stringBuffer);
+assert(brainJSON != NULL);
+
+brain * b = malloc(sizeof(brain));
+
+cJSON * neuronCountJSON = cJSON_GetObjectItemCaseSensitive(brainJSON, "neuronCount");
+assert(neuronCountJSON!=NULL);
+int neuronCount = neuronCountJSON->valueint;
+b->neuronCount = neuronCount;
+
+
+cJSON * neuronsJSON = cJSON_GetObjectItemCaseSensitive(brainJSON, "neurons");
+assert(neuronsJSON!=NULL);
+
+cJSON * neuronJSON = NULL;
+
+b->neurons = malloc(sizeof(neuron) * neuronCount);
+int neuronIndex = 0;
+cJSON_ArrayForEach(neuronJSON, neuronsJSON)
+{
+	neuron * n = &(b->neurons[neuronIndex++]);
+	cJSON * targetCountJSON = cJSON_GetObjectItemCaseSensitive(neuronJSON, "targetCount");
+	assert(cJSON_IsNumber(targetCountJSON));
+	int targetCount = targetCountJSON->valueint;
+	cJSON * thresholdJSON = cJSON_GetObjectItemCaseSensitive(neuronJSON, "threshold");
+	float threshold = thresholdJSON->valuedouble;
+
+
+	n->fired = 0;	
+	n->age=0;
+	n->activationPotential = threshold;
+	n->excitation = 0.0 ;
+	n->activationDuration=0.05;
+	n->mostRecentActivation= -100.0;
+	n->targetCount = targetCount;
+	
+	n->targets = malloc(sizeof(int)* (n->targetCount));
+	n->potentialWeights = malloc(sizeof(float)* n->targetCount);
+	n->potentialTimes = malloc(sizeof(float)* n->targetCount);
+	for (int c = 0; c < n->targetCount;c++)
+	{
+	n->potentialTimes[c] = 0.1; //deprecated, to be deleted
+	}
+	cJSON * targetsJSON = cJSON_GetObjectItemCaseSensitive(neuronJSON, "targets");
+	int counter = 0;
+	cJSON * targetJSON;
+        cJSON_ArrayForEach(targetJSON, targetsJSON)
+	{
+	n->targets[counter++] = targetJSON->valueint;
+	}
+	cJSON * weightsJSON = cJSON_GetObjectItemCaseSensitive(neuronJSON, "weights");
+	counter = 0;
+	cJSON * weightJSON = NULL;
+        cJSON_ArrayForEach(weightJSON, weightsJSON)
+	{
+	n->potentialWeights[counter++] = weightJSON->valuedouble;
+	}
+
+
+
+} 
+
+cJSON_Delete(brainJSON);
+
+
+return b;
+
+
+
+
+}

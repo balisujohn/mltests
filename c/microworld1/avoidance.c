@@ -38,6 +38,17 @@ float evaluateMicroWorldPerformance(brain * b)
 
 int main(int arc, char * argv[])
 {
+/*	save-load test protocol hopefully will never be needed again
+	FILE * fp = fopen("save.1","r");
+	brain * b = loadBrainFromFile(fp);
+	printBrain(b);
+	fclose(fp);
+	FILE * fp2 = fopen("log.txt", "w+");
+	printBrainToFile(b,fp2);
+	exit(0);
+	
+*/
+
 
 	srand(time(0));
 	//populationLearn(evaluateMicroWorldPerformance, 4,3,10,10);
