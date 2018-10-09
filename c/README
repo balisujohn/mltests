@@ -27,29 +27,30 @@ Basic Overview:
 
 the neural network is stored in a struct array
 
-currently starting neuron count is defined in brain.h
+currently starting neuron count is define via mutationParams
 
-any  number of inputs and outputs can be specified when advancing the neural network,  the inputs are applied starting
-at index 1 and the outputs are measured starting at index inputCount + 1
+any  number of inputs and outputs can be specified when advancing the neural network as the sum of inputs and outputs is at most one less than the 
+number of neurons, the inputs are applied starting at index 1 and the outputs are measured starting at index inputCount + 1 
 
-any neuron can point any other neuron, so the network is not feed forward and is capable of holding state. 
+any neuron can point any other neuron, so the network is not feed forward and is capable of holding state.  
 
+If you would like to collect the topology of the network you have just trained, terminate the program when you arrive after a prompt when the training sequence completes. 
+The log.txt file will hold the topology. Rename or move this file to prevent it from being overwritten in future runs. The brain.c class implements a method for loading a brain configuration from file, so you can load saved models for further training or analysis. 
 
 
 Mutation:
 
-There is no mutation oversight algorithm of simulated annleaing, it's just based on
-fixed global parameters. This will need work.
+There is no mutation oversight algorithm of simulated annealing, it's just based on
+fixed parameters. This will need work
 
-
+Mutation Types:
 weight change mutation, connection target change mutation, neuron addition/removal mutation, and connection addition/removal mutation.
 
 
 Known Issues:
 
+nothing worth noting right now.
 
-malloc is not entirely used safely, this can result in segfaults if the program runs out of memory. This, along with memory leak issues, is 
-something I plan to address soon.
 
 Questions/concerns:
 
