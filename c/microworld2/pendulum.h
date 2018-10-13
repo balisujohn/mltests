@@ -20,9 +20,10 @@ float weightYPos;
 float weightXVel;
 float weightYVel;
 float weightXAccel;
+float weightYAccel;
 
 float baseXPos;
-float baseXvel;
+float baseXVel;
 float baseXAccel;
 
 } typedef pendulumWorld;
