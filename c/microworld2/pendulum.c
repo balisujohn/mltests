@@ -2,10 +2,9 @@
 #include<stdio.h>
 #include<time.h>
 #include<math.h>
+#include"../brain.h"
 #include"pendulum.h"
 #include"../utils.h"
-
-
 
 //John Balis 2018
 //for support email balisujohn@gmail.com 
@@ -17,6 +16,7 @@
 pendulumWorld * initRandomPendulumWorld()
 {
 pendulumWorld * w = malloc(sizeof(pendulumWorld));
+w->time = 0;
 w->baseYPos = .001;
 w->baseXPos = .001;
 w->baseXVel = 0;
@@ -31,22 +31,26 @@ w->weightYAccel = 0;
 return w;
 }
 
-int advancePendulumWorld(pendulumWorld * w)
+int advancePendulumWorld(pendulumWorld * w, float baseAccel)
 {
+w->time += 1;
 float angle = atan(w->weightYPos/abs(w->weightXPos - w->baseXPos));
 
 
 
-float baseXPos = w->baseXPos;
-float baseYPos = w->baseYPos;
-float weightXAccel = GRAVITY * cos(angle);
-float weightYAccel = GRAVITY * sin(angle);
+float baseXAccel = baseAccel;
+float baseXVel = w->baseXVel + w->baseXAccel;
+float baseXPos = w->baseXPos + w->baseXVel;
+float baseYPos = 0;
+
+float weightXAccel = GRAVITY * cos(angle) + sin(angle) * baseXAccel;
+float weightYAccel = GRAVITY * sin(angle) + cos(angle) * baseXAccel;
+
 float weightXVel = w->weightXVel + w->weightXAccel;
 float weightYVel = w->weightYVel + w->weightYAccel;
 float weightXPos = w->weightXPos +  w->weightXVel * .1;
 float weightYPos = w->weightYPos +  w->weightYVel * .1;
-
-float weightToBaseX = weightXPos - w->baseXPos; 
+float weightToBaseX = weightXPos - baseXPos; 
 float weightToBaseY = weightYPos - baseYPos;
 
 float norm = sqrt(pow(weightToBaseX,2) + pow(weightToBaseY, 2));
@@ -60,11 +64,16 @@ w->weightXVel = weightXVel;
 w->weightYVel = weightYVel;
 w->weightXPos = weightXPos;
 w->weightYPos  = weightYPos;
-
+w->baseXAccel = baseXAccel;
+w->baseXVel = baseXVel;
+w->baseXPos = baseXPos;
 
 
 
 }
+
+
+
 
 void displayPendulum(pendulumWorld * w)
 {
@@ -89,13 +98,70 @@ void graphicalDisplay(pendulumWorld * w)
 		{
 		printf("  ");
 		}
-
 		}
-	printf("\n");
+	
+		printf("\n");
 	}
 }
 
 
+
+
+float evaluateMicroWorldPerformance(brain * b)
+{
+	
+
+	const int trials = 100;
+	const int survivalTime = 1000;	
+
+
+	int score = 0;
+	for(int i = 0; i < trials; i ++)
+	{
+
+		pendulumWorld * world = initRandomPendulumWorld();
+		brain * testInstance = forkBrain(b);
+		while (world->time < survivalTime && world->weightYPos > 0)
+		{
+		score+=1;
+		
+		float brainOutput = 0;
+		
+		int inputs[22];
+		int outputs[9];
+		inputs[0] = world->weightXVel > 0;
+		inputs[9] = world->weightYVel > 0;
+		int normedWeightXVel = (int)(255* world->weightXVel);
+		if (normedWeightXVel > 255) 
+		{
+		normedWeightXVel = 255;
+		} 
+		int normedWeightYVel = (int)(255* world->weightYVel);
+		if (normedWeightYVel > 255) 
+		{
+		normedWeightYVel = 255;
+		}
+		int normedHeight = (int)(world->weightYPos/PENDULUM_LENGTH)* 15;
+		if(normedHeight > 15)
+		{
+			normedHeight = 15;
+		} 
+		mapIntToArray(normedWeightXVel,&(inputs[1]) ,8);
+		mapIntToArray(normedWeightYVel,&(inputs[10]) ,8);		
+		mapIntToArray(normedHeight,&(inputs[18]) ,4);
+		
+	
+		advanceBrain(testInstance,$(inputs[0]),22,$(outputs[0]),9);
+
+			
+
+		advancePendulumWorld(world,brainOutput);
+
+		}
+		
+	}	
+	return (((float)score /(trials * survivalTime)) * 100)/.95;
+}
 
 
 
@@ -113,7 +179,7 @@ int main(int argc, char * argv[])
 		interval.tv_nsec = 50000000;
 		nanosleep(&interval, NULL);
 		graphicalDisplay(test);
-		advancePendulumWorld(test);
+		advancePendulumWorld(test,((randFloat()*2) -1)/10);
 	}
 
 

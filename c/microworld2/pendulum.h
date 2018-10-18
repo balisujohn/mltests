@@ -13,7 +13,7 @@
 //for support email balisujohn@gmail.com
 
 struct pendulumWorld{
-
+int time;
 
 float weightXPos;
 float weightYPos;
