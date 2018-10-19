@@ -6,6 +6,7 @@
 
 
 void mapIntToArray(int value, int * map, int length);
+void mapIntToUnaryArray(int value, int * map, int length);
 int mapArrayToInt(int * map, int length);
 float randFloat();
 int randRange(int limit);

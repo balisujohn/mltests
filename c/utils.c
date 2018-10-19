@@ -34,6 +34,17 @@ map[i] = (value >> i) & 1;
 
 }
 
+
+void mapIntToUnaryArray(int value, int * map, int length)
+{
+for(int i = 0; i < length; i++)
+{
+map[i] = (value >> i) > 0;
+}
+
+}
+
+
 /*
 Takes a range of an aray of integers such that each integer is equal to one or zero and returns the integer value 
 constructed from binary. 

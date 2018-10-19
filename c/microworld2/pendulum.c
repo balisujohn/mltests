@@ -3,6 +3,7 @@
 #include<stdio.h>
 #include<time.h>
 #include<math.h>
+#include<string.h>
 
 #include"../brain.h"
 
@@ -47,7 +48,20 @@ float angle = atan(w->weightYPos/abs(w->weightXPos - w->baseXPos));
 
 float baseXAccel = baseAccel;
 float baseXVel = w->baseXVel + w->baseXAccel;
-float baseXPos = w->baseXPos + w->baseXVel * .1;
+float baseXPos = w->baseXPos + w->baseXVel;
+if(baseXPos > 2)
+{
+ baseXPos = 2;
+ baseXVel = 0;
+}
+
+if(baseXPos < -2) 
+{
+baseXPos = -2;
+baseXVel = 0;	
+
+
+}
 float baseYPos = 0;
 
 float weightXAccel = GRAVITY * cos(angle) + sin(angle) * baseXAccel;
@@ -91,6 +105,7 @@ void graphicalDisplay(pendulumWorld * w)
 	printf("\033[2J");
 	for(int c = 19; c >= 0; c --)
 	{
+		printf("|");
 		for(int i = 19; i >= 0; i--)
 		{
 		if(w->weightXPos >= -2.0 + (i*(.2)) && w->weightXPos <= -2.0 + ((i+1) * .2 ) && (w->weightYPos >= -2.0 + (c*(.2)) && w->weightYPos <= -2.0 + ((c+1) * .2 )))
@@ -107,7 +122,7 @@ void graphicalDisplay(pendulumWorld * w)
 		}
 		}
 	
-		printf("\n");
+		printf("|\n");
 	}
 }
 
@@ -152,12 +167,14 @@ float evaluateMicroWorldPerformance(brain * b)
 		{
 			normedHeight = 15;
 		} 
-		mapIntToArray(normedWeightXVel,&(inputs[1]) ,8);
-		mapIntToArray(normedWeightYVel,&(inputs[10]) ,8);		
-		mapIntToArray(normedHeight,&(inputs[18]) ,4);
+		mapIntToUnaryArray(normedWeightXVel,&(inputs[1]) ,8);
+		mapIntToUnaryArray(normedWeightYVel,&(inputs[10]) ,8);		
+		mapIntToUnaryArray(normedHeight,&(inputs[18]) ,4);
 		
-			
+		for(int c = 0; c< 5; c++)
+		{	
 		advanceBrain(testInstance,&(inputs[0]),22,&(outputs[0]),9);
+		}
 
 	 	int brainOutput = mapArrayToInt(&(outputs[0]), 8);
 		if(outputs[8])
@@ -165,7 +182,7 @@ float evaluateMicroWorldPerformance(brain * b)
 		brainOutput *= -1;
 		}
 		//if(brainOutput) printf("%i\n",brainOutput);
-		advancePendulumWorld(world,brainOutput*2);
+		advancePendulumWorld(world,brainOutput/255.0);
 		}
 		free(world);
 		freeBrain(testInstance);
@@ -174,10 +191,81 @@ float evaluateMicroWorldPerformance(brain * b)
 	return (((float)score /(trials * survivalTime)) * 100)/.95;
 }
 
+void m2Analysis(brain * b)
+{
+while(1)
+{
+        int score = 0;
+        pendulumWorld * world = initRandomPendulumWorld();
+                brain * testInstance = forkBrain(b);
+                while (world->weightYPos > 0)
+                {
+                score+=1;
+                
+                
+                int inputs[22];
+                int outputs[9];
+                inputs[0] = world->weightXVel > 0;
+                inputs[9] = world->weightYVel > 0;
+                int normedWeightXVel = abs((int)(255* world->weightXVel));
+                if (normedWeightXVel > 255) 
+                {
+                normedWeightXVel = 255;
+                } 
+                int normedWeightYVel = abs((int)(255* world->weightYVel));
+                if (normedWeightYVel > 255) 
+                {
+                normedWeightYVel = 255;
+                }
+                int normedHeight = (int)((world->weightYPos/PENDULUM_LENGTH)* 15);
+                if(normedHeight > 15)
+                {
+                        normedHeight = 15;
+                } 
+                mapIntToUnaryArray(normedWeightXVel,&(inputs[1]) ,8);
+                mapIntToUnaryArray(normedWeightYVel,&(inputs[10]) ,8);               
+                mapIntToUnaryArray(normedHeight,&(inputs[18]) ,4);
+               
+		printf("X VELOCITY: %i, Y VELOCITY: %i, HEIGHT: %i\n", normedWeightXVel, normedWeightYVel, normedHeight);
+		 
+               	for(int c = 0; c< 5; c++)
+		{	
+		advanceBrain(testInstance,&(inputs[0]),22,&(outputs[0]),9);
+		}
+                struct timespec interval;
+                interval.tv_sec = 0;
+                interval.tv_nsec = 200000000;
+                nanosleep(&interval, NULL);
+                graphicalDisplay(world);
+
+
+                int brainOutput = mapArrayToInt(&(outputs[0]), 8);
+                if(outputs[8])
+                {
+                brainOutput *= -1;
+                }
+                //if(brainOutput) printf("%i\n",brainOutput);
+                advancePendulumWorld(world, brainOutput/255.0);
+                }
+                free(world);
+                freeBrain(testInstance);
+                printf("SCORE: %i\n", score);
+                struct timespec interval;
+                interval.tv_sec = 0;
+                interval.tv_nsec = 200000000;   
+		 nanosleep(&interval, NULL);
+
+
+
+}
+
+}
+
 
 
 int main(int argc, char * argv[])
 {
+	srand(time(0));
 
 
 	/*
@@ -191,32 +279,26 @@ int main(int argc, char * argv[])
 	return 1 ;
 	*/
 
-	srand(time(0));
+	
 
+	if(strstr(argv[1], "train"))
+	{
 	params * p = initializeDefaultParams();
 	p->mParams->initialNeuronCount = 32;
 	p->mParams->potentialProb = .3;	
         brain * resultBrain = learn(evaluateMicroWorldPerformance, p);
-	
-
-	return 1;	
-
-	pendulumWorld * test = initRandomPendulumWorld(); 
-
-
-
-	while(test->weightYPos > 0)
+	}
+	else if(strstr(argv[1],"analyze"))
 	{
-		struct timespec interval;
-		interval.tv_sec = 0;
-		interval.tv_nsec = 50000000;
-		nanosleep(&interval, NULL);
-		graphicalDisplay(test);
-		advancePendulumWorld(test,((randFloat()*2) -1)/10);
+	srand(time(0));
+        FILE * fp = fopen("log.txt", "r");
+        brain * b = loadBrainFromFile(fp);
+	m2Analysis(b);
 	}
 
 
-	return 1;
+	return 1;	
+
 }
 
 

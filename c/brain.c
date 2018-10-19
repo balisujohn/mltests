@@ -329,6 +329,17 @@ void neuronCountMutation(brain * b, int minInputCount, int minOutputCount, float
 			b->neuronCount--;
 			b->neurons = realloc(b->neurons, sizeof(neuron)* b->neuronCount);
 
+
+			for(int i = 0; i  < b->neuronCount; i++) // this is an expensive O(n^2) mutation, so it's important to give it a low probability, but it ensures we will 
+			{ // not have to worry about pre-existing activation patterns coming back from the dead when add a neuron with the index of a neuron we previously removed
+				for(int c = 0; c < b->neurons[i].targetCount; c++)
+					if (b->neurons[i].targets[c] == b->neuronCount)
+					{
+						b->neurons[i].targets[c] = randRange(b->neuronCount); // randomizes edges which previously targeted neuron being removed 
+					}
+
+			}
+
 		}
 
 
@@ -502,35 +513,35 @@ void mutateBrain(brain * b, mutationParams * m){
 	char c;
 	int i = 0;
 	while((c = (m->order)[i]) != '\0'){
-	i += 1;
-	//printf("%c\n", c);
-	switch (c) {
+		i += 1;
+		//printf("%c\n", c);
+		switch (c) {
 
 
-		case 's' :
+			case 's' :
 
-			neuronSwapMutation(b,m->swapProb);
-			break;
+				neuronSwapMutation(b,m->swapProb);
+				break;
 
-		case 'c' :
+			case 'c' :
 
-			neuronCountMutation(b, m->minInputCount, m->minOutputCount,m->neuronCountProb, m->neuronCountBias );
-			break;
+				neuronCountMutation(b, m->minInputCount, m->minOutputCount,m->neuronCountProb, m->neuronCountBias );
+				break;
 
-		case 't' : 
+			case 't' : 
 
-			targetMutation(b, m->targetLimit, m->targetCountProb, m->targetCountBias, m->retargetProb);
-			break;
+				targetMutation(b, m->targetLimit, m->targetCountProb, m->targetCountBias, m->retargetProb);
+				break;
 
-		case 'p' :
+			case 'p' :
 
-			potentialsMutation(b, m->potentialProb, m->potentialStrength);
-			break;	
-		case 'h' :
+				potentialsMutation(b, m->potentialProb, m->potentialStrength);
+				break;	
+			case 'h' :
 
-			thresholdMutation(b, m->potentialProb, m->potentialStrength);
-			break;
-	}
+				thresholdMutation(b, m->potentialProb, m->potentialStrength);
+				break;
+		}
 
 
 
@@ -657,7 +668,7 @@ void printBrain(brain * b ){
 
  */
 void printBrainToFile(brain * b ,FILE * fp){
-	
+
 
 	cJSON * brainJSON = cJSON_CreateObject();
 	assert(brainJSON != NULL);
@@ -668,14 +679,14 @@ void printBrainToFile(brain * b ,FILE * fp){
 	assert(neuronsJSON!=NULL);
 	for(int i = 0; i < b->neuronCount; i++)
 	{
-			cJSON * targetsJSON = cJSON_CreateArray();
-	                assert(targetsJSON!=NULL);
-			cJSON * weightsJSON = cJSON_CreateArray();
-			assert(weightsJSON!=NULL);
-			cJSON * thresholdJSON = cJSON_CreateNumber(b->neurons[i].activationPotential);	
-			assert(thresholdJSON!= NULL);
-			cJSON * targetCountJSON = cJSON_CreateNumber(b->neurons[i].targetCount);
-			assert(targetCountJSON != NULL);
+		cJSON * targetsJSON = cJSON_CreateArray();
+		assert(targetsJSON!=NULL);
+		cJSON * weightsJSON = cJSON_CreateArray();
+		assert(weightsJSON!=NULL);
+		cJSON * thresholdJSON = cJSON_CreateNumber(b->neurons[i].activationPotential);	
+		assert(thresholdJSON!= NULL);
+		cJSON * targetCountJSON = cJSON_CreateNumber(b->neurons[i].targetCount);
+		assert(targetCountJSON != NULL);
 		for(int c = 0; c < b->neurons[i].targetCount; c++)
 		{
 			cJSON * newTargetJSON = cJSON_CreateNumber(b->neurons[i].targets[c]);
@@ -700,91 +711,91 @@ void printBrainToFile(brain * b ,FILE * fp){
 
 	cJSON_AddItemToObject(brainJSON,"neurons", neuronsJSON);
 	char * resultString = NULL;
-	
-	resultString = cJSON_Print(brainJSON);
-	
 
- 	cJSON_Delete(brainJSON);
+	resultString = cJSON_Print(brainJSON);
+
+
+	cJSON_Delete(brainJSON);
 	fprintf(fp, "%s", resultString);
 	free(resultString);
 }
 
 brain * loadBrainFromFile(FILE * fp)
 {
-fseek(fp, 0L, SEEK_END);
-size_t size = ftell(fp)+1;
-rewind(fp);
-char * stringBuffer = malloc(sizeof(char) *size);
+	fseek(fp, 0L, SEEK_END);
+	size_t size = ftell(fp)+1;
+	rewind(fp);
+	char * stringBuffer = malloc(sizeof(char) *size);
 
-fread((void *)stringBuffer, size,1,fp);
-stringBuffer[size-1] = '\0';
+	fread((void *)stringBuffer, size,1,fp);
+	stringBuffer[size-1] = '\0';
 
-cJSON * brainJSON = cJSON_Parse(stringBuffer);
-assert(brainJSON != NULL);
+	cJSON * brainJSON = cJSON_Parse(stringBuffer);
+	assert(brainJSON != NULL);
 
-brain * b = malloc(sizeof(brain));
+	brain * b = malloc(sizeof(brain));
 
-cJSON * neuronCountJSON = cJSON_GetObjectItemCaseSensitive(brainJSON, "neuronCount");
-assert(neuronCountJSON!=NULL);
-int neuronCount = neuronCountJSON->valueint;
-b->neuronCount = neuronCount;
-
-
-cJSON * neuronsJSON = cJSON_GetObjectItemCaseSensitive(brainJSON, "neurons");
-assert(neuronsJSON!=NULL);
-
-cJSON * neuronJSON = NULL;
-
-b->neurons = malloc(sizeof(neuron) * neuronCount);
-int neuronIndex = 0;
-cJSON_ArrayForEach(neuronJSON, neuronsJSON)
-{
-	neuron * n = &(b->neurons[neuronIndex++]);
-	cJSON * targetCountJSON = cJSON_GetObjectItemCaseSensitive(neuronJSON, "targetCount");
-	assert(cJSON_IsNumber(targetCountJSON));
-	int targetCount = targetCountJSON->valueint;
-	cJSON * thresholdJSON = cJSON_GetObjectItemCaseSensitive(neuronJSON, "threshold");
-	float threshold = thresholdJSON->valuedouble;
+	cJSON * neuronCountJSON = cJSON_GetObjectItemCaseSensitive(brainJSON, "neuronCount");
+	assert(neuronCountJSON!=NULL);
+	int neuronCount = neuronCountJSON->valueint;
+	b->neuronCount = neuronCount;
 
 
-	n->fired = 0;	
-	n->age=0;
-	n->activationPotential = threshold;
-	n->excitation = 0.0 ;
-	n->activationDuration=0.05;
-	n->mostRecentActivation= -100.0;
-	n->targetCount = targetCount;
-	
-	n->targets = malloc(sizeof(int)* (n->targetCount));
-	n->potentialWeights = malloc(sizeof(float)* n->targetCount);
-	n->potentialTimes = malloc(sizeof(float)* n->targetCount);
-	for (int c = 0; c < n->targetCount;c++)
+	cJSON * neuronsJSON = cJSON_GetObjectItemCaseSensitive(brainJSON, "neurons");
+	assert(neuronsJSON!=NULL);
+
+	cJSON * neuronJSON = NULL;
+
+	b->neurons = malloc(sizeof(neuron) * neuronCount);
+	int neuronIndex = 0;
+	cJSON_ArrayForEach(neuronJSON, neuronsJSON)
 	{
-	n->potentialTimes[c] = 0.1; //deprecated, to be deleted
-	}
-	cJSON * targetsJSON = cJSON_GetObjectItemCaseSensitive(neuronJSON, "targets");
-	int counter = 0;
-	cJSON * targetJSON;
-        cJSON_ArrayForEach(targetJSON, targetsJSON)
-	{
-	n->targets[counter++] = targetJSON->valueint;
-	}
-	cJSON * weightsJSON = cJSON_GetObjectItemCaseSensitive(neuronJSON, "weights");
-	counter = 0;
-	cJSON * weightJSON = NULL;
-        cJSON_ArrayForEach(weightJSON, weightsJSON)
-	{
-	n->potentialWeights[counter++] = weightJSON->valuedouble;
-	}
+		neuron * n = &(b->neurons[neuronIndex++]);
+		cJSON * targetCountJSON = cJSON_GetObjectItemCaseSensitive(neuronJSON, "targetCount");
+		assert(cJSON_IsNumber(targetCountJSON));
+		int targetCount = targetCountJSON->valueint;
+		cJSON * thresholdJSON = cJSON_GetObjectItemCaseSensitive(neuronJSON, "threshold");
+		float threshold = thresholdJSON->valuedouble;
+
+
+		n->fired = 0;	
+		n->age=0;
+		n->activationPotential = threshold;
+		n->excitation = 0.0 ;
+		n->activationDuration=0.05;
+		n->mostRecentActivation= -100.0;
+		n->targetCount = targetCount;
+
+		n->targets = malloc(sizeof(int)* (n->targetCount));
+		n->potentialWeights = malloc(sizeof(float)* n->targetCount);
+		n->potentialTimes = malloc(sizeof(float)* n->targetCount);
+		for (int c = 0; c < n->targetCount;c++)
+		{
+			n->potentialTimes[c] = 0.1; //deprecated, to be deleted
+		}
+		cJSON * targetsJSON = cJSON_GetObjectItemCaseSensitive(neuronJSON, "targets");
+		int counter = 0;
+		cJSON * targetJSON;
+		cJSON_ArrayForEach(targetJSON, targetsJSON)
+		{
+			n->targets[counter++] = targetJSON->valueint;
+		}
+		cJSON * weightsJSON = cJSON_GetObjectItemCaseSensitive(neuronJSON, "weights");
+		counter = 0;
+		cJSON * weightJSON = NULL;
+		cJSON_ArrayForEach(weightJSON, weightsJSON)
+		{
+			n->potentialWeights[counter++] = weightJSON->valuedouble;
+		}
 
 
 
-} 
+	} 
 
-cJSON_Delete(brainJSON);
+	cJSON_Delete(brainJSON);
 
 
-return b;
+	return b;
 
 
 
