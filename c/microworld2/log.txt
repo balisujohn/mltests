@@ -1,0 +1,164 @@
+{
+	"neuronCount":	32,
+	"neurons":	[{
+			"targets":	[],
+			"weights":	[],
+			"threshold":	0.4926433265209198,
+			"targetCount":	0
+		}, {
+			"targets":	[],
+			"weights":	[],
+			"threshold":	0.79116809368133545,
+			"targetCount":	0
+		}, {
+			"targets":	[],
+			"weights":	[],
+			"threshold":	0.956994891166687,
+			"targetCount":	0
+		}, {
+			"targets":	[20],
+			"weights":	[0.7653123140335083],
+			"threshold":	0.5288546085357666,
+			"targetCount":	1
+		}, {
+			"targets":	[],
+			"weights":	[],
+			"threshold":	0.65579193830490112,
+			"targetCount":	0
+		}, {
+			"targets":	[9, 7],
+			"weights":	[-0.56958842277526855, 1.0056309700012207],
+			"threshold":	0.68590319156646729,
+			"targetCount":	2
+		}, {
+			"targets":	[1, 0],
+			"weights":	[-0.37664487957954407, 0.359130322933197],
+			"threshold":	0.35936209559440613,
+			"targetCount":	2
+		}, {
+			"targets":	[14],
+			"weights":	[0.097996354103088379],
+			"threshold":	0.35978662967681885,
+			"targetCount":	1
+		}, {
+			"targets":	[4, 26, 27],
+			"weights":	[0.84072363376617432, 0.34653663635253906, 0.83880782127380371],
+			"threshold":	0.11766915768384933,
+			"targetCount":	3
+		}, {
+			"targets":	[],
+			"weights":	[],
+			"threshold":	0.92234653234481812,
+			"targetCount":	0
+		}, {
+			"targets":	[],
+			"weights":	[],
+			"threshold":	0.205359548330307,
+			"targetCount":	0
+		}, {
+			"targets":	[],
+			"weights":	[],
+			"threshold":	0.87855958938598633,
+			"targetCount":	0
+		}, {
+			"targets":	[],
+			"weights":	[],
+			"threshold":	0.38153481483459473,
+			"targetCount":	0
+		}, {
+			"targets":	[8],
+			"weights":	[0.14274120330810547],
+			"threshold":	0.58614695072174072,
+			"targetCount":	1
+		}, {
+			"targets":	[],
+			"weights":	[],
+			"threshold":	0.76601439714431763,
+			"targetCount":	0
+		}, {
+			"targets":	[5],
+			"weights":	[-0.88756471872329712],
+			"threshold":	0.065624520182609558,
+			"targetCount":	1
+		}, {
+			"targets":	[25],
+			"weights":	[-0.420914888381958],
+			"threshold":	0.69975721836090088,
+			"targetCount":	1
+		}, {
+			"targets":	[1, 28, 13],
+			"weights":	[-0.43043720722198486, 0.5179063081741333, 0.58109110593795776],
+			"threshold":	0.023168236017227173,
+			"targetCount":	3
+		}, {
+			"targets":	[],
+			"weights":	[],
+			"threshold":	0.72621792554855347,
+			"targetCount":	0
+		}, {
+			"targets":	[11, 15, 20],
+			"weights":	[-0.26562970876693726, 0.6597740650177002, 0.070730239152908325],
+			"threshold":	0.44221347570419312,
+			"targetCount":	3
+		}, {
+			"targets":	[14],
+			"weights":	[0.97314453125],
+			"threshold":	0.1554865837097168,
+			"targetCount":	1
+		}, {
+			"targets":	[28, 20],
+			"weights":	[-0.6987345814704895, 0.76407802104949951],
+			"threshold":	0.13092394173145294,
+			"targetCount":	2
+		}, {
+			"targets":	[],
+			"weights":	[],
+			"threshold":	0.54847055673599243,
+			"targetCount":	0
+		}, {
+			"targets":	[29],
+			"weights":	[-0.0843820571899414],
+			"threshold":	0.384244829416275,
+			"targetCount":	1
+		}, {
+			"targets":	[26, 3],
+			"weights":	[-0.51619589328765869, 0.13676606118679047],
+			"threshold":	0.37745392322540283,
+			"targetCount":	2
+		}, {
+			"targets":	[9],
+			"weights":	[-0.60585469007492065],
+			"threshold":	0.44357010722160339,
+			"targetCount":	1
+		}, {
+			"targets":	[],
+			"weights":	[],
+			"threshold":	0.975348174571991,
+			"targetCount":	0
+		}, {
+			"targets":	[],
+			"weights":	[],
+			"threshold":	0.70235592126846313,
+			"targetCount":	0
+		}, {
+			"targets":	[10],
+			"weights":	[-0.64575397968292236],
+			"threshold":	0.56337523460388184,
+			"targetCount":	1
+		}, {
+			"targets":	[2],
+			"weights":	[0.35266304016113281],
+			"threshold":	0.74072521924972534,
+			"targetCount":	1
+		}, {
+			"targets":	[],
+			"weights":	[],
+			"threshold":	0.62661284208297729,
+			"targetCount":	0
+		}, {
+			"targets":	[0, 28],
+			"weights":	[-0.96881598234176636, 0.16810110211372375],
+			"threshold":	0.58804738521575928,
+			"targetCount":	2
+		}]
+}

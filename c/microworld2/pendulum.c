@@ -1,10 +1,17 @@
 #include<stdlib.h>
+#include<assert.h>
 #include<stdio.h>
 #include<time.h>
 #include<math.h>
+
 #include"../brain.h"
+
 #include"pendulum.h"
+
+#include"../learning.h"
 #include"../utils.h"
+
+
 
 //John Balis 2018
 //for support email balisujohn@gmail.com 
@@ -40,7 +47,7 @@ float angle = atan(w->weightYPos/abs(w->weightXPos - w->baseXPos));
 
 float baseXAccel = baseAccel;
 float baseXVel = w->baseXVel + w->baseXAccel;
-float baseXPos = w->baseXPos + w->baseXVel;
+float baseXPos = w->baseXPos + w->baseXVel * .1;
 float baseYPos = 0;
 
 float weightXAccel = GRAVITY * cos(angle) + sin(angle) * baseXAccel;
@@ -125,18 +132,17 @@ float evaluateMicroWorldPerformance(brain * b)
 		{
 		score+=1;
 		
-		float brainOutput = 0;
 		
 		int inputs[22];
 		int outputs[9];
 		inputs[0] = world->weightXVel > 0;
 		inputs[9] = world->weightYVel > 0;
-		int normedWeightXVel = (int)(255* world->weightXVel);
+		int normedWeightXVel = abs((int)(255* world->weightXVel));
 		if (normedWeightXVel > 255) 
 		{
 		normedWeightXVel = 255;
 		} 
-		int normedWeightYVel = (int)(255* world->weightYVel);
+		int normedWeightYVel = abs((int)(255* world->weightYVel));
 		if (normedWeightYVel > 255) 
 		{
 		normedWeightYVel = 255;
@@ -150,14 +156,19 @@ float evaluateMicroWorldPerformance(brain * b)
 		mapIntToArray(normedWeightYVel,&(inputs[10]) ,8);		
 		mapIntToArray(normedHeight,&(inputs[18]) ,4);
 		
-	
-		advanceBrain(testInstance,$(inputs[0]),22,$(outputs[0]),9);
-
 			
+		advanceBrain(testInstance,&(inputs[0]),22,&(outputs[0]),9);
 
-		advancePendulumWorld(world,brainOutput);
-
+	 	int brainOutput = mapArrayToInt(&(outputs[0]), 8);
+		if(outputs[8])
+		{
+		brainOutput *= -1;
 		}
+		//if(brainOutput) printf("%i\n",brainOutput);
+		advancePendulumWorld(world,brainOutput*2);
+		}
+		free(world);
+		freeBrain(testInstance);
 		
 	}	
 	return (((float)score /(trials * survivalTime)) * 100)/.95;
@@ -168,9 +179,31 @@ float evaluateMicroWorldPerformance(brain * b)
 int main(int argc, char * argv[])
 {
 
+
+	/*
+	int array[8];
+	int value = 254;
+	mapIntToArray(value, &(array[0]), 8);
+	int result = mapArrayToInt(&(array[0]),8);
+	assert(value == result);
+
+
+	return 1 ;
+	*/
+
 	srand(time(0));
 
+	params * p = initializeDefaultParams();
+	p->mParams->initialNeuronCount = 32;
+	p->mParams->potentialProb = .3;	
+        brain * resultBrain = learn(evaluateMicroWorldPerformance, p);
+	
+
+	return 1;	
+
 	pendulumWorld * test = initRandomPendulumWorld(); 
+
+
 
 	while(test->weightYPos > 0)
 	{
