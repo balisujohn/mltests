@@ -23,6 +23,37 @@ int randRange(int limit)
 
 
 /*
+This is useful for mapping bits from an int to array indices to prep for inputting a brain.
+*/
+void mapIntToArray(int value, int * map, int length)
+{
+for(int i = 0; i < length; i++)
+{
+map[i] = (value >> i) & 1;
+}
+
+}
+
+/*
+Takes a range of an aray of integers such that each integer is equal to one or zero and returns the integer value 
+constructed from binary. 
+
+*/
+int mapArrayToInt(int * map, int length)
+{
+int val = 0;
+for(int i = 0; i < length; i++)
+{
+val +=  (map[i] << i);
+
+}
+
+return val;
+}
+
+
+
+/*
 return a random float between 0 and 1
 
 */

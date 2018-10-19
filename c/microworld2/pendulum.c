@@ -119,7 +119,7 @@ float evaluateMicroWorldPerformance(brain * b)
 	
 
 	const int trials = 100;
-	const int survivalTime = 1000;	
+	const int survivalTime = 100;	
 
 
 	int score = 0;

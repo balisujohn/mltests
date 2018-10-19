@@ -46,6 +46,11 @@ brain * learn( float (*f)(brain *), params * p/*int inputCount, int outputCount*
 		if (newScore > score)
 		{
 
+			FILE *fp;
+			fp = fopen("log.txt", "w+");
+			printBrainToFile(candidate, fp);
+			fclose(fp);
+
 			printf("NEW BEST SCORE: %f\n" , newScore);
 			score = newScore;
 			freeBrain(best);
@@ -90,7 +95,7 @@ brain * learn( float (*f)(brain *), params * p/*int inputCount, int outputCount*
 
    GENERATE RANDOM -> MUTATE -> REPLACE ORIGINAL IF MUTATE OFFSPRING SCORES HIGHER
 
-	takes existing brain and problem as in put and trains brain on problem. 
+   takes existing brain and problem as in put and trains brain on problem. 
 
 
  */
@@ -170,87 +175,87 @@ brain * learnFromExistingBrain(brain * b,  float (*f)(brain *), params * p/* int
 //deprecated
 
 /*
-brain * multiSucc( float (*f)(brain *), int inputCount, int outputCount, int childCount)
+   brain * multiSucc( float (*f)(brain *), int inputCount, int outputCount, int childCount)
+   {
+   srand(time(0));
+
+   brain * best = generateBasicBrain();
+   float score = 0;
+   int sum =0;
+   int counter=0;
+   int validated = 0;
+
+
+
+   brain  ** children = malloc(sizeof(brain * ) * childCount);
+
+   while (!validated)
+   {
+
+   for(int i = 0 ; i < childCount; i ++)
+   {
+
+   children[i] = forkBrain(best);
+   mutateBrain(children[i],inputCount,outputCount);
+   }
+
+   float childScore = score;
+   brain * bestChild = NULL;	
+
+   for(int i = 0 ; i < childCount; i++ )
+   {
+
+   float newChildScore = (*f)(children[i]);
+   if (newChildScore >  childScore)
+   {
+   printf("CHILD ACCEPTED: %f\n", newChildScore);
+   childScore = newChildScore;
+
+   if(bestChild != NULL)
+   {
+   freeBrain(bestChild);
+   }			
+   bestChild = forkBrain(children[i]);
+
+   }
+   freeBrain(children[i]);
+   }
+   if (childScore > score)
+   {
+
+   printf("NEW BEST SCORE: %f\n" , childScore);
+   score = childScore;
+   freeBrain(best);
+   best =forkBrain(bestChild);
+//printBrain(best);
+validated = (100 <= score);
+
+}
+if(bestChild != NULL)
 {
-	srand(time(0));
-
-	brain * best = generateBasicBrain();
-	float score = 0;
-	int sum =0;
-	int counter=0;
-	int validated = 0;
-
-
-
-	brain  ** children = malloc(sizeof(brain * ) * childCount);
-
-	while (!validated)
-	{
-
-		for(int i = 0 ; i < childCount; i ++)
-		{
-
-			children[i] = forkBrain(best);
-			mutateBrain(children[i],inputCount,outputCount);
-		}
-
-		float childScore = score;
-		brain * bestChild = NULL;	
-
-		for(int i = 0 ; i < childCount; i++ )
-		{
-
-			float newChildScore = (*f)(children[i]);
-			if (newChildScore >  childScore)
-			{
-				printf("CHILD ACCEPTED: %f\n", newChildScore);
-				childScore = newChildScore;
-
-				if(bestChild != NULL)
-				{
-					freeBrain(bestChild);
-				}			
-				bestChild = forkBrain(children[i]);
-
-			}
-			freeBrain(children[i]);
-		}
-		if (childScore > score)
-		{
-
-			printf("NEW BEST SCORE: %f\n" , childScore);
-			score = childScore;
-			freeBrain(best);
-			best =forkBrain(bestChild);
-			//printBrain(best);
-			validated = (100 <= score);
-
-		}
-		if(bestChild != NULL)
-		{
-		freeBrain(bestChild);
-		}
-		sum += childScore;
-		counter++;
-		if (counter == 100)
-		{
-			//printf("LAST 100 AVERAGE: %f\n", sum/100.0);
+freeBrain(bestChild);
+}
+sum += childScore;
+counter++;
+if (counter == 100)
+{
+//printf("LAST 100 AVERAGE: %f\n", sum/100.0);
 
 
-			sum = 0;
-			counter = 0;
-		}
-	}
+sum = 0;
+counter = 0;
+}
+}
 
-	free(children);
-	FILE *fp;
-	fp = fopen("log.txt", "w+");
-	printBrainToFile(best, fp);
-	fclose(fp);
-	printBrain(best);
-	analyzeBrain(best, inputCount, outputCount);
+free(children);
+FILE *fp;
+fp = fopen("log.txt", "w+");
+printBrainToFile(best, fp);
+fclose(fp);
+printBrain(best);
+analyzeBrain(best, inputCount, outputCount);
 //	freeBrain(best);
-	return best;
+return best;
 }
 //deprecated
 brain * populationLearn( float (*f)(brain *), int inputCount, int outputCount, int populationCount, int generations)
