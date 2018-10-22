@@ -106,7 +106,9 @@ brain * learnFromExistingBrain(brain * b,  float (*f)(brain *), params * p/* int
 	srand(time(0));
 
 	brain * best = b;
-	float score = 0;
+	brain * benchmarkBrain = forkBrain(best);
+	float score = (*f)(benchmarkBrain);
+	freeBrain(benchmarkBrain);
 	int sum =0;
 	int counter=0;
 	int validated = 0;
@@ -125,6 +127,14 @@ brain * learnFromExistingBrain(brain * b,  float (*f)(brain *), params * p/* int
 		freeBrain(testInstance);
 		if (newScore > score)
 		{
+
+		
+			FILE *fp;
+			fp = fopen("log.txt", "w+");
+			printBrainToFile(candidate, fp);
+			fclose(fp);
+
+
 
 			printf("NEW BEST SCORE: %f\n" , newScore);
 			score = newScore;
