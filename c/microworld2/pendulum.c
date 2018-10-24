@@ -52,12 +52,14 @@ float baseXPos = w->baseXPos + baseXVel;
 
 if(baseXPos > 2)
 {
+ baseXAccel = 0;
  baseXPos = 2;
  baseXVel = 0;
 }
 
 if(baseXPos < -2) 
 {
+baseXAccel = 0;
 baseXPos = -2;
 baseXVel = 0;	
 
@@ -66,10 +68,15 @@ baseXVel = 0;
 float baseYPos = 0;
 
 float weightXAccel = (GRAVITY * cos(angle)) + (sin(angle) * baseXAccel);
-float weightYAccel = (GRAVITY * sin(angle)); + ( cos(angle) * baseXAccel);
+float weightYAccel = (GRAVITY * sin(angle)) + ( cos(angle) * baseXAccel);
+//printf("WEIGHT GRAV Y ACCEL: %f, WEIGHT BASE Y ACCEL: %f\n", (GRAVITY * sin(angle)),   ( cos(angle) * baseXAccel * 5000000));
+
+
 
 float weightXVel = w->weightXVel + weightXAccel;
 float weightYVel = w->weightYVel + weightYAccel;
+if (weightYVel > 1) weightYVel = 1;
+if (weightYVel < -1) weightYVel = -1;
 float weightXPos = w->weightXPos +  weightXVel * .1;
 float weightYPos = w->weightYPos +  weightYVel * .1;
 float weightToBaseX = weightXPos - baseXPos; 
@@ -218,7 +225,7 @@ while(1)
 		{
 		normedWeightYVel = 255;
 		}
-		int normedHeight = (int)(world->weightYPos/PENDULUM_LENGTH)* 15;
+		int normedHeight = (int)((world->weightYPos/PENDULUM_LENGTH)* 15);
 		if(normedHeight > 15)
 		{
 			normedHeight = 15;
