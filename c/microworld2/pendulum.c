@@ -142,7 +142,7 @@ float evaluateMicroWorldPerformance(brain * b)
 	
 
 	const int trials = 100;
-	const int survivalTime = 100;	
+	const int survivalTime = 1000;	
 
 
 	int score = 0;
@@ -196,7 +196,7 @@ float evaluateMicroWorldPerformance(brain * b)
 		freeBrain(testInstance);
 		
 	}	
-	return (((float)score /(trials * survivalTime)) * 100)/.95;
+	return (((float)score /(trials * survivalTime)) * 1000)/.95;
 }
 
 void m2Analysis(brain * b)

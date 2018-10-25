@@ -111,7 +111,7 @@ brain * learnFromExistingBrain(brain * b,  float (*f)(brain *), params * p/* int
 	freeBrain(benchmarkBrain);
 	int sum =0;
 	int counter=0;
-	int validated = 0;
+	int validated = (100<=score);
 	while (!validated )
 	{	
 

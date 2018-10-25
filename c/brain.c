@@ -28,8 +28,6 @@ brain * forkBrain(brain * oldBrain)
 		b->neurons[i].excitation = oldBrain->neurons[i].excitation;
 		b->neurons[i].targetCount = oldBrain->neurons[i].targetCount;
 		b->neurons[i].age=oldBrain->neurons[i].age;
-		b->neurons[i].activationDuration=oldBrain->neurons[i].activationDuration;
-		b->neurons[i].mostRecentActivation= oldBrain->neurons[i].mostRecentActivation;
 		b->neurons[i].targets = malloc(sizeof(int)*( b->neurons[i].targetCount));
 		for (int c = 0; c < b->neurons[i].targetCount;c++)
 		{
@@ -37,11 +35,9 @@ brain * forkBrain(brain * oldBrain)
 
 		}
 		b->neurons[i].potentialWeights = malloc(sizeof(float) * (b->neurons[i].targetCount));
-		b->neurons[i].potentialTimes = malloc(sizeof(float) * (b->neurons[i].targetCount));
 		for (int c = 0; c < b->neurons[i].targetCount; c ++)
 		{
 			b->neurons[i].potentialWeights[c] = oldBrain->neurons[i].potentialWeights[c];
-			b->neurons[i].potentialTimes[c] = oldBrain->neurons[i].potentialTimes[c] ;
 		}
 
 	}
@@ -57,7 +53,6 @@ frees a neuron
 void freeNeuron(neuron *  n)
 {
 	free(n->potentialWeights);
-	free(n->potentialTimes);
 	free(n->targets);
 
 }
@@ -137,8 +132,6 @@ void initializeNeuron(neuron * n,  int neuronCount/* , int targetCountLimit*/)
 	n->age=0;
 	n->activationPotential = randFloat();
 	n->excitation = 0.0 ;//randFloat();
-	n->activationDuration=0.05;
-	n->mostRecentActivation= -100.0;
 	n->targetCount = randRange(neuronCount-1)/2;
 	n->targets = malloc(sizeof(int)* (n->targetCount));
 
@@ -146,11 +139,7 @@ void initializeNeuron(neuron * n,  int neuronCount/* , int targetCountLimit*/)
 	for (int c = 0; c < n->targetCount;c++)
 	{
 
-		//	do
-		//	{ 
 		n->targets[c] = randRange(neuronCount-1)+1;
-		//	}
-		//	while(n->targets[c] == i || ((i ==0 || i == 1) && n->targets[c] ==neuronCount-1)); 
 
 
 	}
@@ -158,11 +147,11 @@ void initializeNeuron(neuron * n,  int neuronCount/* , int targetCountLimit*/)
 
 
 	n->potentialWeights = malloc(sizeof(float) * (neuronCount-1));
-	n->potentialTimes = malloc(sizeof(float) * (neuronCount-1));
+	//n->potentialTimes = malloc(sizeof(float) * (neuronCount-1));
 	for (int c = 0; c < n->targetCount; c ++)
 	{
 		n->potentialWeights[c] = (randFloat()*2)-1;
-		n->potentialTimes[c] = 0.1;
+	//	n->potentialTimes[c] = 0.1;
 	}
 
 
@@ -177,13 +166,9 @@ void copyNeuron(neuron * original, neuron * replica)
 	replica->age = original->age;
 	replica->targetCount = original->targetCount;
 	replica->fired = original->fired;
-	replica->activationDuration = original->activationDuration;
 	replica->activationPotential = original->activationPotential;
 	replica->excitation = original->excitation;
-	replica->mostRecentActivation= original->mostRecentActivation;
 	replica->targets = original->targets;
-	replica->potentialWeights= original->potentialWeights;
-	replica->potentialTimes=original->potentialTimes;
 }
 
 
@@ -228,82 +213,6 @@ brain * generateSparseBrain(mutationParams * m)
 
 		initializeNeuron(&(b->neurons[i]), 2);
 	} 
-	return b;
-
-}
-
-
-
-/*
-DEPRECATED:  
-generates a brain hardcoded to perform Xor.
-this doesn't work with a non-linear gate function, so it is deprecated
- */
-brain * generateXorBrain()
-{
-	brain * b  = malloc(sizeof(brain));
-	b->neuronCount = 6;
-	b->neurons = malloc(sizeof(neuron) * 6);
-	for(int i = 0; i < 6; i++)
-	{
-		b->neurons[i].fired = 0;	
-		b->neurons[i].age=0;
-		b->neurons[i].activationPotential = 1.0;
-		b->neurons[i].excitation = 0.0 ;
-		b->neurons[i].activationDuration=0.05;
-		b->neurons[i].mostRecentActivation= -100.0;
-	} 
-
-
-
-	neuron * neurons = b->neurons;
-
-
-	neurons[0].targetCount = 0;
-
-
-	neurons[1].targetCount = 2;
-	neurons[1].targets = malloc(sizeof(int) *  neurons[1].targetCount);
-	neurons[1].potentialWeights = malloc(sizeof(float) * neurons[1].targetCount);
-	neurons[1].potentialTimes = malloc(sizeof(float) * neurons[1].targetCount); 
-	neurons[1].targets[0] = 4;
-	neurons[1].targets[1] = 5;
-	neurons[1].potentialWeights[0] =  1.0;
-	neurons[1].potentialWeights[1] = -2.0;
-
-
-	neurons[2].targetCount = 2;
-	neurons[2].targets = malloc(sizeof(int) *  neurons[2].targetCount);
-	neurons[2].potentialWeights = malloc(sizeof(float) * neurons[2].targetCount);
-	neurons[2].potentialTimes = malloc(sizeof(float) * neurons[2].targetCount); 
-	neurons[2].targets[0] = 4;
-	neurons[2].targets[1] = 5;
-	neurons[2].potentialWeights[0] =  -2.0;
-	neurons[2].potentialWeights[1] = 1.0;
-
-
-	neurons[3].targetCount = 0;
-
-
-	neurons[4].targetCount = 1;
-	neurons[4].targets = malloc(sizeof(int) *  neurons[4].targetCount);
-	neurons[4].potentialWeights = malloc(sizeof(float) * neurons[4].targetCount);
-	neurons[4].potentialTimes = malloc(sizeof(float) * neurons[4].targetCount); 
-	neurons[4].targets[0] = 3;
-	neurons[4].potentialWeights[0] =  1.0;
-
-
-	neurons[5].targetCount = 1;
-	neurons[5].targets = malloc(sizeof(int) *  neurons[5].targetCount);
-	neurons[5].potentialWeights = malloc(sizeof(float) * neurons[5].targetCount);
-	neurons[5].potentialTimes = malloc(sizeof(float) * neurons[5].targetCount); 
-	neurons[5].targets[0] = 3;
-	neurons[5].potentialWeights[0] =  1.0;
-
-
-
-
-
 	return b;
 
 }
@@ -366,7 +275,6 @@ void targetMutation(brain * b, int targetCountLimit, float targetCountProbabilit
 					b->neurons[i].targetCount++;
 					b->neurons[i].targets = realloc(b->neurons[i].targets, sizeof(int) * b->neurons[i].targetCount);
 					b->neurons[i].potentialWeights = realloc(b->neurons[i].potentialWeights,sizeof(float) * b->neurons[i].targetCount);
-					b->neurons[i].potentialTimes = realloc(b->neurons[i].potentialTimes,sizeof(float) * b->neurons[i].targetCount);
 					b->neurons[i].targets[b->neurons[i].targetCount-1] = randRange(b->neuronCount);
 					b->neurons[i].potentialWeights[b->neurons[i].targetCount-1]  = randFloat();
 				}
@@ -376,7 +284,6 @@ void targetMutation(brain * b, int targetCountLimit, float targetCountProbabilit
 					b->neurons[i].targetCount--;
 					b->neurons[i].targets = realloc(b->neurons[i].targets, sizeof(int) * b->neurons[i].targetCount);
 					b->neurons[i].potentialWeights = realloc(b->neurons[i].potentialWeights,sizeof(float) * b->neurons[i].targetCount);
-					b->neurons[i].potentialTimes = realloc(b->neurons[i].potentialTimes,sizeof(float) * b->neurons[i].targetCount);
 
 				}
 
@@ -394,7 +301,6 @@ void targetMutation(brain * b, int targetCountLimit, float targetCountProbabilit
 			b->neurons[i].targetCount++;
 			b->neurons[i].targets = realloc(b->neurons[i].targets, sizeof(int) * b->neurons[i].targetCount);
 			b->neurons[i].potentialWeights = realloc(b->neurons[i].potentialWeights,sizeof(float) * b->neurons[i].targetCount);
-			b->neurons[i].potentialTimes = realloc(b->neurons[i].potentialTimes,sizeof(float) * b->neurons[i].targetCount);
 			b->neurons[i].targets[b->neurons[i].targetCount-1] = randRange(b->neuronCount);
 			b->neurons[i].potentialWeights[b->neurons[i].targetCount-1]  = (randFloat()*2)-1;
 
@@ -762,17 +668,10 @@ brain * loadBrainFromFile(FILE * fp)
 		n->age=0;
 		n->activationPotential = threshold;
 		n->excitation = 0.0 ;
-		n->activationDuration=0.05;
-		n->mostRecentActivation= -100.0;
 		n->targetCount = targetCount;
 
 		n->targets = malloc(sizeof(int)* (n->targetCount));
 		n->potentialWeights = malloc(sizeof(float)* n->targetCount);
-		n->potentialTimes = malloc(sizeof(float)* n->targetCount);
-		for (int c = 0; c < n->targetCount;c++)
-		{
-			n->potentialTimes[c] = 0.1; //deprecated, to be deleted
-		}
 		cJSON * targetsJSON = cJSON_GetObjectItemCaseSensitive(neuronJSON, "targets");
 		int counter = 0;
 		cJSON * targetJSON;

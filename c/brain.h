@@ -43,13 +43,13 @@ struct neuron{
 	float age;
 	int targetCount;
 	int fired;
-	float activationDuration;
+//	float activationDuration;
 	float activationPotential;
 	float excitation;
-	float mostRecentActivation;
+//	float mostRecentActivation;
 	int * targets;
 	float * potentialWeights;
-	float * potentialTimes;
+//	float * potentialTimes;
 } typedef neuron;
 
 struct brain{

@@ -370,9 +370,12 @@ float evaluateXorPerformance(brain * b)
 }
 
 
+//DEPRECATED
+
 /*
 verifies that the hardcoded xor network still works. If this is broken, nothing else is guaranteed to work
 */
+/*
 int  baseLineXorTest()
 {
 	brain * baseLine = generateXorBrain();
@@ -387,4 +390,4 @@ int  baseLineXorTest()
 
 }
 
-
+*/
