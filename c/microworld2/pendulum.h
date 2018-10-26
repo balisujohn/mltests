@@ -9,11 +9,15 @@
 #define LEFT_X_BOUND -1
 
 
+#define FAILED_WALL_COLLISION
+#define ACTIVE
+
 //John Balis 2018
 //for support email balisujohn@gmail.com
 
 struct pendulumWorld{
 int time;
+int failed;
 
 float weightXPos;
 float weightYPos;
