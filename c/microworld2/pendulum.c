@@ -42,13 +42,15 @@ return w;
 int advancePendulumWorld(pendulumWorld * w, float baseAccel)
 {
 w->time += 1;
-float angle = atan(w->weightYPos/abs(w->weightXPos - w->baseXPos));
 
+float angle = atan(w->weightYPos/ (w->weightXPos - w->baseXPos) ) +( M_PI/2.0);
+//printf("HEIGHT: %f, DISTANCE: %f\n", w->weightYPos, abs(w->weightXPos - w->baseXPos));
 
 
 float baseXAccel = baseAccel;
-float baseXVel = w->baseXVel + baseXAccel;
+float baseXVel = w->baseXVel + baseXAccel * .1;
 float baseXPos = w->baseXPos + baseXVel;
+
 
 if(baseXPos > 2)
 {
@@ -61,24 +63,27 @@ if(baseXPos < -2)
 {
 baseXAccel = 0;
 baseXPos = -2;
-baseXVel = 0;	
-
-
+baseXVel = 0;
 }
+
+
+
 float baseYPos = 0;
 
-float weightXAccel = (GRAVITY * cos(angle)) + (sin(angle) * baseXAccel);
-float weightYAccel = (GRAVITY * sin(angle)) + ( cos(angle) * baseXAccel);
-//printf("WEIGHT GRAV Y ACCEL: %f, WEIGHT BASE Y ACCEL: %f\n", (GRAVITY * sin(angle)),   ( cos(angle) * baseXAccel * 5000000));
+float weightXAccel = (GRAVITY * cos(angle)) - (sin(angle) * baseXAccel);
+float weightYAccel = (GRAVITY * sin(angle)) - ( cos(angle) * (baseXAccel));
 
 
+//printf("WEIGHT GRAV Y ACCEL: %f, WEIGHT BASE Y ACCEL: %f\n", (GRAVITY * sin(angle)),   ( cos(angle) * baseXAccel ));
+//printf("ANGLE: %f\n", angle);
 
-float weightXVel = w->weightXVel + weightXAccel;
-float weightYVel = w->weightYVel + weightYAccel;
-if (weightYVel > 1) weightYVel = 1;
-if (weightYVel < -1) weightYVel = -1;
-float weightXPos = w->weightXPos +  weightXVel * .1;
-float weightYPos = w->weightYPos +  weightYVel * .1;
+
+float weightXVel = w->weightXVel + weightXAccel*.1;
+float weightYVel = w->weightYVel + weightYAccel*.1;
+//if (weightYVel > 1) weightYVel = 1;
+//if (weightYVel < -1) weightYVel = -1;
+float weightXPos = w->weightXPos +  weightXVel ;
+float weightYPos = w->weightYPos +  weightYVel ;
 float weightToBaseX = weightXPos - baseXPos; 
 float weightToBaseY = weightYPos - baseYPos;
 
@@ -142,7 +147,7 @@ float evaluateMicroWorldPerformance(brain * b)
 	
 
 	const int trials = 100;
-	const int survivalTime = 1000;	
+	const int survivalTime = 100;	
 
 
 	int score = 0;
@@ -196,7 +201,7 @@ float evaluateMicroWorldPerformance(brain * b)
 		freeBrain(testInstance);
 		
 	}	
-	return (((float)score /(trials * survivalTime)) * 1000)/.95;
+	return (((float)score /(trials * survivalTime)) * 100)/.95;
 }
 
 void m2Analysis(brain * b)
@@ -240,10 +245,11 @@ while(1)
 		}
   struct timespec interval;
                 interval.tv_sec = 0;
-                interval.tv_nsec = 200000000;
+                interval.tv_nsec = 20000000;
                 nanosleep(&interval, NULL);
                 graphicalDisplay(world);
 		printf("X VELOCITY: %i, Y VELOCITY: %i, HEIGHT: %i\n", normedWeightXVel, normedWeightYVel, normedHeight);
+		printf("X VELOCITY ACTUAL: %f, Y VELOCITY ACTUAL: %f, HEIGHT ACTUAL: %f\n", world->weightXVel, world->weightYVel, world->weightYPos);
 
 
 		int brainOutput = mapArrayToInt(&(outputs[0]), 8);
