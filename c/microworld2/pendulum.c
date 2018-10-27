@@ -124,11 +124,11 @@ void graphicalDisplay(pendulumWorld * w)
 		{
 		if(w->weightXPos >=( -2.0 ) + (i*(.2)) && w->weightXPos <= (-2.0) + ((i+1) * .2 ) && (w->weightYPos >= -2.0 + (c*(.2)) && w->weightYPos <= -2.0 + ((c+1) * .2 )))
 		{
-		printf("X ");
+		printf("o ");
 		}
 		else if(w->baseXPos >= (-2.0) + (i*(.2)) && w->baseXPos <=( -2.0) + ((i+1) * .2 ) && ((w->baseYPos >= -2.0 + (c*(.2))) && ( w->baseYPos <= -2.0 + ((c+1) * .2 ))))
 		{
-		printf("Y ");
+		printf("o ");
 		}
 		else
 		{
@@ -147,8 +147,8 @@ float evaluateMicroWorldPerformance(brain * b)
 {
 	
 
-	const int trials = 100;
-	const int survivalTime = 1000;	
+	const int trials = 1000;
+	const int survivalTime = 100;	
 
 
 	int score = 0;
@@ -252,8 +252,8 @@ while(1)
                 interval.tv_nsec = 20000000;
                 nanosleep(&interval, NULL);
                 graphicalDisplay(world);
-		printf("X VELOCITY: %i, Y VELOCITY: %i, HEIGHT: %i\n", normedWeightXVel, normedWeightYVel, normedHeight);
-		printf("X VELOCITY ACTUAL: %f, Y VELOCITY ACTUAL: %f, HEIGHT ACTUAL: %f\n", world->weightXVel, world->weightYVel, world->weightYPos);
+		printf("WEIGHT X VELOCITY: %i, WEIGHT Y VELOCITY: %i, HEIGHT: %i\n", normedWeightXVel, normedWeightYVel, normedHeight);
+		printf("WEIGHT X VELOCITY ACTUAL: %f, WEIGHT Y VELOCITY ACTUAL: %f, HEIGHT ACTUAL: %f\n", world->weightXVel, world->weightYVel, world->weightYPos);
 
 
 		int brainOutput = mapArrayToInt(&(outputs[0]), 8);
