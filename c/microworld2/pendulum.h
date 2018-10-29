@@ -4,7 +4,7 @@
  
 
 #define PENDULUM_LENGTH 1
-#define GRAVITY -0.1
+#define GRAVITY -.5
 #define RIGHT_X_BOUND 1
 #define LEFT_X_BOUND -1
 

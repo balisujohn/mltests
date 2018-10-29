@@ -53,20 +53,21 @@ float baseXPos = w->baseXPos + baseXVel;
 
 
 
-if(baseXPos > 2)
+if(baseXPos > 4)
 {
- baseXPos = 2;
+ baseXPos = 4;
 baseXAccel = 0;
 baseXVel = 0;
 }
 
-if(baseXPos < -2) 
+if(baseXPos < -4) 
 {
 baseXVel = 0;
-baseXPos = -2;
+baseXPos = -4;
 baseXAccel = 0;
 }
 
+//if(w->time > 100 ) {baseXAccel=0; baseXVel = 0;}
 
 
 float baseYPos = 0;
@@ -81,6 +82,7 @@ float weightYAccel = (GRAVITY * sin(angle)) - ( cos(angle) * (baseXAccel));
 
 float weightXVel = w->weightXVel + weightXAccel*.01;
 float weightYVel = w->weightYVel + weightYAccel*.01;
+
 //if (weightYVel > 1) weightYVel = 1;
 //if (weightYVel < -1) weightYVel = -1;
 float weightXPos = w->weightXPos +  weightXVel ;
@@ -122,11 +124,11 @@ void graphicalDisplay(pendulumWorld * w)
 		printf("|");
 		for(int i = 19; i >= 0; i--)
 		{
-		if(w->weightXPos >=( -2.0 ) + (i*(.2)) && w->weightXPos <= (-2.0) + ((i+1) * .2 ) && (w->weightYPos >= -2.0 + (c*(.2)) && w->weightYPos <= -2.0 + ((c+1) * .2 )))
+		if(w->weightXPos >=( -4.0 ) + (i*(.4)) && w->weightXPos <= (-4.0) + ((i+1) * .4 ) && (w->weightYPos >= -2.0 + (c*(.2)) && w->weightYPos <= -2.0 + ((c+1) * .2 )))
 		{
 		printf("o ");
 		}
-		else if(w->baseXPos >= (-2.0) + (i*(.2)) && w->baseXPos <=( -2.0) + ((i+1) * .2 ) && ((w->baseYPos >= -2.0 + (c*(.2))) && ( w->baseYPos <= -2.0 + ((c+1) * .2 ))))
+		else if(w->baseXPos >= (-4.0) + (i*(.4)) && w->baseXPos <=( -4.0) + ((i+1) * .4 ) && ((w->baseYPos >= -2.0 + (c*(.2))) && ( w->baseYPos <= -2.0 + ((c+1) * .2 ))))
 		{
 		printf("o ");
 		}
@@ -147,8 +149,8 @@ float evaluateMicroWorldPerformance(brain * b)
 {
 	
 
-	const int trials = 1000;
-	const int survivalTime = 100;	
+	const int trials = 100;
+	const int survivalTime = 500;	
 
 
 	int score = 0;
@@ -157,7 +159,7 @@ float evaluateMicroWorldPerformance(brain * b)
 
 		pendulumWorld * world = initRandomPendulumWorld();
 		brain * testInstance = forkBrain(b);
-		while (world->time < survivalTime && world->weightYPos > 0  && world->baseXPos < 2 && world->baseXPos > -2)
+		while (world->time < survivalTime && world->weightYPos > 0  && world->baseXPos < 4 && world->baseXPos > -4)
 		{
 		score+=1;
 		
@@ -166,8 +168,8 @@ float evaluateMicroWorldPerformance(brain * b)
 		int outputs[9];
 		inputs[0] = world->weightXVel > 0;
 		inputs[9] = world->weightYVel > 0;
-		inputs[22] = world->weightXPos > 1;
-		inputs[23] = world->weightXPos < 1;
+		inputs[22] = world->weightXPos > -2;
+		inputs[23] = world->weightXPos < 2;
 
 		int normedWeightXVel = abs((int)(255* world->weightXVel));
 		if (normedWeightXVel > 255) 
@@ -215,7 +217,7 @@ while(1)
         int score = 0;
 	pendulumWorld * world = initRandomPendulumWorld();
 		brain * testInstance = forkBrain(b);
-		while ( world->weightYPos > 0 && world->baseXPos > -2 && world->baseXPos < 2)
+		while ( world->weightYPos > 0 && world->baseXPos > -4 && world->baseXPos < 4)
 		{
 		score+=1;
 		
@@ -262,7 +264,7 @@ while(1)
 			brainOutput *= -1;
 		}
 		//if(brainOutput) printf("%i\n",brainOutput);
-		advancePendulumWorld(world,brainOutput/255.0);
+		advancePendulumWorld(world, brainOutput/255.0);
 		}
 		free(world);
 		freeBrain(testInstance);
