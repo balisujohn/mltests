@@ -17,7 +17,20 @@ int main (int argc, char *  argv[])
 
 params * p = initializeDefaultParams();
 
+
+
 p->mParams->initialNeuronCount = 4;
+
+p->mParams->minInputCount = 2;
+p->mParams->minOutputCount = 1; 
+
+printf("GENERATE RANDOM NETWORK , TRAIN ON XOR WITH SINGLE SUCCESSOR TECHNIQUE, OPEN ANALYSIS DIALOG\n");
+learn(evaluateXorPerformance,p);
+
+
+
+
+
 p->mParams->minInputCount = 1;
 p->mParams->minOutputCount = 1; 
 
@@ -52,16 +65,9 @@ printf("GENERATE RANDOM NETWORK , TRAIN ON NOR WITH SINGLE SUCCESSOR TECHNIQUE, 
 learn(evaluateNorPerformance,p);
 
 
-p->mParams->minInputCount = 2;
-p->mParams->minOutputCount = 1; 
-
-printf("GENERATE RANDOM NETWORK , TRAIN ON XOR WITH SINGLE SUCCESSOR TECHNIQUE, OPEN ANALYSIS DIALOG\n");
-learn(evaluateXorPerformance,p);
-
-
 p->mParams->minInputCount = 6;
 p->mParams->minOutputCount = 4; 
-p->mParams->initialNeuronCount = 11;
+p->mParams->initialNeuronCount = 100;
 
 printf("GENERATE RANDOM NETWORK , TRAIN ON ADDITION WITH SINGLE SUCCESSOR TECHNIQUE, OPEN ANALYSIS DIALOG\n");
 learn(evaluateAdditionPerformance,p);
