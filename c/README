@@ -1,3 +1,6 @@
+
+INTRO:
+
 Hi All,
 
 
@@ -63,5 +66,124 @@ Cheers,
 
 
 John
+
+
+MAKING A MICROWORLD:
+
+
+Making a microworld/evaluation task  to test the learning system is fairly easy, and only requires knowledge of several functions implemented by brain.c and learning.c.
+A simple microworld template is as follows:
+
+
+
+
+
+
+float evaluateMicroWorldPerformance(brain * b)
+{
+
+
+// need to return a value in the range 0-100(inclusive) based on performance
+
+
+}
+
+
+
+int main(int argc, char * argv[])
+{
+	srand(time(0));
+
+
+	params * p = initializeDefaultParams();
+	p->mParams->initialNeuronCount = 20;
+
+
+	if(argc == 2 && strstr(argv[1], "train"))
+	{
+		brain * resultBrain = learn(evaluateMicroWorldPerformance, p);
+	}
+	else if(argc == 3 && strstr(argv[1],"analyze"))
+	{
+		srand(time(0));
+		FILE * fp = fopen(argv[2], "r");
+		brain * b = loadBrainFromFile(fp);
+		m2Analysis(b);
+	}
+	else if (argc == 3 && strstr(argv[1], "improve"))
+	{
+		FILE * brainFile = fopen(argv[2], "r");
+		brain * starter = loadBrainFromFile(brainFile);
+		brain * resultBrain = learnFromExistingBrain(starter, evaluateMicroWorldPerformance, p); 
+	}
+	else
+	{
+		printf("INVALID USAGE\n");
+	}
+
+	return 1;	
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
