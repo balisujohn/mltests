@@ -10,23 +10,20 @@ Areas that need work:
 
 training environments:
 
-	microworld2(Under Construction):
-
-		A simple inverse pendulum simulation in c
-
-	microworld3(Planned) :
-
-		A freeform 3d environment using the gazebo simulation platform
+	Python Neuro-evolution code: under construction
+	openAI gym interface code: under construction
 
 machine learning techniques:
 
 	Modifications to neuron simulation to allow for intragenerational learning(Planned):
 		currently the network can only be trained intergenerationally
+		
+	Implementation of Neuro Evolution through Augmenting Topology planned. 
 
 
 analysis tools:
 
-	Python graph visualization and editing tool(Planned):
+	Python graph visualization and editing tool(Under Construction):
 
 
 If any of these areas sound interesting to you, don't hesitate to contribute; I can be reached at balisujohn at gmail dot com and am very interested recieve
