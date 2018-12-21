@@ -90,6 +90,17 @@ class Brain:
 		self.target_mutation(10,.25,.5,.25)
 		self.potential_weights_mutation(1,.1)
 		self.threshold_mutation(1,.1)
+	def input(self, inputs):
+		self.neurons[0].excitation = self.neurons[0].activation_potential + 1
+		for i in range(1, len(inputs) + 1 )
+			self.neurons[i].excitation = inputs[i-1] * (self.neurons[i].activation_potential + 1)
+			
+		
+	def advance(self, inputs, outputs):
+		assert not (self.neuron_count < 1 + len(inputs) + len(outputs))
+		self.input(inputs)
+		
+		
 
 	
 		
