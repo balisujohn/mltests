@@ -150,7 +150,7 @@ float evaluateMicroWorldPerformance(brain * b)
 	
 
 	const int trials = 100;
-	const int survivalTime = 1000;	
+	const int survivalTime = 1500;	
 
 
 	int score = 0;
@@ -168,8 +168,8 @@ float evaluateMicroWorldPerformance(brain * b)
 		int outputs[9];
 		inputs[0] = world->weightXVel > 0;
 		inputs[9] = world->weightYVel > 0;
-		inputs[22] = world->weightXPos > -2;
-		inputs[23] = world->weightXPos < 2;
+		inputs[22] = world->weightXPos < -2;
+		inputs[23] = world->weightXPos > 2;
 
 		int normedWeightXVel = abs((int)(255* world->weightXVel));
 		if (normedWeightXVel > 255) 
@@ -330,7 +330,7 @@ int main(int argc, char * argv[])
 	}
 
 
-	return 1;	
+	return 0;	
 
 }
 

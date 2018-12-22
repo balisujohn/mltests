@@ -46,9 +46,9 @@ brain * forkBrain(brain * oldBrain)
 }
 
 /*
-frees a neuron
+   frees a neuron
 
-*/
+ */
 
 void freeNeuron(neuron *  n)
 {
@@ -77,9 +77,9 @@ void freeBrain(brain * b )
 
 /*
 
-sets mutation params to comfortable defaults
+   sets mutation params to comfortable defaults
 
-*/
+ */
 mutationParams *  initializeDefaultMutationParams()
 {
 
@@ -110,8 +110,8 @@ mutationParams *  initializeDefaultMutationParams()
 
 
 /*
-sets general params to comfortable defaults
-*/
+   sets general params to comfortable defaults
+ */
 params * initializeDefaultParams()
 {
 	params * p = malloc(sizeof(params));
@@ -151,7 +151,7 @@ void initializeNeuron(neuron * n,  int neuronCount/* , int targetCountLimit*/)
 	for (int c = 0; c < n->targetCount; c ++)
 	{
 		n->potentialWeights[c] = (randFloat()*2)-1;
-	//	n->potentialTimes[c] = 0.1;
+		//	n->potentialTimes[c] = 0.1;
 	}
 
 
@@ -198,8 +198,8 @@ brain * generateBasicBrain()
 }
 
 /*
-generates a brain with few connections
-*/
+   generates a brain with few connections
+ */
 brain * generateSparseBrain(mutationParams * m)
 {
 	assert(m->initialNeuronCount > 1);
@@ -510,11 +510,12 @@ void advanceBrain(brain * b, int  inputs[], int inputCount, int  outputs[], int 
 
 				}
 			}
-			b->neurons[i].excitation = 0.0;	
 			b->neurons[i].fired = 1;
+	b->neurons[i].excitation = 0.0;	
+
 
 		}
-
+	
 	}
 
 	for(int i = 0; i < b->neuronCount; i++)

@@ -99,6 +99,9 @@ class Brain:
 	def advance(self, inputs, outputs):
 		assert not (self.neuron_count < 1 + len(inputs) + len(outputs))
 		self.input(inputs)
+		sums  = [0] * self.neuron_count
+		for i in range(self.neuron_count)
+		
 		
 		
 
