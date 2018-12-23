@@ -2,16 +2,13 @@
 #include <stdio.h>
 #include <time.h>
 #include <assert.h>
-#include "brain.h"
-#include "../utils.h"
+#include "freqBrain-v00.1.hpp"
 #include "../cJSON/cJSON.h"
 
 //John Balis, Michael Ivanitskiy 2018
 //for support email:
 // balisujohn@gmail.com 
 // mivanits@umich.edu
-
-
 
 /*
    copies an existing brain, preserving state;
@@ -20,59 +17,8 @@ brain * forkBrain(brain * oldBrain)
 {
 	brain * b  = (brain *) malloc(sizeof(brain));
 	b->neuronCount = oldBrain->neuronCount;
-	b->neurons = (neuron *) malloc(sizeof(neuron) * oldBrain->neuronCount);
-	for(int i = 0; i < oldBrain->neuronCount; i++)
-	{
-
-		b->neurons[i].fired = oldBrain->neurons[i].fired;
-		b->neurons[i].activationPotential =  oldBrain->neurons[i].activationPotential;
-		b->neurons[i].excitation = oldBrain->neurons[i].excitation;
-		b->neurons[i].targetCount = oldBrain->neurons[i].targetCount;
-		b->neurons[i].age=oldBrain->neurons[i].age;
-		b->neurons[i].targets = (int *) malloc(sizeof(int)*( b->neurons[i].targetCount));
-		for (int c = 0; c < b->neurons[i].targetCount;c++)
-		{
-			b->neurons[i].targets[c] = oldBrain->neurons[i].targets[c];
-
-		}
-		b->neurons[i].potentialWeights = (float *) malloc(sizeof(float) * (b->neurons[i].targetCount));
-		for (int c = 0; c < b->neurons[i].targetCount; c ++)
-		{
-			b->neurons[i].potentialWeights[c] = oldBrain->neurons[i].potentialWeights[c];
-		}
-
-	}
-	return b; 
-
-}
-
-/*
-   frees a neuron
-
- */
-
-void freeNeuron(neuron *  n)
-{
-	free(n->potentialWeights);
-	free(n->targets);
-}
-
-
-/*
-   frees a brain struct
-
- */
-void freeBrain(brain * b )
-{
-
-
-	for(int i = 0 ; i < b->neuronCount; i++)
-	{
-		freeNeuron(&(b->neurons[i]));
-	}
-
-	free(b->neurons);
-	free(b);
+	b->neurons = oldBrain->neurons;
+	return b;
 }
 
 /*
@@ -82,7 +28,6 @@ void freeBrain(brain * b )
  */
 mutationParams *  initializeDefaultMutationParams()
 {
-
 	mutationParams * m = (mutationParams *) malloc(sizeof(mutationParams));
 	m->order = (char *) malloc(sizeof(char) * 6);
 	m->order[1] = 'c';
@@ -120,7 +65,6 @@ params * initializeDefaultParams()
 	return p;
 }
 
-
 /*
    initializes a random neuron. requires the number of other neurons as
    a range for selecting targets
@@ -128,34 +72,7 @@ params * initializeDefaultParams()
 
 void initializeNeuron(neuron * n,  int neuronCount/* , int targetCountLimit*/)
 {
-	n->fired = 0;	
-	n->age=0;
-	n->activationPotential = randFloat();
-	n->excitation = 0.0 ;//randFloat();
-	n->targetCount = randRange(neuronCount-1)/2;
-	n->targets = (int *) malloc(sizeof(int)* (n->targetCount));
-
-
-	for (int c = 0; c < n->targetCount;c++)
-	{
-
-		n->targets[c] = randRange(neuronCount-1)+1;
-
-
-	}
-
-
-
-	n->potentialWeights = (float *) malloc(sizeof(float) * (neuronCount-1));
-	//n->potentialTimes = (float *) malloc(sizeof(float) * (neuronCount-1));
-	for (int c = 0; c < n->targetCount; c ++)
-	{
-		n->potentialWeights[c] = (randFloat()*2)-1;
-		//	n->potentialTimes[c] = 0.1;
-	}
-
-
-
+	*n = neuron(randRange(neuronCount-1)/2, neuronCount);
 }
 
 /*
@@ -163,14 +80,8 @@ void initializeNeuron(neuron * n,  int neuronCount/* , int targetCountLimit*/)
  */
 void copyNeuron(neuron * original, neuron * replica)
 {
-	replica->age = original->age;
-	replica->targetCount = original->targetCount;
-	replica->fired = original->fired;
-	replica->activationPotential = original->activationPotential;
-	replica->excitation = original->excitation;
-	replica->targets = original->targets;
+	*replica = *original;
 }
-
 
 
 /*
@@ -178,19 +89,9 @@ void copyNeuron(neuron * original, neuron * replica)
  */
 brain * generateBasicBrain()
 {
-	assert(NEURON_COUNT > 1);
-
-
-	brain * b  = (brain *) malloc(sizeof(brain));
-	b->neuronCount = NEURON_COUNT;
-	b->neurons = (neuron *) malloc(sizeof(neuron) * NEURON_COUNT);
-	for(int i = 0; i < NEURON_COUNT; i++)
-	{
-
-		initializeNeuron(&(b->neurons[i]), NEURON_COUNT);
-	} 
+	// assert(NEURON_COUNT > 1);
+	brain * b  = brain(NEURON_COUNT); 
 	return b;
-
 }
 
 /*

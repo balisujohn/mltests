@@ -1,0 +1,45 @@
+short term goals
+
+Conversion to C++:
+	[x] get everything in core implementation to compile in C++
+	[ ] convert core/ brain.c, brain.h bases to C++ for readability, modularity
+		[ ] usage of vectors in place of variable size C arrays
+		[ ] object-oriented ctors, dtors, cpy for all
+		[ ] neuron
+			[ ] obj-oriented init
+		[ ] brain
+			[ ] rework mutation code
+			[ ] rework timestep handling
+			[ ] adapt i/o code
+
+frequency-based architecture:
+	[ ] optimal struct for pulses in a neuron?
+		var size vector or someting else? what to sort pulses by if so?
+	
+	compression/activation function:
+		- lots of work, depends on other decisions that need to be made
+
+	behavior when period approaches recovery time:
+		[ ] basic implementation can ignore this by having timestep be > recovery time
+		[ ] more hodkin-huxley or other model simulations, get data on this
+		[ ] use this for more complex activation function
+
+	unloading neurons:
+		[ ] useful primarily for tensor prod stuff?
+		[ ] run tests. might only be with it if << 100% of neurons firing at any given time
+
+	preserving unmodified neuron state:
+		[ ] idea is that neurons whose input waveform is not modified are not updated
+		[ ] problem is that neuron might not have all "parent" neurons fire
+			[ ] need to either subtract parent waveform from target, and readd new one
+			[ ] or find diff between old and new parent waveform, then send to target
+			[ ] might not play nice with waveform compression
+
+[ ] double check pendulum physics
+
+interface to openAI gym:
+	[ ] client-server architecture or is there an easier way?
+
+
+
+

@@ -2,8 +2,12 @@
 #define BRAIN_H
 
 #include <vector>
+#include "../utils.h"
 
-#define NEURON_COUNT 10
+
+// #define NEURON_COUNT 10
+
+int NEURON_COUNT = 10;
 
 
 //John Balis, Michael Ivanitskiy 2018
@@ -49,18 +53,42 @@ struct conn
 {
 	float weight;
 	int target;
+
+	conn(float in_wgt, int in_tgt)
+		: weight(in_wgt), target(in_tgt) {}
 };
 
 struct neuron
 {
+public:
 	std::vector <conn> targets;
-	std::vector <pulse> action_potential;
+	std::vector <pulse> actionPotential;
+
+	// empty ctor
+	neuron(int targetCount, int neuronCount)
+	{
+		targets.reserve(targetCount);
+
+		for (int i = 0; i < targetCount; i++)
+		{
+			targets.emplace_back((randFloat()*2)-1, randRange(neuronCount-1)+1);
+		}
+	}
 };
 
 struct brain
 {
+	int neuronCount;
 	std::vector < neuron > neurons;
-} typedef brain;
+
+	brain(int in_neuronCount) : neuronCount(in_neuronCount)
+	{
+		for(neuron x : neurons)
+		{
+			x = neuron(randRange(neuronCount-1)/2, neuronCount);
+		}
+	}
+};
 
 
 params * initializeDefaultParams();
