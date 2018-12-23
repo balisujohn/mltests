@@ -10,6 +10,17 @@
 // balisujohn@gmail.com 
 // mivanits@umich.edu
 
+
+/*
+      #### ##    ## #### ########
+       ##  ###   ##  ##     ##
+       ##  ####  ##  ##     ##
+       ##  ## ## ##  ##     ##
+       ##  ##  ####  ##     ##
+       ##  ##   ###  ##     ##
+      #### ##    ## ####    ##
+*/
+
 /*
    copies an existing brain, preserving state;
 */
@@ -70,7 +81,7 @@ params * initializeDefaultParams()
    a range for selecting targets
  */
 
-void initializeNeuron(neuron * n,  int neuronCount/* , int targetCountLimit*/)
+void initializeNeuron(neuron * n,  int neuronCount , int targetCountLimit = INT_MAX)
 {
 	*n = neuron(randRange(neuronCount-1)/2, neuronCount);
 }
@@ -90,7 +101,7 @@ void copyNeuron(neuron * original, neuron * replica)
 brain * generateBasicBrain()
 {
 	// assert(NEURON_COUNT > 1);
-	brain * b  = brain(NEURON_COUNT); 
+	brain * b  = new brain(NEURON_COUNT); 
 	return b;
 }
 
@@ -101,19 +112,20 @@ brain * generateSparseBrain(mutationParams * m)
 {
 	assert(m->initialNeuronCount > 1);
 
-
-	brain * b = (brain *) malloc(sizeof(brain));
-	b->neuronCount = m->initialNeuronCount;
-	b->neurons = (neuron *) malloc(sizeof(neuron) * m->initialNeuronCount );
-	for(int i = 0; i < m->initialNeuronCount ; i++)
-	{
-
-		initializeNeuron(&(b->neurons[i]), 2);
-	} 
+	brain * b  = new brain(NEURON_COUNT, false);
 	return b;
-
 }
 
+
+/*
+      ##     ## ##     ## ########    ###    ######## ########
+      ###   ### ##     ##    ##      ## ##      ##    ##
+      #### #### ##     ##    ##     ##   ##     ##    ##
+      ## ### ## ##     ##    ##    ##     ##    ##    ######
+      ##     ## ##     ##    ##    #########    ##    ##
+      ##     ## ##     ##    ##    ##     ##    ##    ##
+      ##     ##  #######     ##    ##     ##    ##    ########
+*/
 
 //function to mutate neuron count, probability encodes the probability of occurance, and the bias encodes the 
 //probability of removing v.s. adding a neuron. 0 guarantees removal, 1 guarantees addition.
@@ -352,6 +364,18 @@ void mutateBrain(brain * b, mutationParams * m){
 
 }
 
+
+/*
+       ######  ######## ######## ########
+      ##    ##    ##    ##       ##     ##
+      ##          ##    ##       ##     ##
+       ######     ##    ######   ########
+            ##    ##    ##       ##
+      ##    ##    ##    ##       ##
+       ######     ##    ######## ##
+*/
+
+
 /*
    applies inputs to a brain. inputs will be applied to neurons 1-targetCount
 
@@ -444,6 +468,25 @@ void advanceBrain(brain * b, int  inputs[], int inputCount, int  outputs[], int 
 
 
 /*
+      ####       ##  #######
+       ##       ##  ##     ##
+       ##      ##   ##     ##
+       ##     ##    ##     ##
+       ##    ##     ##     ##
+       ##   ##      ##     ##
+      #### ##        #######
+*/
+
+/*
+                        iii tt
+      ww      ww rr rr      tt      eee
+      ww      ww rrr  r iii tttt  ee   e
+       ww ww ww  rr     iii tt    eeeee
+        ww  ww   rr     iii  tttt  eeeee
+
+*/
+
+/*
    displays a brain's structure and weights
 
 
@@ -525,6 +568,16 @@ void printBrainToFile(brain * b ,FILE * fp){
 	fprintf(fp, "%s", resultString);
 	free(resultString);
 }
+
+
+/*
+                                 dd
+      rr rr    eee    aa aa      dd
+      rrr  r ee   e  aa aaa  dddddd
+      rr     eeeee  aa  aaa dd   dd
+      rr      eeeee  aaa aa  dddddd
+
+*/
 
 brain * loadBrainFromFile(FILE * fp)
 {
