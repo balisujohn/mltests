@@ -204,7 +204,7 @@ brain * generateSparseBrain(mutationParams * m)
 	b->neurons = (neuron *) malloc(sizeof(neuron) * m->initialNeuronCount );
 	for(int i = 0; i < m->initialNeuronCount ; i++)
 	{
-
+		// FIXME: is this being initialized correctly?
 		initializeNeuron(&(b->neurons[i]), 2);
 	} 
 	return b;

@@ -37,6 +37,10 @@
 	* tensor products can be used to localize neurotransmitter concentrations
 * further explore and optimize frequency-domain architecture
 
+all papers can be found at 
+
+https://www.dropbox.com/sh/yxabj0q5s66skqe/AAAVT3FYVivLd4GxX9o_Ypema?dl=0
+
 
 
 

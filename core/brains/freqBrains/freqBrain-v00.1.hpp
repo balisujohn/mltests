@@ -64,7 +64,7 @@ public:
 	std::vector <conn> targets;
 	std::vector <pulse> actionPotential;
 
-	// empty ctor
+	// rand ctor
 	neuron(int targetCount, int neuronCount)
 	{
 		targets.reserve(targetCount);
@@ -74,6 +74,8 @@ public:
 			targets.emplace_back((randFloat()*2)-1, randRange(neuronCount-1)+1);
 		}
 	}
+
+	// empty ctor
 };
 
 struct brain
@@ -81,11 +83,25 @@ struct brain
 	int neuronCount;
 	std::vector < neuron > neurons;
 
-	brain(int in_neuronCount) : neuronCount(in_neuronCount)
+	// gen basic
+	brain(int in_neuronCount, bool use_rand = true) : neuronCount(in_neuronCount)
 	{
-		for(neuron x : neurons)
+		neurons.reserve(neuronCount);
+
+		if (use_rand)
 		{
-			x = neuron(randRange(neuronCount-1)/2, neuronCount);
+			for(int i = 0; i < neuronCount; i++)
+			{
+				neurons.emplace_back(randRange(neuronCount-1)/2, neuronCount);
+			}
+		}
+		else
+		{
+			// if not random connections, then generate a sparse tree w/ no connections
+			for(int i = 0; i < neuronCount; i++)
+			{
+				neurons.emplace_back(0, neuronCount);
+			}
 		}
 	}
 };
