@@ -1,0 +1,59 @@
+{
+	"neuronCount":	11,
+	"neurons":	[{
+			"targets":	[9, 7, 7],
+			"weights":	[0.36285877227783203, 0.2963104248046875, 0.23547552525997162],
+			"threshold":	0.92031997442245483,
+			"targetCount":	3
+		}, {
+			"targets":	[],
+			"weights":	[],
+			"threshold":	0.40445315837860107,
+			"targetCount":	0
+		}, {
+			"targets":	[],
+			"weights":	[],
+			"threshold":	0.17837963998317719,
+			"targetCount":	0
+		}, {
+			"targets":	[9],
+			"weights":	[0.37569737434387207],
+			"threshold":	0.44042393565177917,
+			"targetCount":	1
+		}, {
+			"targets":	[7, 10, 0],
+			"weights":	[7.162065598172198e-38, 0.19714729487895966, 0.5032275915145874],
+			"threshold":	0.30362975597381592,
+			"targetCount":	3
+		}, {
+			"targets":	[],
+			"weights":	[],
+			"threshold":	0.97183102369308472,
+			"targetCount":	0
+		}, {
+			"targets":	[],
+			"weights":	[],
+			"threshold":	0.8647121787071228,
+			"targetCount":	0
+		}, {
+			"targets":	[1],
+			"weights":	[-0.62962746620178223],
+			"threshold":	0.33839192986488342,
+			"targetCount":	1
+		}, {
+			"targets":	[7],
+			"weights":	[0.80359029769897461],
+			"threshold":	0.85242056846618652,
+			"targetCount":	1
+		}, {
+			"targets":	[8],
+			"weights":	[-0.98737090826034546],
+			"threshold":	0.75578898191452026,
+			"targetCount":	1
+		}, {
+			"targets":	[7, 9],
+			"weights":	[-0.80274927616119385, 0.27928605675697327],
+			"threshold":	0.30838382244110107,
+			"targetCount":	2
+		}]
+}
