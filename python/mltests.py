@@ -1,5 +1,6 @@
 from random import uniform, randrange
-
+import copy
+import math
 
 
 class Neuron:
@@ -35,17 +36,17 @@ class Brain:
 				print ("TARGET: {target}, WEIGHT: {weight}".format(target = neuron.targets[i],weight = neuron.potential_weights[i]))
 			
 	
-	def sigmoid(x)
-		 return 1 / (1 + exp((double) -x))
+	def sigmoid(self, x):
+		 return 1 / (1 + math.exp(float( -x)))
 
 
-	def hyperbolic_tangent(x)
-		return 2*sigmoid(2*x)-1
+	def hyperbolic_tangent(self, x):
+		return 2*self.sigmoid(2*x)-1
 
 	def neuron_count_mutation(self, min_input_count, min_output_count, probability, bias):
 		if uniform(0,1) < probability:		
 			if uniform(0,1) < bias:
-				self.neuron_count -= 1
+				self.neuron_count += 1
 				self.neurons.append(Neuron())	#needs neuron init function
 			elif self.neuron_count > 1 + min_input_count + min_output_count:
 				self.neuron_count -= 1 
@@ -101,38 +102,95 @@ class Brain:
 
 	def input(self, inputs):
 		self.neurons[0].excitation = self.neurons[0].activation_potential + 1
-		for i in range(1, len(inputs) + 1 )
+		for i in range(1, len(inputs) + 1 ):
 			self.neurons[i].excitation = inputs[i-1] * (self.neurons[i].activation_potential + 1)
 			
 		
-	def advance(self, inputs, outputs):
-		assert not (self.neuron_count < 1 + len(inputs) + len(outputs))
+	def advance(self, inputs, output_length):
+		#print ('NEURON COUNT: ' + str(self.neuron_count) + '\nINPUT LENGTH: ' + str(len(inputs)))
+		assert not (self.neuron_count < 1 + len(inputs) + output_length)
 		self.input(inputs)
 		sums  = [0] * self.neuron_count
-		for i in range(self.neuron_count)
+		print(len(sums))
+		for i in range(self.neuron_count):
 			self.neurons[i].fired = 0
-			if self.hyperbolic_tangent(self.neurons[i].excitation) > self.neurons[i].potential:
-				for c in range self.neurons[i].target_count
+			if self.hyperbolic_tangent(self.neurons[i].excitation) > self.neurons[i].activation_potential:
+				for c in range (self.neurons[i].target_count):
+					print(self.neurons[i].targets)
+					print(self.neurons[i].potential_weights)
 					sums[self.neurons[i].targets[c]] += self.neurons[i].potential_weights[c]
 				self.neurons[i].fired = 1
-				self.neurons[i].excitation = 0
-
-				
-
+				self.neurons[i].excitation = self.neurons[i].excitation/2.0
+		
+		for i in range(self.neuron_count):
+			self.neurons[i].excitation += sums[i]
+		assert(len(inputs) + output_length + 1 <= self.neuron_count )
+		start = len(inputs) + 1
+		outputs = []
+		for i in range(output_length):
+			outputs.append(self.neurons[start + i])
+		
+		return outputs
 
 		
-		
-		
-		
+	def evaluate_xor_performance(self):
+		test_instance_1 = copy.deepcopy(self)		
+		test_instance_2 = copy.deepcopy(self)
+		test_instance_3 = copy.deepcopy(self)
+		test_instance_4 = copy.deepcopy(self)
 
+		[input_1,input_2,input_3,input_4] = [[0,0],[0,1],[1,0],[1,1]]
+		#print (input_1)
+		[goal_1,goal_2,goal_3,goal_4] = [0,1,1,0]
+
+		for i in range(5):
+			output_1 = test_instance_1.advance(input_1,1) 
+			output_2 = test_instance_2.advance(input_2,1)
+			output_3 = test_instance_3.advance(input_3,1)
+			output_4 = test_instance_4.advance(input_4,1)
+
+		score = 0
+		if output_1 == goal_1:
+			score += 25
+		if output_2 == goal_2:
+			score += 25
+		if output_3 == goal_3:
+			score += 25
+		if output_4 == goal_4:
+			score += 25
+		return score
+
+
+def learn_xor():
+
+	best_brain = Brain(4)
+	best_score = 0
 	
+	
+	while best_score < 100:
+
+		score = 0
+		
+		mutant = copy.deepcopy(best_brain)
+		mutant.default_mutation(2,1)
+		test_instance = copy.deepcopy(mutant)
+		score = test_instance.evaluate_xor_performance()
+		if score > best_score:
+			best_score = score
+			best_brain = mutant
+	
+
+	return best_brain
 		
 				
-			
+
 				
-				
+learn_xor();			
 
 b = Brain(10)
-b.print_brain()
+c = copy.deepcopy(b)
+
+c.print_brain()
+print(c.evaluate_xor_performance())
 b.default_mutation(3,3)
 b.print_brain()
