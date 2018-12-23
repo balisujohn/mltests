@@ -236,10 +236,12 @@ void neuronCountMutation(brain * b, int minInputCount, int minOutputCount, float
 			for(int i = 0; i  < b->neuronCount; i++) // this is an expensive O(n^2) mutation, so it's important to give it a low probability, but it ensures we will 
 			{ // not have to worry about pre-existing activation patterns coming back from the dead when add a neuron with the index of a neuron we previously removed
 				for(int c = 0; c < b->neurons[i].targetCount; c++)
+				{
 					if (b->neurons[i].targets[c] == b->neuronCount)
 					{
 						b->neurons[i].targets[c] = randRange(b->neuronCount); // randomizes edges which previously targeted neuron being removed 
 					}
+				}
 
 			}
 
