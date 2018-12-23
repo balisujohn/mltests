@@ -35,17 +35,17 @@ const bool PRINT_TEST = true;
 
 // print error
 
-void WARNING( string const& msg )
+inline void WARNING( string const& msg )
 {
 	cerr << "WARNING:\t" << msg << "\n";
 }
 
-void ERROR( string const& msg )
+inline void ERROR( string const& msg )
 {
 	cerr << "ERROR:\t" << msg << "\n";
 }
 
-void ERROR_FATAL( string const& msg )
+inline void ERROR_FATAL( string const& msg )
 {
 	cerr << "===============================\n";
 	cerr << "FATAL ERROR:\t" << msg << "\n";
@@ -54,19 +54,19 @@ void ERROR_FATAL( string const& msg )
 
 // print upon condition
 
-bool CHK_WARNING( bool cond, string const& msg )
+inline bool CHK_WARNING( bool cond, string const& msg )
 {
 	if (cond) WARNING(msg);
 	return cond;
 }
 
-bool CHK_ERROR( bool cond, string const& msg )
+inline bool CHK_ERROR( bool cond, string const& msg )
 {
 	if (cond) ERROR(msg);
 	return cond;
 }
 
-bool CHK_ERROR_FATAL( bool cond, string const& msg )
+inline bool CHK_ERROR_FATAL( bool cond, string const& msg )
 {
 	if (cond) ERROR_FATAL(msg);
 	return cond;
@@ -74,17 +74,17 @@ bool CHK_ERROR_FATAL( bool cond, string const& msg )
 
 // testing/debug prints
 
-void TEST( string const& msg )
+inline void TEST( string const& msg )
 {
 	cerr << "\tTEST:\t" << msg << "\n";
 }
 
-void CHK_TEST( bool cond, string const& msg )
+inline void CHK_TEST( bool cond, string const& msg )
 {
 	if (cond) TEST(msg);
 }
 
-void TEST()
+inline void TEST()
 {
 	if (PRINT_TEST)
 	{
@@ -93,7 +93,7 @@ void TEST()
 	}
 }
 
-void TEST(int input)
+inline void TEST(int input)
 {
 	if (PRINT_TEST)
 	{
@@ -102,13 +102,12 @@ void TEST(int input)
 	}
 }
 
-
-void __DEBUG( string const& msg )
+inline void __DEBUG( string const& msg )
 {
 	if (PRINT_DEBUG) cerr << "\tDEBUG:\t" << msg << "\n";
 }
 
-void __DEBUG()
+inline void __DEBUG()
 {
 	if (PRINT_DEBUG) 
 	{
@@ -117,7 +116,7 @@ void __DEBUG()
 	}
 }
 
-void DEBUG_VEC_CONTENTS(vector < size_t > & vec)
+inline void DEBUG_VEC_CONTENTS(vector < size_t > & vec)
 {
 	for ( size_t x : vec )
 	{
