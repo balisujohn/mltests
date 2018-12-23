@@ -1,5 +1,10 @@
 short term goals
 
+preliminary work:
+	[ ] organize papers in dropbox
+	[ ] search literature for frequency-domain action potential messaging
+	[ ] take notes on existing papers
+
 Conversion to C++:
 	[x] get everything in core implementation to compile in C++
 	[ ] convert core/ brain.c, brain.h bases to C++ for readability, modularity

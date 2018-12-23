@@ -66,3 +66,16 @@ Simple logic gates (or, and, not, unary identity, nor)
 
 COMPLETED: needs bias node to successfully learn not and nor
 COMPLETED: a proper population management algorithm will necesarry to virtually guarantee timely success(xor sometimes gets stuck)
+
+
+
+
+FORMAT
+
+list name:
+	sublist name:
+		[ ] item
+		[x] completed item @done(18-12-06 13:00)
+		[-] cancelled item @cancelled(18-12-06 13:00)
+		[ ] priorities: @critical @high @low @today 
+		[ ] time estimates: @1h30m
