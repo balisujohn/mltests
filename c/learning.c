@@ -2,7 +2,7 @@
 #include<stdlib.h>
 #include<assert.h>
 #include<time.h>
-#include"brain.h"
+#include"brains/brain.h"
 #include"analysis.h"
 #include"learning.h"
 

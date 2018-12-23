@@ -1,7 +1,7 @@
 #include<stdlib.h>
 #include<stdio.h>
 #include<time.h>
-#include"brain.h"
+#include"brains/brain.h"
 #include"utils.h"
 #include"analysis.h"
 

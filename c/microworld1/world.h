@@ -23,7 +23,7 @@
 #define DIRECTION_DOWN 2
 #define DIRECTION_LEFT 3
 
-#include"../brain.h"
+#include"../brains/brain.h"
 
  
 //John Balis 2018

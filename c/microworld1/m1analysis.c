@@ -2,7 +2,7 @@
 #include<stdio.h>
 #include<time.h>
 #include"world.h"
-#include"../brain.h"
+#include"../brains/brain.h"
 //John Balis 2018
 //for support email balisujohn@gmail.com 
 
@@ -19,15 +19,6 @@ void analyzeBrainMicroWorld1(brain * b)
 	{
 
 
-//		userInput = getchar();
-//		if(userInput != '\n')
-//		{
-//			if (userInput=='q')
-//			{
-//				break;
-//			}	
-
-
 		struct timespec interval;
                 interval.tv_sec = 0;
                 interval.tv_nsec = 200000000;
@@ -36,7 +27,6 @@ void analyzeBrainMicroWorld1(brain * b)
 			printf("\033[2J");
 			advanceWorldState(w,testInstance);
 			printWorldInfo(w);
-//		}	
 
 	}
 

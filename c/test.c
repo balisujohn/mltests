@@ -1,7 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<assert.h>
-#include"brain.h"
+#include"brains/brain.h"
 #include"xor.h"
 #include"learning.h"
 #include"smath.h"
@@ -18,17 +18,17 @@ int main (int argc, char *  argv[])
 params * p = initializeDefaultParams();
 
 
-p->mParams->initialNeuronCount = 10;
+p->mParams->initialNeuronCount = 4;
 
+
+
+p->mParams->minInputCount = 1;
+p->mParams->minOutputCount = 1; 
 
 
 
 printf("GENERATE RANDOM NETWORK , TRAIN ON NOT WITH SINGLE SUCCESSOR TECHNIQUE, OPEN ANALYSIS DIALOG\n");
 learn(evaluateNotPerformance,p);
-
-p->mParams->minInputCount = 2;
-p->mParams->minOutputCount = 1; 
-
 
 
 

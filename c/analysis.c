@@ -1,7 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<assert.h>
-#include"brain.h"
+#include"brains/brain.h"
 
 //John Balis 2018
 //for support email balisujohn@gmail.com 

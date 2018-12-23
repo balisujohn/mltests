@@ -6,7 +6,7 @@
 #include"hunter.h"
 #include"agent.h"
 #include"../utils.h"
-#include"../brain.h"
+#include"../brains/brain.h"
 
 //John Balis 2018
 //for support email balisujohn@gmail.com
@@ -14,7 +14,7 @@
 
 world * generateWorld()
 {
-	world * w = malloc(sizeof(world));
+	world * w = (world * )malloc(sizeof(world));
 	w->agentX = -1;
 	w->agentY = -1;
 	w->age = 0;
@@ -25,7 +25,7 @@ world * generateWorld()
 		for(int c = 0; c < BOARD_SIZE; c++)
 		{
 			w->zones[i][c].objCount = 0;
-			w->zones[i][c].head = malloc(sizeof(object));
+			w->zones[i][c].head = (object *)malloc(sizeof(object));
 			w->zones[i][c].head->next = NULL;
 			w->zones[i][c].head->prev = NULL;
 			w->zones[i][c].head->objectInfo = NULL;
@@ -156,7 +156,7 @@ void pushMovement(world * w, zone * curr, zone * dest, object * o)
 	assert(o != NULL);
 	//printf("APPENDING!\n");
 	movementQueueNode * newNode; 
-	assert( (newNode =malloc(sizeof(movementQueueNode)))!= NULL);
+	assert( (newNode =(movementQueueNode * )malloc(sizeof(movementQueueNode)))!= NULL);
 	newNode->curr = curr;
 	newNode->dest = dest;
 	newNode->o = o;
@@ -226,13 +226,13 @@ void applyMovementQueue(world * w)
 
 void initializeBasicWorld(world * w)
 {
-	object * agent = malloc(sizeof(object));
+	object * agent = (object *)malloc(sizeof(object));
 	agent->type = TYPE_AGENT;
 	agent->age = w->age;
 	agent->next = NULL;
 	agent->prev = NULL;
 
-	agentInfo * info = malloc(sizeof(agentInfo));
+	agentInfo * info = (agentInfo * )malloc(sizeof(agentInfo));
 	info-> direction = randRange(4); // for reference, see direction flags in world.h
 	info->health = 10;
 	agent->objectInfo = (void*)info;
@@ -245,7 +245,7 @@ void initializeBasicWorld(world * w)
 	w->agentX = x;
 	w->agentY = y;
 
-	object * hunter = malloc(sizeof(object));
+	object * hunter = (object * )malloc(sizeof(object));
 	hunter->type = TYPE_HUNTER;
 	hunter->age = w->age;	
 	hunter->objectInfo = NULL;

@@ -4,7 +4,7 @@
 #include<string.h>
 #include"world.h"
 #include"m1analysis.h"
-#include"../brain.h"
+#include"../brains/brain.h"
 #include"../learning.h"
 //John Balis 2018
 //for support email balisujohn@gmail.com 

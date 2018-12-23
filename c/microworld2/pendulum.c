@@ -5,7 +5,7 @@
 #include<math.h>
 #include<string.h>
 
-#include"../brain.h"
+#include"../brains/brain.h"
 
 #include"pendulum.h"
 
@@ -23,7 +23,7 @@
 
 pendulumWorld * initRandomPendulumWorld()
 {
-pendulumWorld * w = malloc(sizeof(pendulumWorld));
+pendulumWorld * w = (pendulumWorld * )malloc(sizeof(pendulumWorld));
 w->time = 0;
 w->baseYPos = .001;
 w->baseXPos = .001;

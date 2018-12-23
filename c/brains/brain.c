@@ -3,8 +3,8 @@
 #include<time.h>
 #include<assert.h>
 #include"brain.h"
-#include"utils.h"
-#include"./cJSON/cJSON.h"
+#include"../utils.h"
+#include"../cJSON/cJSON.h"
 
 //John Balis 2018
 //for support email balisujohn@gmail.com
