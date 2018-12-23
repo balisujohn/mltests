@@ -61,7 +61,7 @@ struct brain{
 
 params * initializeDefaultParams();
 brain * generateBasicBrain();
-brain * generateSparseBrain();
+brain * generateSparseBrain(mutationParams * m);
 brain * generateXorBrain();
 void mutateBrain(brain * b, mutationParams * m);
 void advanceBrain(brain * b, int inputs[], int inputCount,int outputs[], int outputCount);
