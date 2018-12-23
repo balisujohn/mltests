@@ -34,6 +34,14 @@ class Brain:
 			for i in range(neuron.target_count):
 				print ("TARGET: {target}, WEIGHT: {weight}".format(target = neuron.targets[i],weight = neuron.potential_weights[i]))
 			
+	
+	def sigmoid(x)
+		 return 1 / (1 + exp((double) -x))
+
+
+	def hyperbolic_tangent(x)
+		return 2*sigmoid(2*x)-1
+
 	def neuron_count_mutation(self, min_input_count, min_output_count, probability, bias):
 		if uniform(0,1) < probability:		
 			if uniform(0,1) < bias:
@@ -90,6 +98,7 @@ class Brain:
 		self.target_mutation(10,.25,.5,.25)
 		self.potential_weights_mutation(1,.1)
 		self.threshold_mutation(1,.1)
+
 	def input(self, inputs):
 		self.neurons[0].excitation = self.neurons[0].activation_potential + 1
 		for i in range(1, len(inputs) + 1 )
@@ -101,6 +110,17 @@ class Brain:
 		self.input(inputs)
 		sums  = [0] * self.neuron_count
 		for i in range(self.neuron_count)
+			self.neurons[i].fired = 0
+			if self.hyperbolic_tangent(self.neurons[i].excitation) > self.neurons[i].potential:
+				for c in range self.neurons[i].target_count
+					sums[self.neurons[i].targets[c]] += self.neurons[i].potential_weights[c]
+				self.neurons[i].fired = 1
+				self.neurons[i].excitation = 0
+
+				
+
+
+		
 		
 		
 		

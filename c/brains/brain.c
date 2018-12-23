@@ -509,19 +509,21 @@ void advanceBrain(brain * b, int  inputs[], int inputCount, int  outputs[], int 
 
 
 		}
-	
+		b->neurons[i].excitation = b->neurons[i].excitation/2.0;	
+
+
 	}
 
 	for(int i = 0; i < b->neuronCount; i++)
 	{
-		for(int c = 0; c < b->neurons[i].targetCount; c++)
-		{
-
-			if(b->neurons[i].targets[c] < b->neuronCount)
-			{
-				b->neurons[b->neurons[i].targets[c]].excitation += sums[b->neurons[i].targets[c]];
-			}
-		}
+	//	for(int c = 0; c < b->neurons[i].targetCount; c++)
+	//	{
+//
+//			if(b->neurons[i].targets[c] < b->neuronCount)
+//			{
+				b->neurons[i/*b->neurons[i].targets[c]*/].excitation += sums[i/*b->neurons[i].targets[c]*/];
+//			}
+//		}
 
 	}
 
