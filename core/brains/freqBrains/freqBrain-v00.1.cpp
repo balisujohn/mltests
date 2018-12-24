@@ -127,186 +127,12 @@ brain * generateSparseBrain(mutationParams * m)
       ##     ##  #######     ##    ##     ##    ##    ########
 */
 
-//function to mutate neuron count, probability encodes the probability of occurance, and the bias encodes the 
-//probability of removing v.s. adding a neuron. 0 guarantees removal, 1 guarantees addition.
-
-void neuronCountMutation(brain * b, int minInputCount, int minOutputCount, float probability, float bias)
-{
-	if(randFloat() < probability )
-	{
-		if(randFloat() < bias)
-		{
-			b->neuronCount++;
-			b->neurons = (neuron *) realloc(b->neurons, sizeof(neuron) * b->neuronCount);
-			initializeNeuron(&(b->neurons[b->neuronCount-1]), b->neuronCount);
-		}	
-		else if(b->neuronCount > 1 + minInputCount +  minOutputCount) 
-		{
-
-			freeNeuron(&(b->neurons[b->neuronCount-1]));
-			b->neuronCount--;
-			b->neurons = (neuron *) realloc(b->neurons, sizeof(neuron)* b->neuronCount);
-
-
-			for(int i = 0; i  < b->neuronCount; i++) // this is an expensive O(n^2) mutation, so it's important to give it a low probability, but it ensures we will 
-			{ // not have to worry about pre-existing activation patterns coming back from the dead when add a neuron with the index of a neuron we previously removed
-				for(int c = 0; c < b->neurons[i].targetCount; c++)
-					if (b->neurons[i].targets[c] == b->neuronCount)
-					{
-						b->neurons[i].targets[c] = randRange(b->neuronCount); // randomizes edges which previously targeted neuron being removed 
-					}
-
-			}
-
-		}
-
-
-
-	}
-
-}
-
-
-void targetMutation(brain * b, int targetCountLimit, float targetCountProbability, float targetCountBias , float retargetProbability){
-
-	for(int i = 0 ; i < b->neuronCount; i++)
-	{
-		if(b->neurons[i].targetCount > 0)
-		{
-			if (targetCountProbability > randFloat())
-			{
-
-
-
-
-				if(targetCountBias > randFloat()  && b->neurons[i].targetCount < targetCountLimit)
-				{
-					b->neurons[i].targetCount++;
-					b->neurons[i].targets = (int *) realloc(b->neurons[i].targets, sizeof(int) * b->neurons[i].targetCount);
-					b->neurons[i].potentialWeights = (float *) realloc(b->neurons[i].potentialWeights,sizeof(float) * b->neurons[i].targetCount);
-					b->neurons[i].targets[b->neurons[i].targetCount-1] = randRange(b->neuronCount);
-					b->neurons[i].potentialWeights[b->neurons[i].targetCount-1]  = randFloat();
-				}
-				else 	
-				{
-
-					b->neurons[i].targetCount--;
-					b->neurons[i].targets = (int *) realloc(b->neurons[i].targets, sizeof(int) * b->neurons[i].targetCount);
-					b->neurons[i].potentialWeights = (float *) realloc(b->neurons[i].potentialWeights,sizeof(float) * b->neurons[i].targetCount);
-
-				}
-
-
-
-			}
-			if(retargetProbability > randFloat() && b->neurons[i].targetCount>0)
-			{
-				b->neurons[i].targets[randRange(b->neurons[i].targetCount)] = randRange(b->neuronCount);
-			}
-
-		}
-		else if(targetCountProbability > randFloat())
-		{
-			b->neurons[i].targetCount++;
-			b->neurons[i].targets = (int *) realloc(b->neurons[i].targets, sizeof(int) * b->neurons[i].targetCount);
-			b->neurons[i].potentialWeights = (float *) realloc(b->neurons[i].potentialWeights,sizeof(float) * b->neurons[i].targetCount);
-			b->neurons[i].targets[b->neurons[i].targetCount-1] = randRange(b->neuronCount);
-			b->neurons[i].potentialWeights[b->neurons[i].targetCount-1]  = (randFloat()*2)-1;
-
-
-		}
-	}
-
-
-
-
-}
-/*
-   Mutate Activation Potentials
-
-probability: 0-1
-strength: 0-infinity
-
- */
-
-
-void potentialsMutation(brain * b, float probability, float strength){
-	for(int i = 0 ; i < b->neuronCount; i++)
-	{
-		if(b->neurons[i].targetCount)
-		{
-			int mutations = randRange(b->neurons[i].targetCount);
-			for (int c = 0 ; c < mutations; c++)
-			{
-				//TODO add soft boundary
-				if(randFloat() < probability)
-				{	
-					b->neurons[i].potentialWeights[randRange(b->neurons[i].targetCount)] += ((randFloat() *2)-1)*strength;
-				}
-			}
-		}
-	}
-
-
-
-}
-
-void thresholdMutation(brain * b, float probability, float strength){
-	for(int i = 0 ; i < b->neuronCount; i++)
-	{
-		if(b->neurons[i].targetCount)
-		{
-			int mutations = randRange(b->neurons[i].targetCount);
-			for (int c = 0 ; c < mutations; c++)
-			{
-				//TODO add soft boundary
-				if(randFloat() < probability)
-				{	
-					b->neurons[i].activationPotential += ((randFloat() *2)-1)*strength;
-				}
-			}
-		}
-	}
-
-
-
-}
-
-
-
-
-/*
-   swaps some neurons
-
-
- */
-void neuronSwapMutation(brain * b, float probability)
-{
-	if(randFloat() < probability)
-	{
-		int index1 = randRange(b->neuronCount-1)+1;	
-		int index2 = randRange(b->neuronCount-1)+1;
-		while(index2 == index1)
-		{
-			index2 = randRange(b->neuronCount-1)+1;
-		}
-		neuron temp;
-		copyNeuron(&(b->neurons[index1]),&temp);
-		copyNeuron(&(b->neurons[index2]),&(b->neurons[index1]));
-		copyNeuron(&temp,&(b->neurons[index2]));
-
-
-
-
-	}
-
-}
-
 /*
    randomly mutates a brain.
  */
 
-void mutateBrain(brain * b, mutationParams * m){
+void mutateBrain(brain * b, mutationParams * m)
+{
 
 	//historical presets, preserved for reference
 
@@ -314,8 +140,6 @@ void mutateBrain(brain * b, mutationParams * m){
 	  targetMutation(b, .25, .5,.25);
 	  potentialsMutation(b, 1, .1);
 	  neuronSwapMutation(b, .1);*/
-
-
 
 	/*
 	   neuronSwapMutation(b, .1);
@@ -325,43 +149,7 @@ void mutateBrain(brain * b, mutationParams * m){
 	   thresholdMutation(b,1,.1);
 	 */
 
-	char c;
-	int i = 0;
-	while((c = (m->order)[i]) != '\0'){
-		i += 1;
-		//printf("%c\n", c);
-		switch (c) {
-
-
-			case 's' :
-
-				neuronSwapMutation(b,m->swapProb);
-				break;
-
-			case 'c' :
-
-				neuronCountMutation(b, m->minInputCount, m->minOutputCount,m->neuronCountProb, m->neuronCountBias );
-				break;
-
-			case 't' : 
-
-				targetMutation(b, m->targetLimit, m->targetCountProb, m->targetCountBias, m->retargetProb);
-				break;
-
-			case 'p' :
-
-				potentialsMutation(b, m->potentialProb, m->potentialStrength);
-				break;	
-			case 'h' :
-
-				thresholdMutation(b, m->potentialProb, m->potentialStrength);
-				break;
-		}
-
-
-
-	}
-
+	b->mutate(m);
 }
 
 

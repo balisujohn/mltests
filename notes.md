@@ -31,6 +31,7 @@
     * could find diff between new and old action potential, and add that to target 
     * both assume linear, might not play nice with waveform compression
 * double check pendulum physics
+* extension of tensor product
 
 ## longer term goals:
 * explore applications of chemical signalling in ANN systems, particularly for novel learning methods

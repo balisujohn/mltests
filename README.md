@@ -33,6 +33,7 @@ input and contributions.
 Contributors:  
 John Balis   
 William Derksen  
+Mikhail Ivanitskiy
 
 Inline dependencies:  
 cJSON, courtesy of Dave Gamble and cJSON contributors
