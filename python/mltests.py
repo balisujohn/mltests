@@ -1,6 +1,7 @@
 from random import uniform, randrange
 import copy
 import math
+import gym
 
 
 class Neuron:
@@ -47,6 +48,7 @@ class Brain:
 
 	def verify_network_consistency(self):
 		#print("NEURON COUNT: " + str(self.neuron_count)) 
+
 		#print("NEURONS LENGTH: " + str(len(self.neurons))) 
 		#assert(self.neuron_count == len(self.neurons))
 		#for neuron in self.neurons:
@@ -80,7 +82,7 @@ class Brain:
 					if neuron.target_count < max_targets:
 						neuron.target_count += 1
 						neuron.targets.append(randrange(0,self.neuron_count))
-						neuron.potential_weights.append(uniform(0,1))
+						neuron.potential_weights.append((uniform(0,1)*2)-1)
 				else:
 					if neuron.target_count > 0:
 						neuron.target_count -= 1
@@ -123,7 +125,7 @@ class Brain:
 		self.verify_network_consistency()		
 		self.neuron_swap_mutation(.1)
 		self.neuron_count_mutation(min_input_count, min_output_count, .125, .5)
-		self.target_mutation(10,.25,.5,.25)
+		self.target_mutation(5,.25,.5,.25)
 		self.potential_weights_mutation(1,.1)
 		self.threshold_mutation(1,.1)
 		self.verify_network_consistency()
@@ -155,7 +157,8 @@ class Brain:
 					sums[self.neurons[i].targets[c]] += self.neurons[i].potential_weights[c]
 					#sums[1] += self.neurons[i].potential_weights[c]
 				self.neurons[i].fired = 1
-				self.neurons[i].excitation = self.neurons[i].excitation/2.0
+				self.neurons[i].excitation = 0.0
+			self.neurons[i].excitation = self.neurons[i].excitation/2.0
 		
 		for i in range(self.neuron_count):
 			self.neurons[i].excitation += sums[i]
@@ -163,7 +166,7 @@ class Brain:
 		start = len(inputs) + 1
 		outputs = []
 		for i in range(output_length):
-			outputs.append(self.neurons[start + i])
+			outputs.append(self.neurons[start + i].fired)
 		
 		return outputs
 
@@ -175,8 +178,16 @@ class Brain:
 		test_instance_4 = copy.deepcopy(self)
 
 		[input_1,input_2,input_3,input_4] = [[0,0],[0,1],[1,0],[1,1]]
-		#print (input_1)
-		[goal_1,goal_2,goal_3,goal_4] = [0,1,1,0]
+
+		[goal_1,goal_2,goal_3,goal_4] = [1,0,0,1]
+
+
+
+
+		output_1 = 0
+		output_2 = 0
+		output_3 = 0
+		output_4 = 0
 
 		for i in range(5):
 			output_1 = test_instance_1.advance(input_1,1) 
@@ -184,16 +195,45 @@ class Brain:
 			output_3 = test_instance_3.advance(input_3,1)
 			output_4 = test_instance_4.advance(input_4,1)
 
+
+
+
+	#	print(output_1)
+	#	print(str(goal_1) + "\n")
+
+
+
+
 		score = 0
-		if output_1 == goal_1:
+		if output_1[0] == goal_1:
 			score += 25
-		if output_2 == goal_2:
+		if output_2[0] == goal_2:
 			score += 25
-		if output_3 == goal_3:
+		if output_3[0] == goal_3:
 			score += 25
-		if output_4 == goal_4:
+		if output_4[0] == goal_4:
 			score += 25
+
+
+		#if score == 100:
+	#		print([input_1,input_2,input_3,input_4])
+	#		print([goal_1,goal_2,goal_3,goal_4])
 		return score
+
+	def analyze(self, input_count, output_count):
+		while True:
+			test_instance = copy.deepcopy(self)
+			
+			inputs = str(raw_input("PLEASE ENTER " + str(input_count) + " INPUTS:\n"))
+			inputs = [int(char) for char in inputs]
+			#print (inputs)
+			time_slices = int(input("PLEASE ENTER DESIRED NUMBER OF TIME SLICES:\n"))
+			outputs = []
+			for i in range(time_slices):
+				outputs = self.advance(inputs, output_count)
+			print ("OUTPUTS: " + str(outputs))
+		
+
 
 
 def learn_xor():
@@ -202,9 +242,11 @@ def learn_xor():
 	best_brain.verify_network_consistency()
 	best_score = 0
 	
+	counter = 0 	
+	average = 0	
 	
 	while best_score < 100:
-
+		counter += 1
 		score = 0
 		
 		mutant = copy.deepcopy(best_brain) #hELLO ERROR
@@ -217,8 +259,13 @@ def learn_xor():
 		test_instance = copy.deepcopy(mutant)
 		test_instance.verify_network_consistency()
 		score = test_instance.evaluate_xor_performance()
+		average += score
+		if ((counter % 100) == 0):
+			print ('LAST 100 AVERAGE: ' + str(average/100))
+			average = 0
 		if score > best_score:
-			print(score)
+			print('NEW BEST SCORE: ' + str(score))
+		#	test_instance.print_brain()
 			best_score = score
 			mutant.verify_network_consistency()
 			best_brain = copy.deepcopy(mutant)
@@ -226,16 +273,29 @@ def learn_xor():
 	
 
 	return best_brain
+
+
+def evaluate_space_invaders_performance():
+	env = gym.make('SpaceInvaders-ram-v0')
+	observation = env.reset()
+	print(observation)
+	while 1:
+		env.render()
+		print(observation)
+		action = env.action_space.sample()
+		observation,reward,done,info = env.step(action)
+		if done:
+			break
+
+	#feedback loop with microworld
+
+
+#def learn_space_invaders():
 		
 				
 
-				
-learn_xor();			
+evaluate_space_invaders_performance()
+	
+result = learn_xor();
+result.analyze(2, 1)			
 
-b = Brain(10)
-c = copy.deepcopy(b)
-
-c.print_brain()
-print(c.evaluate_xor_performance())
-b.default_mutation(3,3)
-b.print_brain()

@@ -45,7 +45,7 @@ float evaluateAndPerformance(brain * b)
 	int expectedResult4 = 0;
 
 
-	for(int c = 0; c < 100; c++)
+	for(int c = 0; c < 5; c++)
 	{
 		advanceBrain(testInstance, inputs,2, &result, 1);
 		advanceBrain(testInstance2, inputs2,2, &result2, 1);
@@ -111,7 +111,7 @@ float evaluateNorPerformance(brain * b )
 	int expectedResult4 = 0;
 
 
-	for(int c = 0; c < 100; c++)
+	for(int c = 0; c < 5; c++)
 	{
 		advanceBrain(testInstance, inputs,2, &result, 1);
 		advanceBrain(testInstance2, inputs2,2, &result2, 1);
@@ -169,7 +169,7 @@ float evaluateIdentityPerformance(brain * b )
 	int expectedResult2 = 0;
 
 
-	for(int c = 0; c < 100; c++)
+	for(int c = 0; c < 5; c++)
 	{
 		advanceBrain(testInstance, inputs,1, &result, 1);
 		advanceBrain(testInstance2, inputs2,1, &result2, 1);
@@ -217,7 +217,7 @@ float evaluateNotPerformance(brain * b)
 	int expectedResult2 = 1;
 
 
-	for(int c = 0; c < 100; c++)
+	for(int c = 0; c < 5; c++)
 	{
 		advanceBrain(testInstance, &inputs,1, &result, 1);
 		advanceBrain(testInstance2, &inputs2,1, &result2, 1);
@@ -275,7 +275,7 @@ float evaluateOrPerformance(brain * b)
 	int expectedResult4 = 1;
 
 
-	for(int c = 0; c < 100; c++)
+	for(int c = 0; c < 5; c++)
 	{
 		advanceBrain(testInstance, inputs,2, &result, 1);
 		advanceBrain(testInstance2, inputs2,2, &result2, 1);
@@ -341,7 +341,7 @@ float evaluateXorPerformance(brain * b)
 	int expectedResult4 = 1;
 
 
-	for(int c = 0; c < 100; c++)
+	for(int c = 0; c < 5; c++)
 	{
 		advanceBrain(testInstance, inputs,2, &result, 1);
 		advanceBrain(testInstance2, inputs2,2, &result2, 1);
@@ -389,5 +389,8 @@ int  baseLineXorTest()
 
 
 }
+
+
+p->mParams->initialNeuronCount = 3;
 
 */

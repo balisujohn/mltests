@@ -18,7 +18,7 @@ int main (int argc, char *  argv[])
 params * p = initializeDefaultParams();
 
 
-p->mParams->initialNeuronCount = 4;
+p->mParams->initialNeuronCount = 3;
 
 
 
@@ -30,6 +30,9 @@ p->mParams->minOutputCount = 1;
 printf("GENERATE RANDOM NETWORK , TRAIN ON NOT WITH SINGLE SUCCESSOR TECHNIQUE, OPEN ANALYSIS DIALOG\n");
 learn(evaluateNotPerformance,p);
 
+
+
+p->mParams->initialNeuronCount = 4;
 
 
 
@@ -71,7 +74,7 @@ learn(evaluateNorPerformance,p);
 
 p->mParams->minInputCount = 6;
 p->mParams->minOutputCount = 4; 
-p->mParams->initialNeuronCount = 100;
+p->mParams->initialNeuronCount = 11;
 
 printf("GENERATE RANDOM NETWORK , TRAIN ON ADDITION WITH SINGLE SUCCESSOR TECHNIQUE, OPEN ANALYSIS DIALOG\n");
 learn(evaluateAdditionPerformance,p);
