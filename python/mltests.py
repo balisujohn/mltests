@@ -1,6 +1,7 @@
 from random import uniform, randrange
 import copy
 import math
+import utils
 import gym
 
 
@@ -249,7 +250,7 @@ def learn_xor():
 		counter += 1
 		score = 0
 		
-		mutant = copy.deepcopy(best_brain) #hELLO ERROR
+		mutant = copy.deepcopy(best_brain) 
 		#mutant.print_brain()
 		#best_brain.print_brain()	
 		best_brain.verify_network_consistency()	
@@ -275,27 +276,86 @@ def learn_xor():
 	return best_brain
 
 
-def evaluate_space_invaders_performance():
+
+
+def evaluate_space_invaders_performance(brain):
+
+	top_indices = [87, 79, 80, 77, 112, 1, 8, 72, 6, 28, 3, 110, 82, 85, 78, 9, 81, 90, 106, 74]
+	
 	env = gym.make('SpaceInvaders-ram-v0')
-	observation = env.reset()
-	print(observation)
+	observations = env.reset()
+	score = 0
 	while 1:
-		env.render()
-		print(observation)
-		action = env.action_space.sample()
-		observation,reward,done,info = env.step(action)
+		score += 1
+		#env.render()
+		#print(observation)
+
+		output = [0] * 3
+		inputs = utils.extract_observations(top_indices, observations)
+		#print(inputs)
+		#print(len(inputs))
+		assert(len(inputs) == 160)
+
+		for i in range(5):
+			output = brain.advance(inputs, 3)
+		#print(output)
+		#print(output)
+		action = min(utils.binary_array_to_decimal(output), 5)
+		#print(action)
+
+		observations,reward,done,info = env.step(action)
 		if done:
-			break
+			return score
+		
+		
+
 
 	#feedback loop with microworld
 
 
-#def learn_space_invaders():
+
+
+def learn_space_invaders():
+
+	best_brain = Brain(164)
+	best_brain.verify_network_consistency()
+	best_score = 0
+	
+	counter = 0 	
+	average = 0	
+	
+	while best_score < 1000:
+		counter += 1
+		score = 0
+		
+		mutant = copy.deepcopy(best_brain) 
+		#mutant.print_brain()
+		#best_brain.print_brain()	
+		#best_brain.verify_network_consistency()	
+		#mutant.verify_network_consistency()
+		mutant.default_mutation(160,3)
+		#mutant.verify_network_consistency()
+		test_instance = copy.deepcopy(mutant)
+		#test_instance.verify_network_consistency()
+		score = evaluate_space_invaders_performance(test_instance)
+		average += score
+		if ((counter % 100) == 0):
+			print ('LAST 100 AVERAGE: ' + str(average/100))
+			average = 0
+		if score > best_score:
+			print('NEW BEST SCORE: ' + str(score))
+		#	test_instance.print_brain()
+			best_score = score
+			#mutant.verify_network_consistency()
+			best_brain = copy.deepcopy(mutant)
+			#best_brain.verify_network_consistency()
+	
+
+	return best_brain
+
 		
 				
-
-evaluate_space_invaders_performance()
-	
-result = learn_xor();
-result.analyze(2, 1)			
+learn_space_invaders()
+#evaluate_space_invaders_performance(Brain(164))
+				
 
