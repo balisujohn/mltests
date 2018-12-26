@@ -1,8 +1,14 @@
 from random import uniform, randrange
+from enum import Enum
 import copy
 import math
 import utils
 import gym
+
+
+class Flags(Enum):
+	VISUALIZATION_ON = 1
+	VISUALIZATION_OFF = 2
 
 
 class Neuron:
@@ -112,7 +118,6 @@ class Brain:
 		self.verify_network_consistency()
 
 	def neuron_swap_mutation(self, probability):
-		self.verify_network_consistency()
 		index1 = randrange(0, self.neuron_count -1) + 1 
 		index2 = randrange(0, self.neuron_count -1) + 1 
 		while index2 == index1:
@@ -120,16 +125,15 @@ class Brain:
 		temp = self.neurons[index1]
 		self.neurons[index1] = self.neurons[index2]
 		self.neurons[index2] = temp
-		self.verify_network_consistency()
+
 	
 	def default_mutation(self, min_input_count, min_output_count):
-		self.verify_network_consistency()		
 		self.neuron_swap_mutation(.1)
 		self.neuron_count_mutation(min_input_count, min_output_count, .125, .5)
 		self.target_mutation(5,.25,.5,.25)
-		self.potential_weights_mutation(1,.1)
-		self.threshold_mutation(1,.1)
-		self.verify_network_consistency()
+		self.potential_weights_mutation(1,.25)
+		self.threshold_mutation(1,.5)
+
 	
 	def input(self, inputs):
 		self.neurons[0].excitation = self.neurons[0].activation_potential + 1
@@ -170,6 +174,7 @@ class Brain:
 			outputs.append(self.neurons[start + i].fired)
 		
 		return outputs
+	
 
 		
 	def evaluate_xor_performance(self):
@@ -180,7 +185,7 @@ class Brain:
 
 		[input_1,input_2,input_3,input_4] = [[0,0],[0,1],[1,0],[1,1]]
 
-		[goal_1,goal_2,goal_3,goal_4] = [1,0,0,1]
+		[goal_1,goal_2,goal_3,goal_4] = [0,1,1,0]
 
 
 
@@ -278,7 +283,7 @@ def learn_xor():
 
 
 
-def evaluate_space_invaders_performance(brain):
+def evaluate_space_invaders_performance(brain, visualization_mode):
 
 	top_indices = [87, 79, 80, 77, 112, 1, 8, 72, 6, 28, 3, 110, 82, 85, 78, 9, 81, 90, 106, 74]
 	
@@ -287,7 +292,8 @@ def evaluate_space_invaders_performance(brain):
 	score = 0
 	while 1:
 		score += 1
-		#env.render()
+		if visualization_mode == Flags.VISUALIZATION_ON:
+			env.render()
 		#print(observation)
 
 		output = [0] * 3
@@ -312,7 +318,9 @@ def evaluate_space_invaders_performance(brain):
 
 	#feedback loop with microworld
 
-
+def visualize_space_invaders_performance(brain):
+	while 1:
+		evaluate_space_invaders_performance(brain, Flags.VISUALIZATION_ON)
 
 
 def learn_space_invaders():
@@ -324,7 +332,7 @@ def learn_space_invaders():
 	counter = 0 	
 	average = 0	
 	
-	while best_score < 1000:
+	while best_score < 2000:
 		counter += 1
 		score = 0
 		
@@ -337,7 +345,7 @@ def learn_space_invaders():
 		#mutant.verify_network_consistency()
 		test_instance = copy.deepcopy(mutant)
 		#test_instance.verify_network_consistency()
-		score = evaluate_space_invaders_performance(test_instance)
+		score = evaluate_space_invaders_performance(test_instance, Flags.VISUALIZATION_OFF)
 		average += score
 		if ((counter % 100) == 0):
 			print ('LAST 100 AVERAGE: ' + str(average/100))
@@ -355,7 +363,9 @@ def learn_space_invaders():
 
 		
 				
-learn_space_invaders()
+#result = learn_space_invaders()
+#visualize_space_invaders_performance(result)
 #evaluate_space_invaders_performance(Brain(164))
-				
+
+learn_xor()				
 
