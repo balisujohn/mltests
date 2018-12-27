@@ -4,7 +4,7 @@ import copy
 import utils
 import gym
 
-class Flags(Enum):
+class Learning_flags(Enum):
 	VISUALIZATION_ON = 1
 	VISUALIZATION_OFF = 2
 
@@ -48,25 +48,25 @@ def evaluate_xor_performance(brain, visualization_mode):
 
 def evaluate_space_invaders_performance(brain, visualization_mode):
 
-	top_indices = [87, 79, 80, 77, 112, 1, 8, 72, 6, 28, 3, 110, 82, 85, 78, 9, 81, 90, 106, 74]
+	#top_indices = [87, 79, 80, 77, 112, 1, 8, 72, 6, 28, 3, 110, 82, 85, 78, 9, 81, 90, 106, 74]
 	
 	env = gym.make('SpaceInvaders-ram-v0')
 	observations = env.reset()
 	score = 0.0
-	desired_score = 2000.0
+	desired_score = 1000
 	while 1:
 		score += 1
-		if visualization_mode == Flags.VISUALIZATION_ON:
+		if visualization_mode == Learning_flags.VISUALIZATION_ON:
 			env.render()
 
 
 		output = [0] * 3
-		inputs = utils.extract_observations(top_indices, observations)
+		#inputs = utils.extract_observations(top_indices, observations)
 		
-		assert(len(inputs) == 160)
+
 
 		for i in range(5):
-			output = brain.advance(inputs, 3)
+			output = brain.advance(observations, 3)
 		
 		action = min(utils.binary_array_to_decimal(output), 5)
 
@@ -96,12 +96,12 @@ def analyze(brain, input_count, output_count):
 
 def visualize_performance(brain, eval_function):
 	while 1:
-		eval_function(brain, Flags.VISUALIZATION_ON)	
+		eval_function(brain, Learning_flags.VISUALIZATION_ON)	
 
 
-def learn(eval_function):
+def learn(eval_function,input_size, output_size):
 
-	best_brain = brain.Brain(164)
+	best_brain = brain.Brain(2)
 
 	best_score = 0
 	
@@ -109,22 +109,27 @@ def learn(eval_function):
 	average = 0	
 	
 	while best_score < 100:
+
 		counter += 1
 		score = 0
 		
 		mutant = copy.deepcopy(best_brain) 
-		
-		mutant.default_mutation(160,3)
+
+
+		for i in range(3):
+			mutant.default_mutation(input_size,output_size)
 
 		test_instance = copy.deepcopy(mutant)
 
-		score = eval_function(test_instance, Flags.VISUALIZATION_OFF)
+		score = eval_function(test_instance, Learning_flags.VISUALIZATION_OFF)
+
 		average += score
 		if ((counter % 100) == 0):
 			print ('LAST 100 AVERAGE: ' + str(average/100))
 			average = 0
 		if score > best_score:
 			print('NEW BEST SCORE: ' + str(score))
+			brain.print_brain_to_file(mutant)
 
 			best_score = score
 
