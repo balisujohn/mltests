@@ -11,7 +11,9 @@ class Brain_flags(Enum): ## dont change the existing ones without updating in mu
 	NEURON_SENSORY = 2
 	NEURON_ACTUATING = 3
 	SENSOR_BIT = 4
-	SENSOR_LINEAR_THRESHOLD = 5
+	SENSOR_LINEAR_THRESHOLD_UP = 5
+	SENSOR_LINEAR_THRESHOLD_DOWN = 6
+	SENSOR_BINARY = 7
 
 
 class Neuron:
@@ -121,7 +123,7 @@ class Brain:
 			selection = uniform(0,1)			
 			if selection < sensory_mutation_prob:
 				neuron.type = Brain_flags.NEURON_SENSORY
-				neuron.sensor_type = Brain_flags(randrange(4,6))
+				neuron.sensor_type = Brain_flags(randrange(4,8))
 				neuron.external_index = randrange(input_count)
 				neuron.external_thresh = randrange(256)
 				neuron.external_bit = randrange(8)
@@ -151,6 +153,7 @@ class Brain:
 		for neuron in self.neurons:
 			if uniform(0,1) < probability:
 				neuron.activation_potential += ((uniform(0,1) *2)-1)*strength
+				neuron.activation_potential = max(0, neuron.activation_potential)
 
 
 	def neuron_swap_mutation(self, probability):
@@ -175,7 +178,7 @@ class Brain:
 		self.target_mutation(5,.25,.5,.25)
 		self.potential_weights_mutation(1,.25)
 		self.threshold_mutation(1,.5)
-		self.type_mutation(input_count, output_count,.1,.1,.1)
+		self.type_mutation(input_count, output_count,.5,.1,.1)
 
 	
 
@@ -198,30 +201,67 @@ class Brain:
 		outputs = [0] * output_length
 
 		for i,neuron in enumerate(self.neurons):
+	
+			
 
-			if neuron.fired:
-				neuron.fired = 0
-				if neuron.type == Brain_flags.NEURON_ACTUATING:
-					outputs[neuron.external_index] = 1
+			#if neuron.fired:
+			#	neuron.fired = 0
+			#	if neuron.type == Brain_flags.NEURON_ACTUATING:
+			#		outputs[neuron.external_index] += 1
 	
 
-			if neuron.type == Brain_flags.NEURON_SENSORY:
-				observation = inputs[neuron.external_index]
-				if neuron.sensor_type == Brain_flags.SENSOR_BIT:
-					if (observation >> neuron.external_bit) & 1:	
-						neuron.excitation = neuron.activation_potential + 1 
-				elif self.neurons[i].sensor_type == Brain_flags.SENSOR_LINEAR_THRESHOLD:
-					if observation > neuron.external_thresh:
-						neuron.excitation = neuron.activation_potential + 1 
+			if neuron.type == Brain_flags.NEURON_ACTUATING:
+				if neuron.fired:
+					outputs[neuron.external_index] += 1
+				else:
+					outputs[neuron.external_index] -= 1
 
 
-			elif self.hyperbolic_tangent(self.neurons[i].excitation) > self.neurons[i].activation_potential:
+			neuron.fired = 0
+
+			
+			if i == 0 or self.hyperbolic_tangent(self.neurons[i].excitation) > self.neurons[i].activation_potential:
 				for c in range (self.neurons[i].target_count):
 					
 					assert(self.neurons[i].targets[c] < self.neuron_count)
 					sums[self.neurons[i].targets[c]] += self.neurons[i].potential_weights[c]
 				self.neurons[i].fired = 1
-				self.neurons[i].excitation = 0.0
+				self.neurons[i].excitation = 0
+
+			elif neuron.type == Brain_flags.NEURON_SENSORY:
+				observation = inputs[neuron.external_index]
+				if neuron.sensor_type == Brain_flags.SENSOR_BIT:
+					if (observation >> neuron.external_bit) & 1:	
+						for c in range (self.neurons[i].target_count):
+					
+							assert(self.neurons[i].targets[c] < self.neuron_count)
+							sums[self.neurons[i].targets[c]] += self.neurons[i].potential_weights[c]
+						self.neurons[i].fired = 1
+						self.neurons[i].excitation = 0.0
+				elif self.neurons[i].sensor_type == Brain_flags.SENSOR_LINEAR_THRESHOLD_UP:
+					if observation >= neuron.external_thresh:
+						for c in range (self.neurons[i].target_count):
+					
+							assert(self.neurons[i].targets[c] < self.neuron_count)
+							sums[self.neurons[i].targets[c]] += self.neurons[i].potential_weights[c]
+						self.neurons[i].fired = 1
+						self.neurons[i].excitation = 0.0
+				elif self.neurons[i].sensor_type == Brain_flags.SENSOR_LINEAR_THRESHOLD_DOWN:
+					if observation <= neuron.external_thresh:
+						for c in range (self.neurons[i].target_count):
+					
+							assert(self.neurons[i].targets[c] < self.neuron_count)
+							sums[self.neurons[i].targets[c]] += self.neurons[i].potential_weights[c]
+						self.neurons[i].fired = 1
+						self.neurons[i].excitation = 0.0
+				elif self.neurons[i].sensor_type == Brain_flags.SENSOR_BINARY:
+					if observation != 0:
+						for c in range (self.neurons[i].target_count):
+					
+							assert(self.neurons[i].targets[c] < self.neuron_count)
+							sums[self.neurons[i].targets[c]] += self.neurons[i].potential_weights[c]
+						self.neurons[i].fired = 1
+						self.neurons[i].excitation = 0.0
 			self.neurons[i].excitation = self.neurons[i].excitation/2.0
 		
 		for i in range(self.neuron_count):
@@ -232,6 +272,12 @@ class Brain:
 		#for i in range(output_length):
 		#	outputs.append(self.neurons[start + i].fired)
 		
+
+		for i in range(len(outputs)):
+			if outputs[i] > 0:
+				outputs[i] = 1
+			else:
+				outputs[i] = 0
 		return outputs
 	
 
@@ -265,8 +311,30 @@ def print_brain_to_file(brain):
 
 
 
-#def load_brain_from_file():
-	
+def load_brain_from_file(file_name):
+	with open(file_name) as json_file:
+		brain_json = json.load(json_file)
+		load_brain = Brain(0)
+		load_brain.neuron_count = brain_json['neuronCount']
+		for neuron_json in brain_json['neurons']:
+			new_neuron = Neuron()
+			new_neuron.targets = neuron_json['targets']
+
+			new_neuron.potential_weights = neuron_json['weights'] 
+			new_neuron.activation_potential  = neuron_json['thresh'] 
+			new_neuron.target_count = neuron_json['targetCount']
+
+			new_neuron.type = Brain_flags[neuron_json['neuronType']] 
+		 	new_neuron.sensor_type = Brain_flags[neuron_json['sensorType']]
+
+
+
+			new_neuron.external_index = neuron_json['externalIndex'] 
+			new_neuron.external_thresh =neuron_json['externalThreshold'] 
+			new_neuron.external_bit = neuron_json['externalBit'] 
+			load_brain.neurons.append(new_neuron)
+		return load_brain
+			 	
 
 
 
