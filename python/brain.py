@@ -123,7 +123,7 @@ class Brain:
 			selection = uniform(0,1)			
 			if selection < sensory_mutation_prob:
 				neuron.type = Brain_flags.NEURON_SENSORY
-				neuron.sensor_type = Brain_flags(randrange(4,8))
+				neuron.sensor_type = Brain_flags(randrange(5,8)) #sensor bit temporarily disabled
 				neuron.external_index = randrange(input_count)
 				neuron.external_thresh = randrange(256)
 				neuron.external_bit = randrange(8)
@@ -178,7 +178,7 @@ class Brain:
 		self.target_mutation(5,.25,.5,.25)
 		self.potential_weights_mutation(1,.25)
 		self.threshold_mutation(1,.5)
-		self.type_mutation(input_count, output_count,.5,.1,.1)
+		self.type_mutation(input_count, output_count,.1,.1,.1)
 
 	
 

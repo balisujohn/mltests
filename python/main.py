@@ -1,16 +1,7 @@
 import learning
 import brain
 import sys
-#import gym 
-
-
-#env = gym.make()
-
-
-#load_brain = brain.load_brain_from_file()
-#result = learning.learn_from_existing(load_brain, learning.evaluate_space_invaders_performance,128,3)
-#learning.visualize_performance(load_brain, learning.evaluate_space_invaders_performance)
-
+import gym 
 
 
 if len(sys.argv) == 2 and sys.argv[1] == 'train':

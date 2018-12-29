@@ -56,33 +56,41 @@ def evaluate_xor_performance(brain, visualization_mode):
 
 def evalute_pendulum_cart_performance(brain, visualization_mode):
 	
-	env = gym.make('SpaceInvaders-ram-v0')
-	observations = env.reset()
-	score = 0.0
-	desired_score = 1500
-	while 1:
-		score += 1
-		if visualization_mode == Learning_flags.VISUALIZATION_ON:
-			env.render()
+	
+	total_score = 0.0
+	desired_score = 100
+	trials = 100
+	for c in range(trials):
+		env = gym.make('CartPole-v0')
+		observations = env.reset()
+		score = 0
+		for h in range(desired_score):
+			#score += 1
+			if visualization_mode == Learning_flags.VISUALIZATION_ON:
+				env.render()
 
 
-		output = [0] * 3
-		#inputs = utils.extract_observations(top_indices, observations)
+			output = [0] * 3
+			#inputs = utils.extract_observations(top_indices, observations)
 		
 
 
-		for i in range(1):
-			output = brain.advance(observations, 3)
+			for i in range(1):
+				action = brain.advance(observations, 1)[0]
 		
-		action = min(utils.binary_array_to_decimal(output), 5)
 
-		if visualization_mode == Learning_flags.VISUALIZATION_ON:
-			print('ACTION: ' + str(action))
+			if visualization_mode == Learning_flags.VISUALIZATION_ON:
+				print('ACTION: ' + str(action))
+
 		
-		observations,reward,done,info = env.step(action)
-		if done:
-			return (score/desired_score) * 100
-
+		
+			observations,reward,done,info = env.step(action)
+			score += reward
+			if done:
+				total_score += score
+				env.close()
+				break
+	return (total_score / (trials * desired_score)) * 100
 
 
 def evaluate_space_invaders_performance(brain, visualization_mode):
@@ -92,7 +100,7 @@ def evaluate_space_invaders_performance(brain, visualization_mode):
 	env = gym.make('SpaceInvaders-ram-v0')
 	observations = env.reset()
 	score = 0.0
-	desired_score = 1000
+	desired_score = 500
 	while 1:
 		#score += 1
 		if visualization_mode == Learning_flags.VISUALIZATION_ON:
