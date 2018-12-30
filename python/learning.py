@@ -5,6 +5,10 @@ from random import randrange
 import utils
 import gym
 
+
+
+
+
 class Learning_flags(Enum):
 	VISUALIZATION_ON = 1
 	VISUALIZATION_OFF = 2
@@ -54,7 +58,7 @@ def evaluate_xor_performance(brain, visualization_mode):
 
 	return score
 
-def evalute_pendulum_cart_performance(brain, visualization_mode):
+def evalute_pendulum_cart_performance(test_brain, visualization_mode):
 	
 	
 	total_score = 0.0
@@ -74,9 +78,14 @@ def evalute_pendulum_cart_performance(brain, visualization_mode):
 			#inputs = utils.extract_observations(top_indices, observations)
 		
 
+			for i in range(len(observations)):
+				brain.Mutation_params().upper_input_bounds[i] = max(brain.Mutation_params().upper_input_bounds[i],observations[i])
+				brain.Mutation_params().lower_input_bounds[i] = min(brain.Mutation_params().lower_input_bounds[i],observations[i])
+
+
 
 			for i in range(1):
-				action = brain.advance(observations, 1)[0]
+				action = test_brain.advance(observations, 1)[0]
 		
 
 			if visualization_mode == Learning_flags.VISUALIZATION_ON:
@@ -88,12 +97,12 @@ def evalute_pendulum_cart_performance(brain, visualization_mode):
 			score += reward
 			if done:
 				total_score += score
-				env.close()
 				break
+		env.close()
 	return (total_score / (trials * desired_score)) * 100
 
 
-def evaluate_space_invaders_performance(brain, visualization_mode):
+def evaluate_space_invaders_performance(test_brain, visualization_mode):
 
 	#top_indices = [87, 79, 80, 77, 112, 1, 8, 72, 6, 28, 3, 110, 82, 85, 78, 9, 81, 90, 106, 74]
 	
@@ -107,13 +116,19 @@ def evaluate_space_invaders_performance(brain, visualization_mode):
 			env.render()
 
 
+
 		output = [0] * 3
 		#inputs = utils.extract_observations(top_indices, observations)
 		
 
+		for i in range(len(observations)):
+			brain.Mutation_params().upper_input_bounds[i] = max(brain.Mutation_params().upper_input_bounds[i],observations[i])
+			brain.Mutation_params().lower_input_bounds[i] = min(brain.Mutation_params().lower_input_bounds[i],observations[i])
+
+
 
 		for i in range(1):
-			output = brain.advance(observations, 3)
+			output = test_brain.advance(observations, 3)
 
 		
 		action = min(utils.binary_array_to_decimal(output), 5)
@@ -151,7 +166,10 @@ def visualize_performance(brain, eval_function):
 		eval_function(brain, Learning_flags.VISUALIZATION_ON)	
 
 
-def learn(eval_function,input_size, output_size):
+def learn(eval_function):
+
+	input_size = brain.Mutation_params().input_count
+	output_size = brain.Mutation_params().output_count
 
 	best_brain = brain.Brain(1)
 
@@ -194,7 +212,11 @@ def learn(eval_function,input_size, output_size):
 	return best_brain
 		
 
-def learn_from_existing(existing_brain, eval_function,input_size, output_size):
+def learn_from_existing(existing_brain, eval_function):
+
+	input_size = brain.Mutation_params().input_count
+	output_size = brain.Mutation_params().output_count
+
 
 	best_brain = existing_brain
 	benchmark_instance = copy.deepcopy(best_brain)
@@ -221,7 +243,7 @@ def learn_from_existing(existing_brain, eval_function,input_size, output_size):
 		
 		average += score
 		if ((counter % 100) == 0):
-			print ('LAST 100 AVERAGE: ' + str(average/100))
+			print ('LAST 100 AVERAGE: ' + str(average/100))		
 			average = 0
 		if score >= best_score:
 			print('NEW BEST SCORE: ' + str(score))

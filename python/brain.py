@@ -16,6 +16,31 @@ class Brain_flags(Enum): ## dont change the existing ones without updating in mu
 	SENSOR_BINARY = 7
 
 
+
+class Mutation_params():
+	swap_prob =  .1
+	neuron_count_prob = .125 
+	neuron_count_bias = .5
+	target_limit = 5
+	target_count_prob = .25
+	target_count_bias = .5
+	retarget_prob = .25
+	potential_prob = .1
+	potential_strength = .1 
+	threshold_prob = .1
+	threshold_strength = .1 
+	input_count = 	10
+	output_count = 10
+
+	sensory_prob = .5
+	actuating_prob = .1
+	hidden_prob = .1
+
+	upper_input_bounds = []
+	lower_input_bounds = []
+	
+
+
 class Neuron:
 	
 	def __init__(self):
@@ -125,8 +150,8 @@ class Brain:
 				neuron.type = Brain_flags.NEURON_SENSORY
 				neuron.sensor_type = Brain_flags(randrange(5,8)) #sensor bit temporarily disabled
 				neuron.external_index = randrange(input_count)
-				neuron.external_thresh = randrange(256)
-				neuron.external_bit = randrange(8)
+				neuron.external_thresh = uniform(Mutation_params.lower_input_bounds[neuron.external_index],Mutation_params.upper_input_bounds[neuron.external_index])
+				#neuron.external_bit = randrange(8)
 	
 			elif selection < sensory_mutation_prob + actuating_mutation_prob:
 				neuron.type = Brain_flags.NEURON_ACTUATING
@@ -173,12 +198,12 @@ class Brain:
 
 	
 	def default_mutation(self, input_count, output_count):
-		self.neuron_swap_mutation(.1)
-		self.neuron_count_mutation(input_count, output_count, .125, .5)
-		self.target_mutation(5,.25,.5,.25)
-		self.potential_weights_mutation(1,.25)
-		self.threshold_mutation(1,.5)
-		self.type_mutation(input_count, output_count,.1,.1,.1)
+		self.neuron_swap_mutation(Mutation_params().swap_prob)
+		self.neuron_count_mutation(input_count, output_count, Mutation_params().neuron_count_prob,Mutation_params().neuron_count_bias )
+		self.target_mutation(Mutation_params().target_limit,Mutation_params().target_count_prob,Mutation_params().target_count_bias,Mutation_params().retarget_prob)
+		self.potential_weights_mutation(Mutation_params().potential_prob,Mutation_params().potential_strength)
+		self.threshold_mutation(Mutation_params().threshold_prob,Mutation_params().threshold_strength)
+		self.type_mutation(input_count, output_count,Mutation_params().sensory_prob,Mutation_params().actuating_prob,Mutation_params().hidden_prob)
 
 	
 
