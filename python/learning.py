@@ -106,43 +106,151 @@ def evaluate_space_invaders_performance(test_brain, visualization_mode):
 
 	#top_indices = [87, 79, 80, 77, 112, 1, 8, 72, 6, 28, 3, 110, 82, 85, 78, 9, 81, 90, 106, 74]
 	
-	env = gym.make('SpaceInvaders-ram-v0')
-	observations = env.reset()
-	score = 0.0
+
+
+	best_score = 0.0
 	desired_score = 500
-	while 1:
-		#score += 1
-		if visualization_mode == Learning_flags.VISUALIZATION_ON:
-			env.render()
+	trials = 100
+	for i in range(trials):
+		env = gym.make('SpaceInvaders-ram-v0')
+		observations = env.reset()
+		score = 0
+		while 1:
+			#score += 1
+			if visualization_mode == Learning_flags.VISUALIZATION_ON:
+				env.render()
 
 
 
-		output = [0] * 3
-		#inputs = utils.extract_observations(top_indices, observations)
+			output = [0] * 3
+			#inputs = utils.extract_observations(top_indices, observations)
 		
 
-		for i in range(len(observations)):
-			brain.Mutation_params().upper_input_bounds[i] = max(brain.Mutation_params().upper_input_bounds[i],observations[i])
-			brain.Mutation_params().lower_input_bounds[i] = min(brain.Mutation_params().lower_input_bounds[i],observations[i])
+			for i in range(len(observations)):
+				brain.Mutation_params().upper_input_bounds[i] = max(brain.Mutation_params().upper_input_bounds[i],observations[i])
+				brain.Mutation_params().lower_input_bounds[i] = min(brain.Mutation_params().lower_input_bounds[i],observations[i])
 
 
 
-		for i in range(1):
-			output = test_brain.advance(observations, 3)
+			for i in range(1):
+				output = test_brain.advance(observations, 3)
 
 		
-		action = min(utils.binary_array_to_decimal(output), 5)
+			action = min(utils.binary_array_to_decimal(output), 5)
 
-		if visualization_mode == Learning_flags.VISUALIZATION_ON:
-			print('ACTION: ' + str(action))
+			if visualization_mode == Learning_flags.VISUALIZATION_ON:
+				print('ACTION: ' + str(action))
 		
-		observations,reward,done,info = env.step(action)
-		score += reward
-		if done:
-			env.close()
-			return (score/desired_score) * 100
+			observations,reward,done,info = env.step(action)
+			score += reward
+			if done:
+				best_score += score 
+				env.close()
+				break
+				
+
+	return (best_score/(desired_score* trials)) * 100
 		
+def evaluate_berzerk_performance(test_brain, visualization_mode):
+
+	#top_indices = [87, 79, 80, 77, 112, 1, 8, 72, 6, 28, 3, 110, 82, 85, 78, 9, 81, 90, 106, 74]
+	
+
+
+	best_score = 0.0
+	desired_score = 1000
+	trials = 1
+	for i in range(trials):
+		env = gym.make('Berzerk-ram-v0')
+		observations = env.reset()
+		score = 0
+		for c in range(1000):
+			#score += 1
+			if visualization_mode == Learning_flags.VISUALIZATION_ON:
+				env.render()
+
+
+
+			output = [0] * 3
+			#inputs = utils.extract_observations(top_indices, observations)
 		
+
+			for i in range(len(observations)):
+				brain.Mutation_params().upper_input_bounds[i] = max(brain.Mutation_params().upper_input_bounds[i],observations[i])
+				brain.Mutation_params().lower_input_bounds[i] = min(brain.Mutation_params().lower_input_bounds[i],observations[i])
+
+
+
+			for i in range(1):
+				output = test_brain.advance(observations, 5)
+
+		
+			action = min(utils.binary_array_to_decimal(output), 17)
+
+			if visualization_mode == Learning_flags.VISUALIZATION_ON:
+				print('ACTION: ' + str(action))
+		
+			observations,reward,done,info = env.step(action)
+			score += reward
+			if done:
+				break
+		best_score += score
+		env.close()
+	return (best_score/(desired_score* trials)) * 100
+		
+				
+def evaluate_chopper_performance(test_brain, visualization_mode):
+
+	#top_indices = [87, 79, 80, 77, 112, 1, 8, 72, 6, 28, 3, 110, 82, 85, 78, 9, 81, 90, 106, 74]
+	
+
+
+	best_score = 0.0
+	desired_score = 1000
+	trials = 1
+	for i in range(trials):
+		env = gym.make('ChopperCommand-ram-v0')
+		observations = env.reset()
+		score = 0
+		for c in range(1000):
+			#score += 1
+			if visualization_mode == Learning_flags.VISUALIZATION_ON:
+				env.render()
+
+
+
+			output = [0] * 3
+			#inputs = utils.extract_observations(top_indices, observations)
+		
+
+			for i in range(len(observations)):
+				brain.Mutation_params().upper_input_bounds[i] = max(brain.Mutation_params().upper_input_bounds[i],observations[i])
+				brain.Mutation_params().lower_input_bounds[i] = min(brain.Mutation_params().lower_input_bounds[i],observations[i])
+
+
+
+			for i in range(1):
+				output = test_brain.advance(observations, 5)
+
+		
+			action = min(utils.binary_array_to_decimal(output), 17)
+
+			if visualization_mode == Learning_flags.VISUALIZATION_ON:
+				print('ACTION: ' + str(action))
+		
+			observations,reward,done,info = env.step(action)
+			score += reward
+			if done:
+				break
+		best_score += score
+		env.close()
+	return (best_score/(desired_score* trials)) * 100
+		
+				
+
+
+
+
 
 
 def analyze(brain, input_count, output_count):
@@ -186,7 +294,7 @@ def learn(eval_function):
 		mutant = copy.deepcopy(best_brain) 
 
 
-		for i in range(randrange(3)):
+		for i in range(1):
 			mutant.default_mutation(input_size,output_size)
 
 		test_instance = copy.deepcopy(mutant)
@@ -234,7 +342,7 @@ def learn_from_existing(existing_brain, eval_function):
 		mutant = copy.deepcopy(best_brain) 
 
 
-		for i in range(randrange(3)):
+		for i in range(1):
 			mutant.default_mutation(input_size,output_size)
 
 		test_instance = copy.deepcopy(mutant)

@@ -25,16 +25,35 @@ def set_xor_params():
 	brain.Mutation_params.upper_input_bounds = [1] * 2
 	brain.Mutation_params.lower_input_bounds = [-1] * 2
 
+
+def set_berzerk_params():
+	brain.Mutation_params.input_count = 128
+	brain.Mutation_params.output_count = 5
+	brain.Mutation_params.upper_input_bounds = [1] * 128
+	brain.Mutation_params.lower_input_bounds = [-1] * 128
+
+
+def set_chopper_params():
+	brain.Mutation_params.input_count = 128
+	brain.Mutation_params.output_count = 5
+	brain.Mutation_params.upper_input_bounds = [1] * 128
+	brain.Mutation_params.lower_input_bounds = [-1] * 128
+
+
 environments ={
 'invaders':learning.evaluate_space_invaders_performance,
 'cartpole':learning.evalute_pendulum_cart_performance,
-'xor':learning.evaluate_xor_performance
+'xor':learning.evaluate_xor_performance,
+'berzerk':learning.evaluate_berzerk_performance,
+'chopper':learning.evaluate_chopper_performance
 }
 
 environment_settings= {
 'invaders':set_space_invaders_params,
 'cartpole':set_cart_pole_params,
-'xor':set_xor_params
+'xor':set_xor_params,
+'berzerk':set_berzerk_params,
+'chopper':set_chopper_params
 
 }
 

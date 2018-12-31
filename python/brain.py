@@ -19,7 +19,7 @@ class Brain_flags(Enum): ## dont change the existing ones without updating in mu
 
 class Mutation_params():
 	swap_prob =  .1
-	neuron_count_prob = .125 
+	neuron_count_prob = 1
 	neuron_count_bias = .5
 	target_limit = 5
 	target_count_prob = .25
@@ -32,8 +32,8 @@ class Mutation_params():
 	input_count = 	10
 	output_count = 10
 
-	sensory_prob = .5
-	actuating_prob = .1
+	sensory_prob = .25
+	actuating_prob = .25
 	hidden_prob = .1
 
 	upper_input_bounds = []
@@ -52,7 +52,7 @@ class Neuron:
 		self.excitation = 0
 		
 		self.type = Brain_flags.NEURON_HIDDEN
-		self.sensor_type = Brain_flags.SENSOR_BIT # not initalized to consistent vales(not used until neuron set to sensory or actuating)
+		self.sensor_type = Brain_flags.SENSOR_BINARY # not initalized to consistent vales(not used until neuron set to sensory or actuating)
 		self.external_index = 0
 		self.external_thresh = 0
 		self.external_bit = 0
