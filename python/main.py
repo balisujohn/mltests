@@ -15,8 +15,8 @@ def set_space_invaders_params():
 def set_cart_pole_params():
 	brain.Mutation_params.input_count = 4
 	brain.Mutation_params.output_count = 1
-	brain.Mutation_params.upper_input_bounds = [1] * 4
-	brain.Mutation_params.lower_input_bounds = [-1] * 4
+	brain.Mutation_params.upper_input_bounds = [.00000001] * 4
+	brain.Mutation_params.lower_input_bounds = [-.000000001] * 4
 
 
 def set_xor_params():

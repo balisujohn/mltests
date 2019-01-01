@@ -83,10 +83,10 @@ def evalute_pendulum_cart_performance(test_brain, visualization_mode):
 				brain.Mutation_params().lower_input_bounds[i] = min(brain.Mutation_params().lower_input_bounds[i],observations[i])
 
 
-
-			for i in range(1):
-				action = test_brain.advance(observations, 1)[0]
-		
+			sum = 0
+			for i in range(5):
+				sum  += test_brain.advance(observations, 1)[0]
+			action = int(sum >=3)
 
 			if visualization_mode == Learning_flags.VISUALIZATION_ON:
 				print('ACTION: ' + str(action))

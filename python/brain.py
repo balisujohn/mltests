@@ -20,13 +20,13 @@ class Brain_flags(Enum): ## dont change the existing ones without updating in mu
 class Mutation_params():
 	swap_prob =  .1
 	neuron_count_prob = 1
-	neuron_count_bias = .5
+	neuron_count_bias = .6
 	target_limit = 5
 	target_count_prob = .25
-	target_count_bias = .5
+	target_count_bias = .6
 	retarget_prob = .25
 	potential_prob = .1
-	potential_strength = .1 
+	potential_strength = .1
 	threshold_prob = .1
 	threshold_strength = .1 
 	input_count = 	10
@@ -35,6 +35,8 @@ class Mutation_params():
 	sensory_prob = .25
 	actuating_prob = .25
 	hidden_prob = .1
+
+	mutation_cycles = 2
 
 	upper_input_bounds = []
 	lower_input_bounds = []
@@ -108,6 +110,8 @@ class Brain:
 			if uniform(0,1) < bias:
 				self.neurons.append(Neuron())	#needs neuron init function
 				self.neuron_count  += 1
+			
+
 			elif self.neuron_count > 1:# + min_input_count + min_output_count:
 				self.neuron_count -= 1
 				del self.neurons[self.neuron_count]
@@ -193,18 +197,21 @@ class Brain:
 			assert(len(self.neurons) == self.neuron_count)
 			for index, neuron in enumerate(self.neurons):
 				for i in range(neuron.target_count):
-					while neuron.targets[i] == index:
-						neuron.targets[i] = randrange(self.neuron_count) 
-
+					if neuron.targets[i] == index1:
+						neuron.targets[i] == index2
+					elif neuron.targets[i] == index2:
+						neuron.targets[i] == index1
 	
 	def default_mutation(self, input_count, output_count):
-		self.neuron_swap_mutation(Mutation_params().swap_prob)
-		self.neuron_count_mutation(input_count, output_count, Mutation_params().neuron_count_prob,Mutation_params().neuron_count_bias )
-		self.target_mutation(Mutation_params().target_limit,Mutation_params().target_count_prob,Mutation_params().target_count_bias,Mutation_params().retarget_prob)
-		self.potential_weights_mutation(Mutation_params().potential_prob,Mutation_params().potential_strength)
-		self.threshold_mutation(Mutation_params().threshold_prob,Mutation_params().threshold_strength)
-		self.type_mutation(input_count, output_count,Mutation_params().sensory_prob,Mutation_params().actuating_prob,Mutation_params().hidden_prob)
 
+		for i in range(Mutation_params().mutation_cycles):
+			self.neuron_count_mutation(input_count, output_count, Mutation_params().neuron_count_prob,Mutation_params().neuron_count_bias)
+			self.neuron_swap_mutation(Mutation_params().swap_prob)
+			self.target_mutation(Mutation_params().target_limit,Mutation_params().target_count_prob,Mutation_params().target_count_bias,Mutation_params().retarget_prob)
+			self.potential_weights_mutation(Mutation_params().potential_prob,Mutation_params().potential_strength)
+			self.threshold_mutation(Mutation_params().threshold_prob,Mutation_params().threshold_strength)
+			self.type_mutation(input_count, output_count,Mutation_params().sensory_prob,Mutation_params().actuating_prob,Mutation_params().hidden_prob)
+			self.neuron_count_mutation(input_count, output_count, Mutation_params().neuron_count_prob,Mutation_params().neuron_count_bias)
 	
 
 
