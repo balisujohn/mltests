@@ -62,13 +62,13 @@ def evalute_pendulum_cart_performance(test_brain, visualization_mode):
 	
 	
 	total_score = 0.0
-	desired_score = 100
+	desired_score = 200
 	trials = 100
 	for c in range(trials):
 		env = gym.make('CartPole-v0')
 		observations = env.reset()
 		score = 0
-		for h in range(desired_score):
+		while True:#for h in range(desired_score):
 			#score += 1
 			if visualization_mode == Learning_flags.VISUALIZATION_ON:
 				env.render()
@@ -88,7 +88,7 @@ def evalute_pendulum_cart_performance(test_brain, visualization_mode):
 				sum  += test_brain.advance(observations, 1)[0]
 			action = int(sum >=3)
 
-			if visualization_mode == Learning_flags.VISUALIZATION_ON:
+			if visualization_mode == Learning_flags.VISUALIZATION_ON: 
 				print('ACTION: ' + str(action))
 
 		
@@ -181,7 +181,7 @@ def evaluate_berzerk_performance(test_brain, visualization_mode):
 
 
 
-			for i in range(1):
+			for i in range(5):
 				output = test_brain.advance(observations, 5)
 
 		
@@ -229,7 +229,7 @@ def evaluate_chopper_performance(test_brain, visualization_mode):
 
 
 
-			for i in range(1):
+			for i in range(5):
 				output = test_brain.advance(observations, 5)
 
 		
@@ -365,6 +365,68 @@ def learn_from_existing(existing_brain, eval_function):
 
 	return best_brain
 		
+def population_learn(population_size, eval_function):
+	
+
+	
+	input_size = brain.Mutation_params().input_count
+	output_size = brain.Mutation_params().output_count
+
+
+	population  = []
+	for i in range(population_size):
+		population.append( [0,brain.Brain(1)] )
+
+	
+	best_score = 0
+	best_brain = None
+
+
+	while best_score  < 100:
+
+		for i in range(len(population)):
+			test_instance = copy.deepcopy(population[i][1])
+			population[i][0] = eval_function(test_instance,Learning_flags.VISUALIZATION_OFF) 
+			if population[i][0] >= best_score:
+				best_score = population[i][0]
+				best_brain = population[i][1]
+		
+		#print(len(population))
+		population = sorted(population, key= lambda x : -x[0])
+		population = population[:population_size]
+		#print(len(population))
+
+		print('\nSCORES: '),
+		for p in population:
+			print(str(p[0]) + ',' ) ,
+
+		for i in range(population_size):
+
+			new_pair = [randrange(population_size), randrange(population_size)]
+			while new_pair[0] == new_pair[1]:
+
+				new_pair[1] = randrange(population_size)
+
+	
+			
+			#print(population[new_pair[0]][1])
+			#print(population[new_pair[1]][1])
+			new_offspring = brain.cross_over(population[new_pair[0]][1], population[new_pair[1]][1])
+			new_offspring.verify_network_consistency()		
+			new_offspring.default_mutation(input_size, output_size)
+			population.append([0,new_offspring])
+
+
+	       	
+	
+		
+
+	
+
+
+
+
+
 				
 
 

@@ -19,7 +19,7 @@ class Brain_flags(Enum): ## dont change the existing ones without updating in mu
 
 class Mutation_params():
 	swap_prob =  .1
-	neuron_count_prob = 1
+	neuron_count_prob = .25
 	neuron_count_bias = .6
 	target_limit = 5
 	target_count_prob = .25
@@ -36,8 +36,7 @@ class Mutation_params():
 	actuating_prob = .25
 	hidden_prob = .1
 
-	mutation_cycles = 2
-
+	mutation_cycles = 1
 	upper_input_bounds = []
 	lower_input_bounds = []
 	
@@ -92,15 +91,16 @@ class Brain:
 		return 2*self.sigmoid(2*x)-1
 
 	def verify_network_consistency(self):
-		print("NEURON COUNT: " + str(self.neuron_count)) 
+		#print("NEURON COUNT: " + str(self.neuron_count)) 
 
-		print("NEURONS LENGTH: " + str(len(self.neurons))) 
+		#print("NEURONS LENGTH: " + str(len(self.neurons))) 
 		assert(self.neuron_count == len(self.neurons))
-		for neuron in self.neurons:
-			for target in neuron.targets:
-				print('TARGET: ' + str(target))
-				print("NEURON COUNT: " + str(self.neuron_count)) 
+		for i,neuron in enumerate(self.neurons):
+			for  target in neuron.targets:
+		#		print('TARGET: ' + str(target))
+		#		print("NEURON COUNT: " + str(self.neuron_count)) 
 				assert(target < self.neuron_count)
+				assert(target != i)
 		pass
 		
 
@@ -115,10 +115,21 @@ class Brain:
 			elif self.neuron_count > 1:# + min_input_count + min_output_count:
 				self.neuron_count -= 1
 				del self.neurons[self.neuron_count]
-				for neuron in self.neurons:
-					for index, target in enumerate(neuron.targets):
-						if target >= self.neuron_count:
-							neuron.targets[index] = randrange(0,self.neuron_count)
+				
+				if self.neuron_count > 1:
+					for neuron_index, neuron in enumerate(self.neurons):
+						for target_index, target in enumerate(neuron.targets):
+							if target >= self.neuron_count:
+								new_target = randrange(0,self.neuron_count)
+								while new_target == neuron_index:
+									new_target = randrange(0,self.neuron_count)
+								neuron.targets[target_index] = new_target
+
+				else: 
+					self.neurons[0].targets  = []
+					self.neurons[0].target_count = 0
+		#self.verify_network_consistency()
+		
 
 
 	def target_mutation(self, max_targets, target_count_probability, target_count_bias, retarget_probability):
@@ -141,7 +152,10 @@ class Brain:
 
 
 					if retarget_probability > uniform(0,1) and neuron.target_count > 0:
-						neuron.targets[randrange(0,neuron.target_count)] = randrange(self.neuron_count)
+						new_target = randrange(self.neuron_count)
+						while new_target == i:
+							new_target = randrange(self.neuron_count)
+						neuron.targets[randrange(0,neuron.target_count)] = new_target
 
 	
 
@@ -195,23 +209,35 @@ class Brain:
 			self.neurons[index1] = self.neurons[index2]
 			self.neurons[index2] = temp
 			assert(len(self.neurons) == self.neuron_count)
+
+
 			for index, neuron in enumerate(self.neurons):
 				for i in range(neuron.target_count):
 					if neuron.targets[i] == index1:
-						neuron.targets[i] == index2
+						neuron.targets[i] = index2
 					elif neuron.targets[i] == index2:
-						neuron.targets[i] == index1
+						neuron.targets[i] = index1
+			#self.verify_network_consistency()
 	
 	def default_mutation(self, input_count, output_count):
 
 		for i in range(Mutation_params().mutation_cycles):
-			self.neuron_count_mutation(input_count, output_count, Mutation_params().neuron_count_prob,Mutation_params().neuron_count_bias)
+			#self.verify_network_consistency()
+			self.neuron_count_mutation(input_count, output_count, Mutation_params().neuron_count_prob,Mutation_params().neuron_count_bias)	
+			#self.verify_network_consistency()
 			self.neuron_swap_mutation(Mutation_params().swap_prob)
+			#self.verify_network_consistency()
 			self.target_mutation(Mutation_params().target_limit,Mutation_params().target_count_prob,Mutation_params().target_count_bias,Mutation_params().retarget_prob)
+			#self.verify_network_consistency()
 			self.potential_weights_mutation(Mutation_params().potential_prob,Mutation_params().potential_strength)
+			#self.verify_network_consistency()
 			self.threshold_mutation(Mutation_params().threshold_prob,Mutation_params().threshold_strength)
+			#self.verify_network_consistency()
 			self.type_mutation(input_count, output_count,Mutation_params().sensory_prob,Mutation_params().actuating_prob,Mutation_params().hidden_prob)
+			#self.verify_network_consistency()
 			self.neuron_count_mutation(input_count, output_count, Mutation_params().neuron_count_prob,Mutation_params().neuron_count_bias)
+		#	self.verify_network_consistency()
+		
 	
 
 
@@ -312,6 +338,25 @@ class Brain:
 				outputs[i] = 0
 		return outputs
 	
+
+def cross_over(brain_1, brain_2):
+
+	output = copy.deepcopy(brain_1)
+	offset = output.neuron_count
+	for neuron in brain_2.neurons:
+		replica = copy.deepcopy(neuron)
+		for i in range(replica.target_count):
+			replica.targets[i]  += offset
+		output.neurons.append(replica)
+	output.neuron_count += brain_2.neuron_count
+
+	output.verify_network_consistency()
+	return output
+
+
+
+	
+
 
 def print_brain_to_file(brain):
 	data = {}

@@ -58,6 +58,10 @@ environment_settings= {
 }
 
 
+#param_setup = environment_settings['cartpole']
+#param_setup()
+#learning.population_learn(10, environments['cartpole'])
+
 
 
 if len(sys.argv) == 3 and sys.argv[1] == 'train':
