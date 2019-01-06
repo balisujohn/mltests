@@ -85,7 +85,7 @@ def evalute_pendulum_cart_performance(test_brain, visualization_mode):
 
 			sum = 0
 			for i in range(5):
-				sum  += test_brain.advance(observations, 1)[0]
+				sum += test_brain.advance(observations, 1)[0]
 			action = int(sum >=3)
 
 			if visualization_mode == Learning_flags.VISUALIZATION_ON: 
@@ -373,7 +373,7 @@ def population_learn(population_size, eval_function):
 	output_size = brain.Mutation_params().output_count
 
 
-	population  = []
+	population = []
 	for i in range(population_size):
 		population.append( [0,brain.Brain(1)] )
 
@@ -382,7 +382,7 @@ def population_learn(population_size, eval_function):
 	best_brain = None
 
 
-	while best_score  < 100:
+	while best_score < 100:
 
 		for i in range(len(population)):
 			test_instance = copy.deepcopy(population[i][1])
@@ -416,8 +416,6 @@ def population_learn(population_size, eval_function):
 			new_offspring.default_mutation(input_size, output_size)
 			population.append([0,new_offspring])
 
-
-	       	
 	
 		
 

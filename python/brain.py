@@ -18,7 +18,7 @@ class Brain_flags(Enum): ## dont change the existing ones without updating in mu
 
 
 class Mutation_params():
-	swap_prob =  .1
+	swap_prob = .1
 	neuron_count_prob = .25
 	neuron_count_bias = .6
 	target_limit = 5
@@ -77,7 +77,7 @@ class Brain:
 			print ("NEURON {index}".format(index = index))
 			for i in range(neuron.target_count):
 				print ("TARGET: {target}, WEIGHT: {weight}".format(target = neuron.targets[i],weight = neuron.potential_weights[i]))
-		print('NEURON COUNT RECORD: ' +  str(self.neuron_count))
+		print('NEURON COUNT RECORD: ' + str(self.neuron_count))
 		print('NEURON COUNT: ' + str(len(self.neurons)))
 			
 
@@ -96,7 +96,7 @@ class Brain:
 		#print("NEURONS LENGTH: " + str(len(self.neurons))) 
 		assert(self.neuron_count == len(self.neurons))
 		for i,neuron in enumerate(self.neurons):
-			for  target in neuron.targets:
+			for target in neuron.targets:
 		#		print('TARGET: ' + str(target))
 		#		print("NEURON COUNT: " + str(self.neuron_count)) 
 				assert(target < self.neuron_count)
@@ -109,7 +109,7 @@ class Brain:
 		if uniform(0,1) < probability:		
 			if uniform(0,1) < bias:
 				self.neurons.append(Neuron())	#needs neuron init function
-				self.neuron_count  += 1
+				self.neuron_count += 1
 			
 
 			elif self.neuron_count > 1:# + min_input_count + min_output_count:
@@ -126,7 +126,7 @@ class Brain:
 								neuron.targets[target_index] = new_target
 
 				else: 
-					self.neurons[0].targets  = []
+					self.neurons[0].targets = []
 					self.neurons[0].target_count = 0
 		#self.verify_network_consistency()
 		
@@ -135,7 +135,7 @@ class Brain:
 	def target_mutation(self, max_targets, target_count_probability, target_count_bias, retarget_probability):
 		if self.neuron_count > 1:
 			for i, neuron in enumerate(self.neurons):
-				if  target_count_probability > uniform(0,1):
+				if target_count_probability > uniform(0,1):
 					if target_count_bias > uniform(0,1) :
 						if neuron.target_count < max_targets:
 							neuron.target_count += 1
@@ -201,8 +201,8 @@ class Brain:
 
 	def neuron_swap_mutation(self, probability):
 		if self.neuron_count > 1:
-			index1 = randrange(0, self.neuron_count)  
-			index2 = randrange(0, self.neuron_count)  
+			index1 = randrange(0, self.neuron_count) 
+			index2 = randrange(0, self.neuron_count) 
 			while index2 == index1:
 				index2 = randrange(0, self.neuron_count) 
 			temp = self.neurons[index1]
@@ -243,7 +243,7 @@ class Brain:
 
 
 	def input(self, inputs):
-		self.neurons[0].excitation = self.neurons[0].activation_potential + 1  # activating the bias neuron
+		self.neurons[0].excitation = self.neurons[0].activation_potential + 1 # activating the bias neuron
 
 
 
@@ -255,7 +255,7 @@ class Brain:
 
 		#assert not (self.neuron_count < 1 + len(inputs) + output_length)
 		#self.input(inputs)
-		sums  = [0] * self.neuron_count
+		sums = [0] * self.neuron_count
 		outputs = [0] * output_length
 
 		for i,neuron in enumerate(self.neurons):
@@ -346,7 +346,7 @@ def cross_over(brain_1, brain_2):
 	for neuron in brain_2.neurons:
 		replica = copy.deepcopy(neuron)
 		for i in range(replica.target_count):
-			replica.targets[i]  += offset
+			replica.targets[i] += offset
 		output.neurons.append(replica)
 	output.neuron_count += brain_2.neuron_count
 
@@ -366,7 +366,7 @@ def print_brain_to_file(brain):
 		neuron_dict = {}
 		neuron_dict['targets'] = neuron.targets
 		neuron_dict['weights'] = neuron.potential_weights
-		neuron_dict['thresh'] =  neuron.activation_potential
+		neuron_dict['thresh'] = neuron.activation_potential
 		neuron_dict['targetCount'] = neuron.target_count
 
 		neuron_dict['neuronType'] = neuron.type.name
@@ -398,11 +398,11 @@ def load_brain_from_file(file_name):
 			new_neuron.targets = neuron_json['targets']
 
 			new_neuron.potential_weights = neuron_json['weights'] 
-			new_neuron.activation_potential  = neuron_json['thresh'] 
+			new_neuron.activation_potential = neuron_json['thresh'] 
 			new_neuron.target_count = neuron_json['targetCount']
 
 			new_neuron.type = Brain_flags[neuron_json['neuronType']] 
-		 	new_neuron.sensor_type = Brain_flags[neuron_json['sensorType']]
+			new_neuron.sensor_type = Brain_flags[neuron_json['sensorType']]
 
 
 

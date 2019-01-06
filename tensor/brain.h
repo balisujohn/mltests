@@ -91,7 +91,7 @@ void fire_manual(neuron_coord & c)
 	// find if neuron has been activated
 	auto iter_n = active_neurons.find(c);
 
-	if (iter_n == active_neurons.end())
+	if (iter_n != active_neurons.end())
 	{
 		// if found, add to that neuron
 		iter_n->second.add_spike(elt);

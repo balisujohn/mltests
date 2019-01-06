@@ -1,11 +1,5 @@
 - explore frequency domain architecture further
 
-extension of tensor product model:
-	mathematically rigourous (and pretty) definition that allows for differences in local structure
-	[ ] figure out how to specify which vertex will be replaced by which graph
-	[ ] nice way to refer to transition matricies between different graphs?
-	[ ] think about how to implement this computationally
-
 explore chemical signalling:
 	- usage of tensor products for localization of neurotransmitter concentrations
 	- chemical signalling plays a huge role in learning, this cant be ignored

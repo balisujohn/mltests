@@ -26,7 +26,7 @@ def observation_frequency_analysis(world_name, frames):
 
 
 def top_n_frequency_indices(frquencies,n):
-	return  sorted(range(len(frequencies)), key = lambda x: frequencies[x])[-n:]
+	return sorted(range(len(frequencies)), key = lambda x: frequencies[x])[-n:]
 
 
 def extract_observations(indices, observations):
