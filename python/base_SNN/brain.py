@@ -1,3 +1,6 @@
+import sys
+sys.path.insert(0,"..")
+
 from random import uniform, randrange
 from enum import Enum
 import copy

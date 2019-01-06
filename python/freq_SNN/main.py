@@ -1,3 +1,6 @@
+import sys
+sys.path.insert(0,"..")
+
 import learning
 import brain
 import sys
