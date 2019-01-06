@@ -9,13 +9,9 @@ import utils
 import gym
 
 
-
-
-
 class Learning_flags(Enum):
 	VISUALIZATION_ON = 1
 	VISUALIZATION_OFF = 2
-
 	
 def evaluate_xor_performance(brain, visualization_mode):
 	test_instance_1 = copy.deepcopy(brain)		
@@ -26,7 +22,6 @@ def evaluate_xor_performance(brain, visualization_mode):
 	[input_1,input_2,input_3,input_4] = [[0,0],[0,1],[1,0],[1,1]]
 
 	[goal_1,goal_2,goal_3,goal_4] = [0,1,1,0]
-
 
 	output_1 = 0
 	output_2 = 0
@@ -39,14 +34,10 @@ def evaluate_xor_performance(brain, visualization_mode):
 		output_3 = test_instance_3.advance(input_3,1)
 		output_4 = test_instance_4.advance(input_4,1)
 
-
 	if visualization_mode == Learning_flags.VISUALIZATION_ON:
 		print('')
 		print('INPUTS: '+ str([input_1,input_2,input_3,input_4]))
 		print('OUTPUTS: ' + str([output_1, output_2, output_3,output_4]))
-
-
-
 
 	score = 0
 	if output_1[0] == goal_1:
@@ -58,11 +49,9 @@ def evaluate_xor_performance(brain, visualization_mode):
 	if output_4[0] == goal_4:
 		score += 25
 
-
 	return score
 
 def evalute_pendulum_cart_performance(test_brain, visualization_mode):
-	
 	
 	total_score = 0.0
 	desired_score = 200
@@ -76,15 +65,12 @@ def evalute_pendulum_cart_performance(test_brain, visualization_mode):
 			if visualization_mode == Learning_flags.VISUALIZATION_ON:
 				env.render()
 
-
 			output = [0] * 3
 			#inputs = utils.extract_observations(top_indices, observations)
 		
-
 			for i in range(len(observations)):
 				brain.Mutation_params().upper_input_bounds[i] = max(brain.Mutation_params().upper_input_bounds[i],observations[i])
 				brain.Mutation_params().lower_input_bounds[i] = min(brain.Mutation_params().lower_input_bounds[i],observations[i])
-
 
 			sum = 0
 			for i in range(5):
@@ -93,8 +79,6 @@ def evalute_pendulum_cart_performance(test_brain, visualization_mode):
 
 			if visualization_mode == Learning_flags.VISUALIZATION_ON: 
 				print('ACTION: ' + str(action))
-
-		
 		
 			observations,reward,done,info = env.step(action)
 			score += reward
@@ -108,8 +92,6 @@ def evalute_pendulum_cart_performance(test_brain, visualization_mode):
 def evaluate_space_invaders_performance(test_brain, visualization_mode):
 
 	#top_indices = [87, 79, 80, 77, 112, 1, 8, 72, 6, 28, 3, 110, 82, 85, 78, 9, 81, 90, 106, 74]
-	
-
 
 	best_score = 0.0
 	desired_score = 500
