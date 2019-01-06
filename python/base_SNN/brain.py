@@ -455,6 +455,7 @@ def cross_over(brain_1, brain_2):
 
 
 
+<<<<<<< HEAD
 	
 
 ####       ##  #######
@@ -467,6 +468,9 @@ def cross_over(brain_1, brain_2):
 
 
 def print_brain_to_file(brain):
+=======
+def print_brain_to_json(brain):
+>>>>>>> aa7948e2adc5f73ae043101054578c7512a3e632
 	data = {}
 	data['neuronCount'] = len(brain.neurons)
 	data['neurons'] = []
@@ -480,14 +484,21 @@ def print_brain_to_file(brain):
 		neuron_dict['neuronType'] = neuron.type.name
 		neuron_dict['sensorType'] = neuron.sensor_type.name
 
-
+		neuron_dict['fired'] = neuron.fired
 
 		neuron_dict['externalIndex'] = neuron.external_index
 		neuron_dict['externalThreshold'] = neuron.external_thresh
-		neuron_dict['externalBit'] = neuron.external_bitx
+		neuron_dict['externalBit'] = neuron.external_bit
 		data['neurons'].append(neuron_dict)
 
 	output = json.dumps(data, indent = 4)
+	return output
+
+
+
+def print_brain_to_file(brain):
+
+	output = print_brain_to_json(brain)
 	output_file = open('log.txt', 'w')
 	output_file.write(output)
 	output_file.close()
