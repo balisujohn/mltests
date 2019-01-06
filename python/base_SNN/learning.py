@@ -6,6 +6,7 @@ import copy
 from random import randrange
 import utils
 import gym
+import visualization
 
 
 #John Balis 2019
@@ -93,6 +94,7 @@ def evalute_pendulum_cart_performance(test_brain, visualization_mode):
 			action = int(sum >=3)
 
 			if visualization_mode == Learning_flags.VISUALIZATION_ON: 
+				visualization.visualize_activation_state(brain.print_brain_to_json(test_brain))	
 				print('ACTION: ' + str(action))
 
 		

@@ -28,8 +28,7 @@ uint8_t LAYERS_SIZE [NUM_LAYERS] = {
 5,
 5,
 5,
-5
-};
+5};
 
 // input/output size is up to 65535, this can be changed relatively easily
 const uint16_t SIZE_INPUT = 5;
