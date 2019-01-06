@@ -6,6 +6,11 @@ import utils
 import json
 import gym
 
+#John Balis 2019
+#for support email balisujohn@gmail.com
+
+
+
 class Brain_flags(Enum): ## dont change the existing ones without updating in mutation function
 	NEURON_HIDDEN = 1
 	NEURON_SENSORY = 2

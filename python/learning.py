@@ -6,6 +6,8 @@ import utils
 import gym
 
 
+#John Balis 2019
+#for support email balisujohn@gmail.com
 
 
 

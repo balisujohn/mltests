@@ -2,6 +2,10 @@ import json
 import networkx as netx
 from matplotlib import pyplot
 
+#John Balis 2019
+#for support email balisujohn@gmail.com
+
+
 sample = """{
 	"neuronCount":	34,
 	"neurons":	[{
@@ -179,23 +183,29 @@ sample = """{
 """
 
 
-edge_labels = {}
-brain = json.loads(sample)
-
-brain_graph = netx.MultiDiGraph()
-#dot = Digraph(comment='brain visualization')
-
-for neuron_index, neuron in enumerate(brain['neurons']):
-    brain_graph.add_node(str(neuron_index))
 
 
-for neuron_index, neuron in enumerate(brain['neurons']):
-    for target_index, target in enumerate(neuron['targets']):
-        brain_graph.add_edge(str(neuron_index),str(neuron['targets'][target_index]), edge_label = neuron['weights'][target_index])
-        edge_labels[str(neuron_index),str(neuron['targets'][target_index])] = neuron['weights'][target_index]
+def visualize_topology(input):
+	edge_labels = {}
+	brain = json.loads(input)
 
-pos = netx.spring_layout(brain_graph)
+	brain_graph = netx.MultiDiGraph()
+	#dot = Digraph(comment='brain visualization')
 
-netx.draw_networkx(brain_graph,pos,edge_labels = edge_labels,with_labels=True,)
-netx.draw_networkx_edge_labels(brain_graph ,pos,edge_labels = edge_labels)
-pyplot.show()
+	for neuron_index, neuron in enumerate(brain['neurons']):
+	    brain_graph.add_node(str(neuron_index))
+
+
+	for neuron_index, neuron in enumerate(brain['neurons']):
+	    for target_index, target in enumerate(neuron['targets']):
+		brain_graph.add_edge(str(neuron_index),str(neuron['targets'][target_index]), edge_label = neuron['weights'][target_index])
+		edge_labels[str(neuron_index),str(neuron['targets'][target_index])] = neuron['weights'][target_index]
+
+	pos = netx.spring_layout(brain_graph)
+
+	netx.draw_networkx(brain_graph,pos,edge_labels = edge_labels,with_labels=True,)
+	netx.draw_networkx_edge_labels(brain_graph ,pos,edge_labels = edge_labels)
+	pyplot.show()
+
+
+def visualize_activation_state():
