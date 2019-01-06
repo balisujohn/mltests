@@ -1,4 +1,5 @@
 import json
+import random 
 import networkx as netx
 from matplotlib import pyplot
 
@@ -193,19 +194,50 @@ def visualize_topology(input):
 	#dot = Digraph(comment='brain visualization')
 
 	for neuron_index, neuron in enumerate(brain['neurons']):
-	    brain_graph.add_node(str(neuron_index))
+		brain_graph.add_node(str(neuron_index))
 
 
 	for neuron_index, neuron in enumerate(brain['neurons']):
-	    for target_index, target in enumerate(neuron['targets']):
-		brain_graph.add_edge(str(neuron_index),str(neuron['targets'][target_index]), edge_label = neuron['weights'][target_index])
-		edge_labels[str(neuron_index),str(neuron['targets'][target_index])] = neuron['weights'][target_index]
+		for target_index, target in enumerate(neuron['targets']):
+			brain_graph.add_edge(str(neuron_index),str(neuron['targets'][target_index]), edge_label = neuron['weights'][target_index])
+			edge_labels[str(neuron_index),str(neuron['targets'][target_index])] = neuron['weights'][target_index]
 
-	pos = netx.spring_layout(brain_graph)
+	pos = netx.spring_layout(brain_graph, seed = 1)
 
+	pyplot.pause(.0000001)	
+	pyplot.clf()
 	netx.draw_networkx(brain_graph,pos,edge_labels = edge_labels,with_labels=True,)
 	netx.draw_networkx_edge_labels(brain_graph ,pos,edge_labels = edge_labels)
-	pyplot.show()
+	pyplot.show(block = False)
 
 
-def visualize_activation_state():
+
+def visualize_activation_state(input):
+	edge_labels = {}
+	brain = json.loads(input)
+
+	brain_graph = netx.MultiDiGraph()
+	#dot = Digraph(comment='brain visualization')
+
+
+	color_map = []
+
+	for neuron_index, neuron in enumerate(brain['neurons']):
+		if neuron['fired'] == 1:	
+			color_map.append('red')
+		else:
+			color_map.append('blue')
+		brain_graph.add_node(str(neuron_index))
+
+
+	for neuron_index, neuron in enumerate(brain['neurons']):
+		for target_index, target in enumerate(neuron['targets']):
+			brain_graph.add_edge(str(neuron_index),str(neuron['targets'][target_index]), edge_label = neuron['weights'][target_index])
+			edge_labels[str(neuron_index),str(neuron['targets'][target_index])] = neuron['weights'][target_index]
+
+	pos = netx.spring_layout(brain_graph, seed = 2048)
+	pyplot.pause(.0000001)	
+	pyplot.clf()
+	netx.draw_networkx(brain_graph,pos,edge_labels = edge_labels,with_labels=True,node_color = color_map)
+	netx.draw_networkx_edge_labels(brain_graph ,pos,edge_labels = edge_labels)
+	pyplot.show(block = False)

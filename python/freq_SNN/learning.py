@@ -1,3 +1,6 @@
+import sys
+sys.path.insert(0,"..")
+
 import brain
 from enum import Enum
 import copy
