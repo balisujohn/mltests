@@ -1,6 +1,9 @@
 import sys
 sys.path.insert(0,"..")
 
+#John Balis 2019
+#for support email balisujohn@gmail.com
+
 from random import uniform, randrange
 from enum import Enum
 import copy
@@ -9,9 +12,14 @@ import utils
 import json
 import gym
 
-#John Balis 2019
-#for support email balisujohn@gmail.com
 
+######## ##    ## ##     ## ##     ##
+##       ###   ## ##     ## ###   ###
+##       ####  ## ##     ## #### ####
+######   ## ## ## ##     ## ## ### ##
+##       ##  #### ##     ## ##     ##
+##       ##   ### ##     ## ##     ##
+######## ##    ##  #######  ##     ##
 
 
 class Brain_flags(Enum): ## dont change the existing ones without updating in mutation function
@@ -23,6 +31,14 @@ class Brain_flags(Enum): ## dont change the existing ones without updating in mu
 	SENSOR_LINEAR_THRESHOLD_DOWN = 6
 	SENSOR_BINARY = 7
 
+
+##     ## ##     ## ########    ########  ########  ##     ##
+###   ### ##     ##    ##       ##     ## ##     ## ###   ###
+#### #### ##     ##    ##       ##     ## ##     ## #### ####
+## ### ## ##     ##    ##       ########  ########  ## ### ##
+##     ## ##     ##    ##       ##        ##   ##   ##     ##
+##     ## ##     ##    ##       ##        ##    ##  ##     ##
+##     ##  #######     ##       ##        ##     ## ##     ##
 
 
 class Mutation_params():
@@ -49,6 +65,14 @@ class Mutation_params():
 	lower_input_bounds = []
 	
 
+##    ## ######## ##     ## ########   #######  ##    ##
+###   ## ##       ##     ## ##     ## ##     ## ###   ##
+####  ## ##       ##     ## ##     ## ##     ## ####  ##
+## ## ## ######   ##     ## ########  ##     ## ## ## ##
+##  #### ##       ##     ## ##   ##   ##     ## ##  ####
+##   ### ##       ##     ## ##    ##  ##     ## ##   ###
+##    ## ########  #######  ##     ##  #######  ##    ##
+
 
 class Neuron:
 	
@@ -68,7 +92,28 @@ class Neuron:
 
 
 
+########  ########     ###    #### ##    ##
+##     ## ##     ##   ## ##    ##  ###   ##
+##     ## ##     ##  ##   ##   ##  ####  ##
+########  ########  ##     ##  ##  ## ## ##
+##     ## ##   ##   #########  ##  ##  ####
+##     ## ##    ##  ##     ##  ##  ##   ###
+########  ##     ## ##     ## #### ##    ##
+
+
 class Brain:
+
+
+
+		#### ##    ## #### ########
+		 ##  ###   ##  ##     ##
+		 ##  ####  ##  ##     ##
+		 ##  ## ## ##  ##     ##
+		 ##  ##  ####  ##     ##
+		 ##  ##   ###  ##     ##
+		#### ##    ## ####    ##
+
+
 
 	def __init__(self, neuron_count):
 		self.neuron_count = neuron_count
@@ -76,6 +121,14 @@ class Brain:
 		for i in range(neuron_count):			
 			self.neurons.append(Neuron())
 	
+         ########  ########  #### ##    ## ########
+         ##     ## ##     ##  ##  ###   ##    ##
+         ##     ## ##     ##  ##  ####  ##    ##
+         ########  ########   ##  ## ## ##    ##
+         ##        ##   ##    ##  ##  ####    ##
+         ##        ##    ##   ##  ##   ###    ##
+         ##        ##     ## #### ##    ##    ##
+
 	def print_brain(self):
 		print("ACTIVATION: ") 
 		for neuron in self.neurons:
@@ -90,6 +143,14 @@ class Brain:
 			
 
 
+
+            ###     ######  ######## ##     ## ##    ##
+           ## ##   ##    ##    ##    ##     ## ###   ##
+          ##   ##  ##          ##    ##     ## ####  ##
+         ##     ## ##          ##    ##     ## ## ## ##
+         ######### ##          ##     ##   ##  ##  ####
+         ##     ## ##    ##    ##      ## ##   ##   ###
+         ##     ##  ######     ##       ###    ##    ##
 	
 	def sigmoid(self, x):
 		 return 1 / (1 + math.exp(float( -x)))
@@ -111,6 +172,14 @@ class Brain:
 				assert(target != i)
 		pass
 		
+
+         ##     ## ##     ## ########    ###    ######## ########
+         ###   ### ##     ##    ##      ## ##      ##    ##
+         #### #### ##     ##    ##     ##   ##     ##    ##
+         ## ### ## ##     ##    ##    ##     ##    ##    ######
+         ##     ## ##     ##    ##    #########    ##    ##
+         ##     ## ##     ##    ##    ##     ##    ##    ##
+         ##     ##  #######     ##    ##     ##    ##    ########
 
 	def neuron_count_mutation(self, min_input_count, min_output_count, probability, bias):
 
@@ -165,7 +234,6 @@ class Brain:
 							new_target = randrange(self.neuron_count)
 						neuron.targets[randrange(0,neuron.target_count)] = new_target
 
-	
 
 
 	# note that the probabilities must add up to one or less here
@@ -250,6 +318,15 @@ class Brain:
 
 
 
+      #### ##    ## ########  ##     ## ########
+       ##  ###   ## ##     ## ##     ##    ##
+       ##  ####  ## ##     ## ##     ##    ##
+       ##  ## ## ## ########  ##     ##    ##
+       ##  ##  #### ##        ##     ##    ##
+       ##  ##   ### ##        ##     ##    ##
+      #### ##    ## ##         #######     ##
+
+
 	def input(self, inputs):
 		self.neurons[0].excitation = self.neurons[0].activation_potential + 1 # activating the bias neuron
 
@@ -258,6 +335,15 @@ class Brain:
 		for i in range(1, len(inputs) + 1 ):
 			self.neurons[i].excitation = inputs[i-1] * (self.neurons[i].activation_potential + 1)
 			
+
+         ###    ########  ##     ##    ###    ##    ##  ######  ########
+        ## ##   ##     ## ##     ##   ## ##   ###   ## ##    ## ##
+       ##   ##  ##     ## ##     ##  ##   ##  ####  ## ##       ##
+      ##     ## ##     ## ##     ## ##     ## ## ## ## ##       ######
+      ######### ##     ##  ##   ##  ######### ##  #### ##       ##
+      ##     ## ##     ##   ## ##   ##     ## ##   ### ##    ## ##
+      ##     ## ########     ###    ##     ## ##    ##  ######  ########
+
 		
 	def advance(self, inputs, output_length):
 
@@ -267,8 +353,6 @@ class Brain:
 		outputs = [0] * output_length
 
 		for i,neuron in enumerate(self.neurons):
-	
-			
 
 			#if neuron.fired:
 			#	neuron.fired = 0
@@ -347,6 +431,14 @@ class Brain:
 		return outputs
 	
 
+ ######  ########   #######   ######   ######   #######  ##     ## ######## ########
+##    ## ##     ## ##     ## ##    ## ##    ## ##     ## ##     ## ##       ##     ##
+##       ##     ## ##     ## ##       ##       ##     ## ##     ## ##       ##     ##
+##       ########  ##     ##  ######   ######  ##     ## ##     ## ######   ########
+##       ##   ##   ##     ##       ##       ## ##     ##  ##   ##  ##       ##   ##
+##    ## ##    ##  ##     ## ##    ## ##    ## ##     ##   ## ##   ##       ##    ##
+ ######  ##     ##  #######   ######   ######   #######     ###    ######## ##     ##
+
 def cross_over(brain_1, brain_2):
 
 	output = copy.deepcopy(brain_1)
@@ -364,6 +456,14 @@ def cross_over(brain_1, brain_2):
 
 
 	
+
+####       ##  #######
+ ##       ##  ##     ##
+ ##      ##   ##     ##
+ ##     ##    ##     ##
+ ##    ##     ##     ##
+ ##   ##      ##     ##
+#### ##        #######
 
 
 def print_brain_to_file(brain):
