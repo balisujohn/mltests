@@ -376,7 +376,7 @@ def print_brain_to_file(brain):
 
 		neuron_dict['externalIndex'] = neuron.external_index
 		neuron_dict['externalThreshold'] = neuron.external_thresh
-		neuron_dict['externalBit'] = neuron.external_bit
+		neuron_dict['externalBit'] = neuron.external_bitx
 		data['neurons'].append(neuron_dict)
 
 	output = json.dumps(data, indent = 4)
