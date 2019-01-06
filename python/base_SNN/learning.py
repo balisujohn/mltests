@@ -1,3 +1,5 @@
+import sys
+sys.path.insert(0,"..")
 import brain
 from enum import Enum
 import copy
@@ -6,6 +8,8 @@ import utils
 import gym
 
 
+#John Balis 2019
+#for support email balisujohn@gmail.com
 
 
 
