@@ -6,13 +6,8 @@
 #include "../utils.h"
 
 
-// #define NEURON_COUNT 10
-
-int NEURON_COUNT = 10;
-
-
-//John Balis, Michael Ivanitskiy 2018
-//for support email:
+// John Balis, Michael Ivanitskiy 2018
+// for support email:
 // balisujohn@gmail.com 
 // mivanits@umich.edu
 
@@ -297,47 +292,6 @@ void potentialsMutation(float probability, float strength)
 }
 
 
-
-
-/*
-void thresholdMutation(brain * b, float probability, float strength){
-	for(int i = 0 ; i < b->neuronCount; i++)
-	{
-		if(b->neurons[i].targetCount)
-		{
-			int mutations = randRange(b->neurons[i].targetCount);
-			for (int c = 0 ; c < mutations; c++)
-			{
-				//TODO add soft boundary
-				if(randFloat() < probability)
-				{	
-					b->neurons[i].activationPotential += ((randFloat() *2)-1)*strength;
-				}
-			}
-		}
-	}
-} 
-*/
-
-//    swaps some neurons
-/*
-void neuronSwapMutation(brain * b, float probability)
-{
-	if(randFloat() < probability)
-	{
-		int index1 = randRange(b->neuronCount-1)+1;	
-		int index2 = randRange(b->neuronCount-1)+1;
-		while(index2 == index1)
-		{
-			index2 = randRange(b->neuronCount-1)+1;
-		}
-		neuron temp;
-		copyNeuron(&(b->neurons[index1]),&temp);
-		copyNeuron(&(b->neurons[index2]),&(b->neurons[index1]));
-		copyNeuron(&temp,&(b->neurons[index2]));
-	}
-}
-*/
 
 };
 

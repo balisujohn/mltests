@@ -1,6 +1,9 @@
 import sys
 sys.path.insert(0,"..")
 
+# John Balis, Michael Ivanitskiy
+# January 2019
+
 from random import uniform, randrange
 from enum import Enum
 import copy
@@ -170,6 +173,14 @@ class Brain:
 		pass
 		
 
+         ##     ## ##     ## ########    ###    ######## ########
+         ###   ### ##     ##    ##      ## ##      ##    ##
+         #### #### ##     ##    ##     ##   ##     ##    ##
+         ## ### ## ##     ##    ##    ##     ##    ##    ######
+         ##     ## ##     ##    ##    #########    ##    ##
+         ##     ## ##     ##    ##    ##     ##    ##    ##
+         ##     ##  #######     ##    ##     ##    ##    ########
+
 	def neuron_count_mutation(self, min_input_count, min_output_count, probability, bias):
 
 		if uniform(0,1) < probability:		
@@ -223,7 +234,6 @@ class Brain:
 							new_target = randrange(self.neuron_count)
 						neuron.targets[randrange(0,neuron.target_count)] = new_target
 
-	
 
 
 	# note that the probabilities must add up to one or less here
@@ -308,6 +318,15 @@ class Brain:
 
 
 
+      #### ##    ## ########  ##     ## ########
+       ##  ###   ## ##     ## ##     ##    ##
+       ##  ####  ## ##     ## ##     ##    ##
+       ##  ## ## ## ########  ##     ##    ##
+       ##  ##  #### ##        ##     ##    ##
+       ##  ##   ### ##        ##     ##    ##
+      #### ##    ## ##         #######     ##
+
+
 	def input(self, inputs):
 		self.neurons[0].excitation = self.neurons[0].activation_potential + 1 # activating the bias neuron
 
@@ -316,6 +335,15 @@ class Brain:
 		for i in range(1, len(inputs) + 1 ):
 			self.neurons[i].excitation = inputs[i-1] * (self.neurons[i].activation_potential + 1)
 			
+
+         ###    ########  ##     ##    ###    ##    ##  ######  ########
+        ## ##   ##     ## ##     ##   ## ##   ###   ## ##    ## ##
+       ##   ##  ##     ## ##     ##  ##   ##  ####  ## ##       ##
+      ##     ## ##     ## ##     ## ##     ## ## ## ## ##       ######
+      ######### ##     ##  ##   ##  ######### ##  #### ##       ##
+      ##     ## ##     ##   ## ##   ##     ## ##   ### ##    ## ##
+      ##     ## ########     ###    ##     ## ##    ##  ######  ########
+
 		
 	def advance(self, inputs, output_length):
 
@@ -325,8 +353,6 @@ class Brain:
 		outputs = [0] * output_length
 
 		for i,neuron in enumerate(self.neurons):
-	
-			
 
 			#if neuron.fired:
 			#	neuron.fired = 0
