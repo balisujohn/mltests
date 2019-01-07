@@ -80,7 +80,7 @@ def evalute_pendulum_cart_performance(test_brain, visualization_mode):
 
 
 			output = [0] * 3
-			#inputs = utils.extract_observations(top_indices, observations)
+
 		
 
 			for i in range(len(observations)):
@@ -91,11 +91,13 @@ def evalute_pendulum_cart_performance(test_brain, visualization_mode):
 			sum = 0
 			for i in range(5):
 				sum += test_brain.advance(observations, 1)[0]
+				if visualization_mode == Learning_flags.VISUALIZATION_ON: 
+					visualization.visualize_brain(brain.print_brain_to_json(test_brain))	
 			action = int(sum >=3)
 
-			if visualization_mode == Learning_flags.VISUALIZATION_ON: 
-				visualization.visualize_activation_state(brain.print_brain_to_json(test_brain))	
+			if visualization_mode == Learning_flags.VISUALIZATION_ON:
 				print('ACTION: ' + str(action))
+				
 
 		
 		

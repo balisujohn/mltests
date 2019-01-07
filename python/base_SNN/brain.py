@@ -286,7 +286,7 @@ class Brain:
 			neuron.fired = 0
 
 			
-			if i == 0 or self.hyperbolic_tangent(self.neurons[i].excitation) > self.neurons[i].activation_potential:
+			if( i == 0) or (self.hyperbolic_tangent(self.neurons[i].excitation) > self.neurons[i].activation_potential):
 				for c in range (self.neurons[i].target_count):
 					
 					assert(self.neurons[i].targets[c] < self.neuron_count)
