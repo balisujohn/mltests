@@ -7,7 +7,7 @@ There are currently distinct Python and C++ architectures, each with a default b
 frequency-domain based spiking neural network. This document includes instructions on how to work with each architecture
 
 
-#C++ architecture
+# C++ architecture
 
 
 
@@ -39,27 +39,27 @@ runs neuro-evolution, starting from an existing topology, and saves to ./log.txt
 provides a visualization of the performance of the toplogy specified by the provided file on the microworld task.
 
 
-#Python architecture
+# Python architecture
 
 python ./main.py <mode> <environment> <file_name>
 
 
-##modes:
+## modes:
 
-###train 
+### train 
 
 runs neuro-evolution from scratch, saving generated toplogy to ./log.txt
 
-###improve
+### improve
 
 runs neuro-evolution, starting from an existing topology, and saves to ./log.txt as higher-scoring topologies are found
 
-###analyze
-
+### analyze
+ 
 provides a visualization of the performance of the toplogy specified by the provided file on the microworld task.
 
 
-##environments:
+## environments:
 
 cartpole
 chopper
