@@ -463,7 +463,7 @@ def cross_over(brain_1, brain_2):
 #### ##        #######
 
 
-def print_brain_to_file(brain):
+def print_brain_to_json(brain):
 	data = {}
 	data['neuronCount'] = len(brain.neurons)
 	data['neurons'] = []

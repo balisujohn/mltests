@@ -49,7 +49,9 @@ mathematically rigourous (and pretty) definition that allows for differences in 
 [ ] think about how to implement this computationally
 
 interface to openAI gym:
-	[ ] client-server architecture or is there an easier way?
+	[x] client-server architecture or is there an easier way?
+	[x] set up python base_snn archetecture
+
 
 
 

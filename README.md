@@ -3,31 +3,75 @@
 Hi all,
 
 This is a project with the loose goal of finding interested ways to generate intelligent agents through trial and error. 
-All of the meaningful code is currently in the c directory, as we have not yet ported the project to c++. The c folder contains 
-instructions regarding how to make and run the code. 
-
-Areas that need work:
-
-training environments:
-
-	Python Neuro-evolution code: under construction
-	openAI gym interface code: under construction
-
-machine learning techniques:
-
-	Modifications to neuron simulation to allow for intragenerational learning(Planned):
-		currently the network can only be trained intergenerationally
-		
-	Implementation of Neuro Evolution through Augmenting Topology planned. 
+There are currently distinct Python and C++ architectures, each with a default basic spiking neural network and a experimental 
+frequency-domain based spiking neural network. This document includes instructions on how to work with each architecture
 
 
-analysis tools:
-
-	Python graph visualization and editing tool(Under Construction):
+#C++ architecture
 
 
-If any of these areas sound interesting to you, don't hesitate to contribute; I can be reached at balisujohn at gmail dot com and am very interested recieve
-input and contributions.
+
+enter the following commands in bash, from the project directory
+
+make
+chmod +x ./test
+cd ./microworld1
+make
+chmod +x ./microworld1
+cd ../microworld2
+make
+chmod +x ./microworld2
+You're good to go!
+
+microworlds 1 and 2 can be run from the command line in three modes
+
+./microworld1 train
+
+runs neuro-evolution from scratch, saving generated toplogy to ./log.txt
+
+
+./microworld1 improve <file_name>
+
+runs neuro-evolution, starting from an existing topology, and saves to ./log.txt as higher-scoring topologies are found
+
+./microworld1 analyze <file_name>
+
+provides a visualization of the performance of the toplogy specified by the provided file on the microworld task.
+
+
+#Python architecture
+
+python ./main.py <mode> <environment> <file_name>
+
+
+##modes:
+
+###train 
+
+runs neuro-evolution from scratch, saving generated toplogy to ./log.txt
+
+###improve
+
+runs neuro-evolution, starting from an existing topology, and saves to ./log.txt as higher-scoring topologies are found
+
+###analyze
+
+provides a visualization of the performance of the toplogy specified by the provided file on the microworld task.
+
+
+##environments:
+
+cartpole
+chopper
+berzerk
+xor
+
+
+
+
+
+
+If any of these areas sound interesting to you, don't hesitate to contribute. I can be reached at balisujohn at gmail dot com and other contributors can be reached at their emails if they have provided them.  We are very interested in recieving input and contributions.
 
 
 Contributors:  

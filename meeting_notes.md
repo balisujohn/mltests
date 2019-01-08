@@ -42,7 +42,12 @@ all papers can be found at
 
 https://www.dropbox.com/sh/yxabj0q5s66skqe/AAAVT3FYVivLd4GxX9o_Ypema?dl=0
 
+#Meeting 2: Jan 6 2019
 
+##cartpole solved!
+* a network trained using the python architecture was able to solve the openAI cartpole instance!
+## frequency-tensor brain
+* started work on frequency-tensor architecture in python
 
 
 
