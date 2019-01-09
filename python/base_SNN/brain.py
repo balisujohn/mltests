@@ -21,6 +21,7 @@ import gym
 ##       ##   ### ##     ## ##     ##
 ######## ##    ##  #######  ##     ##
 
+#ENUM for neuron types
 
 class Brain_flags(Enum): ## dont change the existing ones without updating in mutation function
 	NEURON_HIDDEN = 1
@@ -40,6 +41,8 @@ class Brain_flags(Enum): ## dont change the existing ones without updating in mu
 ##     ## ##     ##    ##       ##        ##    ##  ##     ##
 ##     ##  #######     ##       ##        ##     ## ##     ##
 
+
+#Global mutation parameters, here set to defaults
 
 class Mutation_params():
 	swap_prob = .1
@@ -72,6 +75,7 @@ class Mutation_params():
 ##  #### ##       ##     ## ##   ##   ##     ## ##  ####
 ##   ### ##       ##     ## ##    ##  ##     ## ##   ###
 ##    ## ########  #######  ##     ##  #######  ##    ##
+
 
 
 class Neuron:
@@ -315,7 +319,12 @@ class Brain:
 		#	self.verify_network_consistency()
 		
 	
-
+	def mutation_stress_test(self,mutation_count):
+		for i in range(mutation_count):
+			if i % 100 == 0:
+				print(str(i)  + ' MUTATIONS COMPLETED')
+			self.default_mutation( Mutation_params().input_count, Mutation_params().output_count)
+			self.verify_network_consistency()
 
 
       #### ##    ## ########  ##     ## ########
@@ -495,7 +504,7 @@ def print_brain_to_file(brain):
 	output_file = open('log.txt', 'w')
 	output_file.write(output)
 	output_file.close()
-	
+
 
 
 

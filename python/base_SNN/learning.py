@@ -13,12 +13,15 @@ import visualization
 #for support email balisujohn@gmail.com
 
 
-
+#Flags to determine visualization and learning mode
 class Learning_flags(Enum):
 	VISUALIZATION_ON = 1
 	VISUALIZATION_OFF = 2
 
-	
+
+
+#solved by save.4 in topologies/xor
+# evaluates performance on neural network on xoring inputs
 def evaluate_xor_performance(brain, visualization_mode):
 	test_instance_1 = copy.deepcopy(brain)		
 	test_instance_2 = copy.deepcopy(brain)
@@ -63,6 +66,9 @@ def evaluate_xor_performance(brain, visualization_mode):
 
 	return score
 
+
+#solved by save.12 in topologies/cartpole
+#openAI Gym implementation of pendulum cart
 def evalute_pendulum_cart_performance(test_brain, visualization_mode):
 	
 	
@@ -110,6 +116,10 @@ def evalute_pendulum_cart_performance(test_brain, visualization_mode):
 	return (total_score / (trials * desired_score)) * 100
 
 
+
+
+#unsolved
+#evaluates space invaders performance on an emulated Atari
 def evaluate_space_invaders_performance(test_brain, visualization_mode):
 
 	#top_indices = [87, 79, 80, 77, 112, 1, 8, 72, 6, 28, 3, 110, 82, 85, 78, 9, 81, 90, 106, 74]
@@ -117,8 +127,10 @@ def evaluate_space_invaders_performance(test_brain, visualization_mode):
 
 
 	best_score = 0.0
-	desired_score = 500
-	trials = 100
+	desired_score = 1000
+	brain_speed = 5
+	trials = 5
+	output_count = 3
 	for i in range(trials):
 		env = gym.make('SpaceInvaders-ram-v0')
 		observations = env.reset()
@@ -130,7 +142,7 @@ def evaluate_space_invaders_performance(test_brain, visualization_mode):
 
 
 
-			output = [0] * 3
+			output = [0] * output_count
 			#inputs = utils.extract_observations(top_indices, observations)
 		
 
@@ -139,11 +151,19 @@ def evaluate_space_invaders_performance(test_brain, visualization_mode):
 				brain.Mutation_params().lower_input_bounds[i] = min(brain.Mutation_params().lower_input_bounds[i],observations[i])
 
 
+			raw_output = []
+			for i in range(brain_speed):
+				raw_output.append ( test_brain.advance(observations, 3))
+				#if visualization_mode == Learning_flags.VISUALIZATION_ON: 
+				#	visualization.visualize_brain(brain.print_brain_to_json(test_brain))	
 
-			for i in range(1):
-				output = test_brain.advance(observations, 3)
+			for i in range(output_count):
+				for c in range(brain_speed):	
+					output[i] += raw_output[c][i]
+				output[i] = int(output[i] > int(output_count/2))	
 
-		
+
+
 			action = min(utils.binary_array_to_decimal(output), 5)
 
 			if visualization_mode == Learning_flags.VISUALIZATION_ON:
@@ -158,7 +178,75 @@ def evaluate_space_invaders_performance(test_brain, visualization_mode):
 				
 
 	return (best_score/(desired_score* trials)) * 100
+
+#unsolved
+#evaluates space invaders performance on an emulated Atari
+def evaluate_pong_performance(test_brain, visualization_mode):
+
+	#top_indices = [87, 79, 80, 77, 112, 1, 8, 72, 6, 28, 3, 110, 82, 85, 78, 9, 81, 90, 106, 74]
+	
+
+
+	best_score = 0
+	desired_score = 2000.0
+	brain_speed = 5
+	trials = 5
+	output_count = 3
+	for i in range(trials):
+		env = gym.make('Pong-ram-v0')
+		observations = env.reset()
+		score = 0
+		while 1:
+			
+			#score += 1
+			if visualization_mode == Learning_flags.VISUALIZATION_ON:
+				env.render()
+
+
+
+			output = [0] * output_count
+			#inputs = utils.extract_observations(top_indices, observations)
 		
+
+			for i in range(len(observations)):
+				brain.Mutation_params().upper_input_bounds[i] = max(brain.Mutation_params().upper_input_bounds[i],observations[i])
+				brain.Mutation_params().lower_input_bounds[i] = min(brain.Mutation_params().lower_input_bounds[i],observations[i])
+
+
+			raw_output = []
+			for i in range(brain_speed):
+				raw_output.append ( test_brain.advance(observations, 3))
+				#if visualization_mode == Learning_flags.VISUALIZATION_ON: 
+				#	visualization.visualize_brain(brain.print_brain_to_json(test_brain))	
+
+			for i in range(output_count):
+				for c in range(brain_speed):	
+					output[i] += raw_output[c][i]
+				output[i] = int(output[i] > int(output_count/2))	
+
+
+
+			action = min(utils.binary_array_to_decimal(output), 5)
+
+			if visualization_mode == Learning_flags.VISUALIZATION_ON:
+				print('ACTION: ' + str(action))
+		
+			observations,reward,done,info = env.step(action)
+			score += 1#reward
+			if done:
+				best_score += score #+ 21
+				env.close()
+				break
+		
+
+	return ((best_score)/(desired_score* trials)) * 100
+
+
+
+	
+#unsolved
+#evaluates berzerk performance on an emulated Atari
+	
 def evaluate_berzerk_performance(test_brain, visualization_mode):
 
 	#top_indices = [87, 79, 80, 77, 112, 1, 8, 72, 6, 28, 3, 110, 82, 85, 78, 9, 81, 90, 106, 74]
@@ -167,7 +255,9 @@ def evaluate_berzerk_performance(test_brain, visualization_mode):
 
 	best_score = 0.0
 	desired_score = 1000
-	trials = 1
+	trials = 5
+	brain_speed = 5
+	output_count = 5
 	for i in range(trials):
 		env = gym.make('Berzerk-ram-v0')
 		observations = env.reset()
@@ -179,7 +269,7 @@ def evaluate_berzerk_performance(test_brain, visualization_mode):
 
 
 
-			output = [0] * 3
+			output = [0] * 5
 			#inputs = utils.extract_observations(top_indices, observations)
 		
 
@@ -189,8 +279,16 @@ def evaluate_berzerk_performance(test_brain, visualization_mode):
 
 
 
-			for i in range(5):
-				output = test_brain.advance(observations, 5)
+			raw_output = []
+			for i in range(brain_speed):
+				raw_output.append ( test_brain.advance(observations, 5))
+				#if visualization_mode == Learning_flags.VISUALIZATION_ON: 
+				#	visualization.visualize_brain(brain.print_brain_to_json(test_brain))	
+
+			for i in range(output_count):
+				for c in range(brain_speed):	
+					output[i] += raw_output[c][i]
+				output[i] = int(output[i] > int(output_count/2))	
 
 		
 			action = min(utils.binary_array_to_decimal(output), 17)
@@ -207,6 +305,8 @@ def evaluate_berzerk_performance(test_brain, visualization_mode):
 	return (best_score/(desired_score* trials)) * 100
 		
 				
+#unsolved
+#evaluates chopper performance on an emulated Atari
 def evaluate_chopper_performance(test_brain, visualization_mode):
 
 	#top_indices = [87, 79, 80, 77, 112, 1, 8, 72, 6, 28, 3, 110, 82, 85, 78, 9, 81, 90, 106, 74]
@@ -215,7 +315,9 @@ def evaluate_chopper_performance(test_brain, visualization_mode):
 
 	best_score = 0.0
 	desired_score = 1000
-	trials = 1
+	trials = 5
+	output_count = 5
+	brain_speed = 5
 	for i in range(trials):
 		env = gym.make('ChopperCommand-ram-v0')
 		observations = env.reset()
@@ -227,7 +329,7 @@ def evaluate_chopper_performance(test_brain, visualization_mode):
 
 
 
-			output = [0] * 3
+			output = [0] * 5
 			#inputs = utils.extract_observations(top_indices, observations)
 		
 
@@ -237,10 +339,17 @@ def evaluate_chopper_performance(test_brain, visualization_mode):
 
 
 
-			for i in range(5):
-				output = test_brain.advance(observations, 5)
+			raw_output = []
+			for i in range(brain_speed):
+				raw_output.append ( test_brain.advance(observations, 5))
+				if visualization_mode == Learning_flags.VISUALIZATION_ON: 
+					visualization.visualize_brain(brain.print_brain_to_json(test_brain))	
 
-		
+			for i in range(output_count):
+				for c in range(brain_speed):	
+					output[i] += raw_output[c][i]
+				output[i] = int(output[i] > int(output_count/2))
+
 			action = min(utils.binary_array_to_decimal(output), 17)
 
 			if visualization_mode == Learning_flags.VISUALIZATION_ON:
@@ -260,7 +369,7 @@ def evaluate_chopper_performance(test_brain, visualization_mode):
 
 
 
-
+#Deprecated, as this relies on an older network architecutre
 def analyze(brain, input_count, output_count):
 	while True:
 		test_instance = copy.deepcopy(brain)
@@ -276,12 +385,12 @@ def analyze(brain, input_count, output_count):
 	
 
 
-
+# visualization for when the system is run in analysis mode
 def visualize_performance(brain, eval_function):
 	while 1:
 		eval_function(brain, Learning_flags.VISUALIZATION_ON)	
 
-
+# naive learning algorithm, currently the primary learning algorithm in the python architecture
 def learn(eval_function):
 
 	input_size = brain.Mutation_params().input_count
@@ -327,7 +436,7 @@ def learn(eval_function):
 
 	return best_brain
 		
-
+# naive learning algorithm, starting from existing topology
 def learn_from_existing(existing_brain, eval_function):
 
 	input_size = brain.Mutation_params().input_count
@@ -373,6 +482,9 @@ def learn_from_existing(existing_brain, eval_function):
 
 	return best_brain
 		
+
+#population-based learning algorithm, with crossover. Experimental
+
 def population_learn(population_size, eval_function):
 	
 
