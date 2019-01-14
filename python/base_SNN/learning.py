@@ -1,7 +1,9 @@
 import sys
 sys.path.insert(0,"..")
 import brain
+import logging
 from enum import Enum
+import os
 import copy
 from random import randrange
 import utils
@@ -154,13 +156,13 @@ def evaluate_space_invaders_performance(test_brain, visualization_mode):
 			raw_output = []
 			for i in range(brain_speed):
 				raw_output.append ( test_brain.advance(observations, 3))
-				#if visualization_mode == Learning_flags.VISUALIZATION_ON: 
-				#	visualization.visualize_brain(brain.print_brain_to_json(test_brain))	
+				if visualization_mode == Learning_flags.VISUALIZATION_ON: 
+					visualization.visualize_brain(brain.print_brain_to_json(test_brain))	
 
 			for i in range(output_count):
 				for c in range(brain_speed):	
 					output[i] += raw_output[c][i]
-				output[i] = int(output[i] > int(output_count/2))	
+				output[i] = int(output[i] > int(brain_speed/2))	
 
 
 
@@ -222,7 +224,7 @@ def evaluate_pong_performance(test_brain, visualization_mode):
 			for i in range(output_count):
 				for c in range(brain_speed):	
 					output[i] += raw_output[c][i]
-				output[i] = int(output[i] > int(output_count/2))	
+				output[i] = int(output[i] > int(brain_speed/2))	
 
 
 
@@ -288,7 +290,7 @@ def evaluate_berzerk_performance(test_brain, visualization_mode):
 			for i in range(output_count):
 				for c in range(brain_speed):	
 					output[i] += raw_output[c][i]
-				output[i] = int(output[i] > int(output_count/2))	
+				output[i] = int(output[i] > int(brain_speed/2))	
 
 		
 			action = min(utils.binary_array_to_decimal(output), 17)
@@ -348,7 +350,7 @@ def evaluate_chopper_performance(test_brain, visualization_mode):
 			for i in range(output_count):
 				for c in range(brain_speed):	
 					output[i] += raw_output[c][i]
-				output[i] = int(output[i] > int(output_count/2))
+				output[i] = int(output[i] > int(brain_speed/2))
 
 			action = min(utils.binary_array_to_decimal(output), 17)
 
@@ -364,7 +366,169 @@ def evaluate_chopper_performance(test_brain, visualization_mode):
 	return (best_score/(desired_score* trials)) * 100
 		
 				
+	
+#unsolved
+#evaluates chopper performance on an emulated Atari
+def evaluate_biped_performance(test_brain, visualization_mode):
 
+	#top_indices = [87, 79, 80, 77, 112, 1, 8, 72, 6, 28, 3, 110, 82, 85, 78, 9, 81, 90, 106, 74]
+
+
+
+	best_score = 0
+	desired_score = 1000
+	trials = 100
+	output_count = 8
+	brain_speed = 5
+	for i in range(trials):
+		
+
+		env = gym.make('BipedalWalker-v2')
+
+		observations = env.reset()
+		score = 0
+		counter = 0
+		while counter < 500:
+			counter += 1
+			#score += 1
+			if visualization_mode == Learning_flags.VISUALIZATION_ON:
+				env.render()
+
+
+
+			output = [0] * 4
+			#inputs = utils.extract_observations(top_indices, observations)
+		
+
+			for i in range(len(observations)):
+				brain.Mutation_params().upper_input_bounds[i] = max(brain.Mutation_params().upper_input_bounds[i],observations[i])
+				brain.Mutation_params().lower_input_bounds[i] = min(brain.Mutation_params().lower_input_bounds[i],observations[i])
+
+			
+
+			raw_output = []
+			for i in range(brain_speed):
+				raw_output.append ( test_brain.advance(observations, output_count))
+				#if visualization_mode == Learning_flags.VISUALIZATION_ON: 
+				#	visualization.visualize_brain(brain.print_brain_to_json(test_brain))	
+
+			for i in range(output_count/2):
+				for c in range(brain_speed):	
+					output[i] += raw_output[c][i]
+					output[i] -= raw_output[c][i + (output_count/2)]
+				output[i] = (output[i]/float(brain_speed))
+			
+
+			action = output
+			
+
+
+
+			if visualization_mode == Learning_flags.VISUALIZATION_ON:
+				print('ACTION: ' + str(action))
+		
+			observations,reward,done,info = env.step(action)
+			if reward > 0:			
+				score += reward
+			if done:
+				break
+		best_score += score
+		env.close()
+
+	return ((best_score/(desired_score* trials)) * 100)		
+				
+
+
+
+
+
+
+#experimental instance that requires some degree of temporal learning to work
+#Hypothesis is that it will be very difficult for the current architecture
+
+def evaluate_potion_store_performance(test_brain, visualization_mode):
+
+
+	time_limit = 200
+	time = 0
+	potion_count = 6
+	health_potion_count = 2
+	incorrect_limit = 5
+	correct_limit = 100.0
+	brain_speed = 5
+	trials = 100
+	total_score = 0
+
+	
+	for i in range(trials):
+		assert (health_potion_count <= potion_count)
+
+		health_potion_indices = []
+		for i in range(health_potion_count):
+			new_index = randrange(potion_count)
+			while new_index in health_potion_indices:
+				new_index = randrange(potion_count)
+			health_potion_indices.append(new_index)
+
+		correct_potions = 0.0
+		incorrect_potions = 0.0
+	
+		correct_bit = 0
+		incorrect_bit = 0
+		time = 0
+
+		while correct_potions < correct_limit and incorrect_potions < incorrect_limit and time < time_limit:
+			potion_offer = randrange(potion_count)
+			input = [0] * potion_count
+			input[potion_offer]  = 1
+			input = [correct_bit, incorrect_bit] + input
+
+			assert(len(input)== 8)
+
+			output = 0
+			for i in range(brain_speed):	
+				output += test_brain.advance(input, 1)[0]
+				if visualization_mode == Learning_flags.VISUALIZATION_ON: 
+					visualization.visualize_brain(brain.print_brain_to_json(test_brain))	
+
+			
+			output = int(output > int(brain_speed/2))
+		
+
+
+			if output:
+				if (potion_offer not in health_potion_indices):
+					incorrect_potions += 1
+					incorrect_bit = 1
+					correct_bit = 0
+					if visualization_mode == Learning_flags.VISUALIZATION_ON:
+						print('DRANK ' + str(potion_offer) + ': POISION')
+		
+				
+			 	else: 
+					correct_potions += 1
+					correct_bit = 1
+					incorrect_bit = 0
+					if visualization_mode == Learning_flags.VISUALIZATION_ON:
+						print('DRANK ' + str(potion_offer) + ': HEALTH POTION')
+
+			else: 	
+				if visualization_mode == Learning_flags.VISUALIZATION_ON:
+						print('DECLINED OFFER FOR ' + str(potion_offer))
+		
+
+			time += 1
+	
+		total_score += correct_potions
+		if visualization_mode == Learning_flags.VISUALIZATION_ON:
+			print("NUMBER CORRECT: " + str(correct_potions))
+
+	return float(total_score/(correct_limit*trials)) * 100.0
+			
+
+		
+
+	
 
 
 

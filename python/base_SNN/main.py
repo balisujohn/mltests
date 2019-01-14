@@ -2,6 +2,7 @@ import learning
 import brain
 import sys
 import gym 
+import logging
 
 #John Balis 2019
 #for support email balisujohn@gmail.com
@@ -9,6 +10,14 @@ import gym
 
 
 #parameterizations for various evaluation environments
+
+
+def set_potion_store_params(): # make sure you update the variables in the learning function if you update input_count here
+	brain.Mutation_params.input_count = 8
+	brain.Mutation_params.output_count = 1
+	brain.Mutation_params.upper_input_bounds = [.00000001] * 8
+	brain.Mutation_params.lower_input_bounds = [-.000000001] * 8
+
 
 
 def set_space_invaders_params():
@@ -45,6 +54,14 @@ def set_berzerk_params():
 	brain.Mutation_params.lower_input_bounds = [-1] * 128
 
 
+def set_biped_params():
+	brain.Mutation_params.input_count = 24
+	brain.Mutation_params.output_count = 4
+	brain.Mutation_params.upper_input_bounds = [.00000001] * 24
+	brain.Mutation_params.lower_input_bounds = [-.00000001] * 24
+	brain.Mutation_params.mutation_cycles = 1
+
+
 def set_chopper_params():
 	brain.Mutation_params.input_count = 128
 	brain.Mutation_params.output_count = 5
@@ -64,8 +81,12 @@ environments ={
 'xor':learning.evaluate_xor_performance,
 'berzerk':learning.evaluate_berzerk_performance,
 'chopper':learning.evaluate_chopper_performance,
-'pong':learning.evaluate_pong_performance
+'pong':learning.evaluate_pong_performance,
+'pshoppe':learning.evaluate_potion_store_performance,
+'biped':learning.evaluate_biped_performance
 }
+
+
 
 environment_settings= {
 'invaders':set_space_invaders_params,
@@ -73,13 +94,17 @@ environment_settings= {
 'xor':set_xor_params,
 'berzerk':set_berzerk_params,
 'chopper':set_chopper_params,
-'pong':set_pong_params
+'pong':set_pong_params,
+'pshoppe':set_potion_store_params,
+'biped':set_biped_params
 
 }
 
 
 
 #core user interface dialouge
+
+logging.disable(sys.maxint)
 
 if len(sys.argv) == 3 and sys.argv[1] == 'stress':
 	mutation_count = int(sys.argv[2])
