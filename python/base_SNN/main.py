@@ -56,10 +56,11 @@ def set_berzerk_params():
 
 def set_biped_params():
 	brain.Mutation_params.input_count = 24
-	brain.Mutation_params.output_count = 4
+	brain.Mutation_params.output_count = 8
 	brain.Mutation_params.upper_input_bounds = [.00000001] * 24
 	brain.Mutation_params.lower_input_bounds = [-.00000001] * 24
 	brain.Mutation_params.mutation_cycles = 1
+	brain.Mutation_params().set_to_default_low_intensity()
 
 
 def set_chopper_params():
@@ -101,6 +102,16 @@ environment_settings= {
 }
 
 
+learning_techniques = {
+'default':learning.learn,
+'population':learning.population_learn,
+'imp':learning.impatient_learn
+}
+
+
+
+
+
 
 #core user interface dialouge
 
@@ -112,10 +123,11 @@ if len(sys.argv) == 3 and sys.argv[1] == 'stress':
 	b = brain.Brain(1)
 	b.mutation_stress_test(mutation_count)
 
-elif len(sys.argv) == 3 and sys.argv[1] == 'train':
+elif len(sys.argv) == 4 and sys.argv[1] == 'train':
 	param_setup = environment_settings[sys.argv[2]]
+	learning_algorithm = learning_techniques[sys.argv[3]]	
 	param_setup()
-	result = learning.learn(environments[sys.argv[2]])
+	result = learning_algorithm(None, environments[sys.argv[2]])
 
 elif len(sys.argv) == 4 and sys.argv[1] == 'analyze':
 	load_brain = brain.load_brain_from_file(sys.argv[3])
@@ -123,11 +135,12 @@ elif len(sys.argv) == 4 and sys.argv[1] == 'analyze':
 	param_setup()
 	learning.visualize_performance(load_brain, environments[sys.argv[2]])
 
-elif len(sys.argv) == 4 and sys.argv[1] == 'improve':
-	load_brain = brain.load_brain_from_file(sys.argv[3])
+elif len(sys.argv) == 5 and sys.argv[1] == 'improve':
+	load_brain = brain.load_brain_from_file(sys.argv[4])
+	learning_algorithm = learning_techniques[sys.argv[3]]	
 	param_setup = environment_settings[sys.argv[2]]
 	param_setup()
-	result = learning.learn_from_existing(load_brain, environments[sys.argv[2]])
+	result = learning_algorithm(load_brain, environments[sys.argv[2]])
 else:
 	print('INVALID USAGE')
 	

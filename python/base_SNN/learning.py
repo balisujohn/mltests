@@ -6,9 +6,11 @@ from enum import Enum
 import os
 import copy
 from random import randrange
+from random import uniform 
 import utils
 import gym
 import visualization
+from itertools import combinations 
 
 
 #John Balis 2019
@@ -156,8 +158,8 @@ def evaluate_space_invaders_performance(test_brain, visualization_mode):
 			raw_output = []
 			for i in range(brain_speed):
 				raw_output.append ( test_brain.advance(observations, 3))
-				if visualization_mode == Learning_flags.VISUALIZATION_ON: 
-					visualization.visualize_brain(brain.print_brain_to_json(test_brain))	
+				#if visualization_mode == Learning_flags.VISUALIZATION_ON: 
+				#	visualization.visualize_brain(brain.print_brain_to_json(test_brain))	
 
 			for i in range(output_count):
 				for c in range(brain_speed):	
@@ -388,7 +390,7 @@ def evaluate_biped_performance(test_brain, visualization_mode):
 		observations = env.reset()
 		score = 0
 		counter = 0
-		while counter < 500:
+		while counter < 1000:
 			counter += 1
 			#score += 1
 			if visualization_mode == Learning_flags.VISUALIZATION_ON:
@@ -416,15 +418,18 @@ def evaluate_biped_performance(test_brain, visualization_mode):
 				for c in range(brain_speed):	
 					output[i] += raw_output[c][i]
 					output[i] -= raw_output[c][i + (output_count/2)]
+
 				output[i] = (output[i]/float(brain_speed))
-			
 
 			action = output
+			
+	
 			
 
 
 
 			if visualization_mode == Learning_flags.VISUALIZATION_ON:
+				print(counter)
 				print('ACTION: ' + str(action))
 		
 			observations,reward,done,info = env.step(action)
@@ -449,6 +454,8 @@ def evaluate_biped_performance(test_brain, visualization_mode):
 def evaluate_potion_store_performance(test_brain, visualization_mode):
 
 
+
+
 	time_limit = 200
 	time = 0
 	potion_count = 6
@@ -456,19 +463,17 @@ def evaluate_potion_store_performance(test_brain, visualization_mode):
 	incorrect_limit = 5
 	correct_limit = 100.0
 	brain_speed = 5
-	trials = 100
 	total_score = 0
 
+
+	indices = [i for i  in range(potion_count)]
+	coms = combinations(indices, health_potion_count)
 	
-	for i in range(trials):
+
+	for com in coms:
 		assert (health_potion_count <= potion_count)
 
-		health_potion_indices = []
-		for i in range(health_potion_count):
-			new_index = randrange(potion_count)
-			while new_index in health_potion_indices:
-				new_index = randrange(potion_count)
-			health_potion_indices.append(new_index)
+		health_potion_indices = com
 
 		correct_potions = 0.0
 		incorrect_potions = 0.0
@@ -476,6 +481,7 @@ def evaluate_potion_store_performance(test_brain, visualization_mode):
 		correct_bit = 0
 		incorrect_bit = 0
 		time = 0
+
 
 		while correct_potions < correct_limit and incorrect_potions < incorrect_limit and time < time_limit:
 			potion_offer = randrange(potion_count)
@@ -523,7 +529,7 @@ def evaluate_potion_store_performance(test_brain, visualization_mode):
 		if visualization_mode == Learning_flags.VISUALIZATION_ON:
 			print("NUMBER CORRECT: " + str(correct_potions))
 
-	return float(total_score/(correct_limit*trials)) * 100.0
+	return float(total_score/(correct_limit*15)) * 100.0
 			
 
 		
@@ -554,60 +560,20 @@ def visualize_performance(brain, eval_function):
 	while 1:
 		eval_function(brain, Learning_flags.VISUALIZATION_ON)	
 
-# naive learning algorithm, currently the primary learning algorithm in the python architecture
-def learn(eval_function):
 
-	input_size = brain.Mutation_params().input_count
-	output_size = brain.Mutation_params().output_count
-
-	best_brain = brain.Brain(1)
-
-	best_score = 0
-	
-	counter = 0 	
-	average = 0	
-	
-	while best_score < 100:
-
-		counter += 1
-		score = 0
-		
-		mutant = copy.deepcopy(best_brain) 
-
-
-		for i in range(1):
-			mutant.default_mutation(input_size,output_size)
-
-		test_instance = copy.deepcopy(mutant)
-
-		score = eval_function(test_instance, Learning_flags.VISUALIZATION_OFF)
-
-		#print(score)
-
-		average += score
-		if ((counter % 100) == 0):
-			print ('LAST 100 AVERAGE: ' + str(average/100))
-			average = 0
-		if score >= best_score:
-			print('NEW BEST SCORE: ' + str(score))
-			brain.print_brain_to_file(mutant)
-
-			best_score = score
-
-			best_brain = copy.deepcopy(mutant)
-
-	
-
-	return best_brain
-		
 # naive learning algorithm, starting from existing topology
-def learn_from_existing(existing_brain, eval_function):
+def learn(existing_brain, eval_function):
+
+
+
 
 	input_size = brain.Mutation_params().input_count
 	output_size = brain.Mutation_params().output_count
 
-
-	best_brain = existing_brain
+	if existing_brain != None:
+		best_brain = existing_brain
+	else:
+		best_brain = brain.Brain(1)
 	benchmark_instance = copy.deepcopy(best_brain)
 	best_score = eval_function(benchmark_instance, Learning_flags.VISUALIZATION_OFF)
 	print('NEW BEST SCORE: ' + str(best_score))
@@ -649,8 +615,10 @@ def learn_from_existing(existing_brain, eval_function):
 
 #population-based learning algorithm, with crossover. Experimental
 
-def population_learn(population_size, eval_function):
+def population_learn(existing_brain, eval_function):
 	
+
+ 	population_size  = brain.Mutation_params().population_size
 
 	
 	input_size = brain.Mutation_params().input_count
@@ -658,8 +626,13 @@ def population_learn(population_size, eval_function):
 
 
 	population = []
-	for i in range(population_size):
-		population.append( [0,brain.Brain(1)] )
+
+	if existing_brain == None:
+		for i in range(population_size):
+			population.append( [0,brain.Brain(1)] )
+	else:
+		for i in range(population_size):
+			population.append( [0,copy.deepcopy(existing_brain)] )
 
 	
 	best_score = 0
@@ -702,7 +675,71 @@ def population_learn(population_size, eval_function):
 
 	
 		
+# impatient_learning_algorithm
+def impatient_learn(existing_brain, eval_function):
 
+
+
+
+	input_size = brain.Mutation_params().input_count
+	output_size = brain.Mutation_params().output_count
+
+	if existing_brain != None:
+		best_brain = existing_brain
+	else:
+		best_brain = brain.Brain(1)
+	benchmark_instance = copy.deepcopy(best_brain)
+
+	best_score = eval_function(benchmark_instance, Learning_flags.VISUALIZATION_OFF)
+	print('NEW BEST SCORE: ' + str(best_score))
+	
+	counter = 0
+	average = 0	
+
+	chaos = 1.0
+	chaos_ceiling = 5.0
+	
+	while best_score < 100:
+
+		counter += 1
+		score = 0
+		
+		mutant = copy.deepcopy(best_brain) 
+
+
+		for i in range(1):
+			mutant.default_mutation(input_size,output_size)
+
+		test_instance = copy.deepcopy(mutant)
+
+		score = eval_function(test_instance, Learning_flags.VISUALIZATION_OFF)
+		
+		average += score
+		if ((counter % 100) == 0):
+			print ('LAST 100 AVERAGE: ' + str(average/100))
+			print('CHAOS: ' + str(chaos))		
+			#if uniform(0,1) > .5:
+		#		print('SUPRESSING MUTATION')
+		#		brain.Mutation_params().supress_mutation()
+		#	else:	
+		#		print('AMPLIFYING MUTATION')
+		#		brain.Mutation_params().amplify_mutation()
+			average = 0
+		if score >= best_score:
+			chaos = 1
+			print('NEW BEST SCORE: ' + str(score))
+			brain.print_brain_to_file(mutant)
+
+			best_score = score
+
+			best_brain = copy.deepcopy(mutant)
+		elif chaos < chaos_ceiling:
+			chaos += .01
+		brain.Mutation_params().mutation_cycles = randrange(int(chaos)) + 1
+	
+
+	return best_brain
+		
 	
 
 

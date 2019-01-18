@@ -66,6 +66,44 @@ class Mutation_params():
 	mutation_cycles = 1
 	upper_input_bounds = []
 	lower_input_bounds = []
+
+	population_size = 10
+	innovation_counter = 0
+
+	def supress_mutation(self):
+		self.swap_prob += (1-self.swap_prob)/2
+		self.neuron_count_prob +=(1-self.neuron_count_prob)/2
+		self.target_count_prob +=(1-self.target_count_prob)/2
+		self.retarget_prob += (1-self.retarget_prob)/2
+		self.potential_prob += (1-self.potential_prob)/2
+		self.threshold_prob += (1-self.threshold_prob)/2
+		self.sensory_prob += (1-self.sensory_prob)/2
+		self.actuating_prob += (1-self.actuating_prob)/2
+		self.hidden_prob += (1-self.hidden_prob)/2
+	
+
+	def amplify_mutation(self):
+		self.swap_prob = self.swap_prob/2
+		self.neuron_count_prob = self.neuron_count_prob/2
+		self.target_count_prob =self.target_count_prob/2
+		self.retarget_prob = self.retarget_prob/2
+		self.potential_prob = self.potential_prob/2
+		self.threshold_prob = self.threshold_prob/2
+		self.sensory_prob= self.sensory_prob/2
+		self.actuating_prob = self.actuating_prob/2
+		self.hidden_prob = self.hidden_prob/2
+
+	def set_to_default_low_intensity(self):
+		self.swap_prob  = .05
+		self.neuron_count_prob =.05
+		self.target_count_prob=.05
+		self.retarget_prob=.05
+		self.potential_prob =.05
+		self.threshold_prob =.05
+		self.sensory_prob =.05
+		self.actuating_prob =.05
+		self.hidden_prob =.05
+	
 	
 
 ##    ## ######## ##     ## ########   #######  ##    ##
@@ -461,6 +499,8 @@ def cross_over(brain_1, brain_2):
 
 	output.verify_network_consistency()
 	return output
+
+
 
 
 ####       ##  #######

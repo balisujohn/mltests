@@ -1,0 +1,359 @@
+{
+    "neuronCount": 18, 
+    "neurons": [
+        {
+            "fired": 0, 
+            "targetCount": 1, 
+            "externalBit": 0, 
+            "sensorType": "SENSOR_BINARY", 
+            "externalIndex": 3, 
+            "thresh": 0.982204840707693, 
+            "externalThreshold": 0.12467160433362312, 
+            "weights": [
+                0.40350197747916194
+            ], 
+            "targets": [
+                1
+            ], 
+            "neuronType": "NEURON_ACTUATING"
+        }, 
+        {
+            "fired": 0, 
+            "targetCount": 3, 
+            "externalBit": 0, 
+            "sensorType": "SENSOR_LINEAR_THRESHOLD_UP", 
+            "externalIndex": 5, 
+            "thresh": 0.1230943705607569, 
+            "externalThreshold": -1.1279925807995781, 
+            "weights": [
+                -0.1669364812322991, 
+                -0.8602297804283092, 
+                0.0806365369375881
+            ], 
+            "targets": [
+                6, 
+                14, 
+                5
+            ], 
+            "neuronType": "NEURON_SENSORY"
+        }, 
+        {
+            "fired": 0, 
+            "targetCount": 4, 
+            "externalBit": 0, 
+            "sensorType": "SENSOR_LINEAR_THRESHOLD_UP", 
+            "externalIndex": 2, 
+            "thresh": 0.18444500740945244, 
+            "externalThreshold": 0.5801079260697137, 
+            "weights": [
+                -0.87504106575723, 
+                0.7869006947639241, 
+                0.834942905422367, 
+                -0.16276397251499644
+            ], 
+            "targets": [
+                13, 
+                7, 
+                3, 
+                14
+            ], 
+            "neuronType": "NEURON_ACTUATING"
+        }, 
+        {
+            "fired": 0, 
+            "targetCount": 0, 
+            "externalBit": 0, 
+            "sensorType": "SENSOR_LINEAR_THRESHOLD_DOWN", 
+            "externalIndex": 0, 
+            "thresh": 0.5459905883893846, 
+            "externalThreshold": -0.6688410029063676, 
+            "weights": [], 
+            "targets": [], 
+            "neuronType": "NEURON_ACTUATING"
+        }, 
+        {
+            "fired": 0, 
+            "targetCount": 1, 
+            "externalBit": 0, 
+            "sensorType": "SENSOR_BINARY", 
+            "externalIndex": 3, 
+            "thresh": 0.2007516860919753, 
+            "externalThreshold": 0.31587038604450357, 
+            "weights": [
+                0.4880097201133795
+            ], 
+            "targets": [
+                5
+            ], 
+            "neuronType": "NEURON_ACTUATING"
+        }, 
+        {
+            "fired": 0, 
+            "targetCount": 5, 
+            "externalBit": 0, 
+            "sensorType": "SENSOR_LINEAR_THRESHOLD_UP", 
+            "externalIndex": 20, 
+            "thresh": 0.35065705162824445, 
+            "externalThreshold": 0.10883580427673469, 
+            "weights": [
+                -0.8567477711540189, 
+                0.024207024939282194, 
+                -0.2739916406111227, 
+                0.33405964089801565, 
+                -0.08985538339980281
+            ], 
+            "targets": [
+                15, 
+                2, 
+                12, 
+                2, 
+                12
+            ], 
+            "neuronType": "NEURON_HIDDEN"
+        }, 
+        {
+            "fired": 0, 
+            "targetCount": 0, 
+            "externalBit": 0, 
+            "sensorType": "SENSOR_LINEAR_THRESHOLD_DOWN", 
+            "externalIndex": 9, 
+            "thresh": 0.4442613250084312, 
+            "externalThreshold": 0.61340626413473487, 
+            "weights": [], 
+            "targets": [], 
+            "neuronType": "NEURON_SENSORY"
+        }, 
+        {
+            "fired": 0, 
+            "targetCount": 3, 
+            "externalBit": 0, 
+            "sensorType": "SENSOR_BINARY", 
+            "externalIndex": 3, 
+            "thresh": 0.9382779257962358, 
+            "externalThreshold": -0.19896833196837233, 
+            "weights": [
+                0.3927496854228332, 
+                1.0152386410794474, 
+                -0.6770778020954316
+            ], 
+            "targets": [
+                9, 
+                15, 
+                11
+            ], 
+            "neuronType": "NEURON_HIDDEN"
+        }, 
+        {
+            "fired": 0, 
+            "targetCount": 5, 
+            "externalBit": 0, 
+            "sensorType": "SENSOR_BINARY", 
+            "externalIndex": 0, 
+            "thresh": 0.5977143709560951, 
+            "externalThreshold": -2.5827116172267464, 
+            "weights": [
+                0.9057492182692501, 
+                0.5490472068895855, 
+                -0.5113602619051869, 
+                0.40308650251862976, 
+                0.5263169909574248
+            ], 
+            "targets": [
+                13, 
+                1, 
+                7, 
+                9, 
+                12
+            ], 
+            "neuronType": "NEURON_SENSORY"
+        }, 
+        {
+            "fired": 0, 
+            "targetCount": 3, 
+            "externalBit": 0, 
+            "sensorType": "SENSOR_LINEAR_THRESHOLD_UP", 
+            "externalIndex": 6, 
+            "thresh": 0.8458362380882422, 
+            "externalThreshold": 1.3091748487627535, 
+            "weights": [
+                -0.13650965128220138, 
+                -0.31920750985750224, 
+                0.9277017019980256
+            ], 
+            "targets": [
+                5, 
+                0, 
+                8
+            ], 
+            "neuronType": "NEURON_SENSORY"
+        }, 
+        {
+            "fired": 0, 
+            "targetCount": 5, 
+            "externalBit": 0, 
+            "sensorType": "SENSOR_BINARY", 
+            "externalIndex": 22, 
+            "thresh": 0.9385685095508836, 
+            "externalThreshold": 0.3103119245489618, 
+            "weights": [
+                0.001010211366616276, 
+                0.5473217209346053, 
+                -0.6806511032040636, 
+                0.8304098826889597, 
+                0.7079082575346662
+            ], 
+            "targets": [
+                15, 
+                5, 
+                11, 
+                14, 
+                11
+            ], 
+            "neuronType": "NEURON_SENSORY"
+        }, 
+        {
+            "fired": 0, 
+            "targetCount": 4, 
+            "externalBit": 0, 
+            "sensorType": "SENSOR_LINEAR_THRESHOLD_UP", 
+            "externalIndex": 12, 
+            "thresh": 0.9306771633559232, 
+            "externalThreshold": 1.886994777960965, 
+            "weights": [
+                -0.8756212258411809, 
+                -0.8009329688486365, 
+                0.9521808584995637, 
+                -0.6674372750565037
+            ], 
+            "targets": [
+                5, 
+                1, 
+                1, 
+                7
+            ], 
+            "neuronType": "NEURON_SENSORY"
+        }, 
+        {
+            "fired": 0, 
+            "targetCount": 3, 
+            "externalBit": 0, 
+            "sensorType": "SENSOR_BINARY", 
+            "externalIndex": 11, 
+            "thresh": 0.6126225663152406, 
+            "externalThreshold": -0.1475790931012, 
+            "weights": [
+                -0.9378199720940086, 
+                -0.458451426044574, 
+                0.49729616904988316
+            ], 
+            "targets": [
+                10, 
+                3, 
+                13
+            ], 
+            "neuronType": "NEURON_HIDDEN"
+        }, 
+        {
+            "fired": 0, 
+            "targetCount": 5, 
+            "externalBit": 0, 
+            "sensorType": "SENSOR_LINEAR_THRESHOLD_DOWN", 
+            "externalIndex": 6, 
+            "thresh": 0.4524599936164961, 
+            "externalThreshold": 0.22225276332254368, 
+            "weights": [
+                0.2966780758052056, 
+                0.01739661263213227, 
+                0.8150843508045172, 
+                -0.6515849285418913, 
+                -0.5255222216891688
+            ], 
+            "targets": [
+                14, 
+                9, 
+                7, 
+                8, 
+                0
+            ], 
+            "neuronType": "NEURON_ACTUATING"
+        }, 
+        {
+            "fired": 0, 
+            "targetCount": 4, 
+            "externalBit": 0, 
+            "sensorType": "SENSOR_LINEAR_THRESHOLD_UP", 
+            "externalIndex": 6, 
+            "thresh": 0.0006465307588201311, 
+            "externalThreshold": 1.0266893602675617, 
+            "weights": [
+                -0.5420038639522204, 
+                -0.2414999008952854, 
+                0.36938812288879963, 
+                0.16772436199475838
+            ], 
+            "targets": [
+                12, 
+                1, 
+                12, 
+                13
+            ], 
+            "neuronType": "NEURON_ACTUATING"
+        }, 
+        {
+            "fired": 0, 
+            "targetCount": 5, 
+            "externalBit": 0, 
+            "sensorType": "SENSOR_LINEAR_THRESHOLD_DOWN", 
+            "externalIndex": 0, 
+            "thresh": 0.9618858524635663, 
+            "externalThreshold": 1.0781514218425428, 
+            "weights": [
+                0.2357211597904445, 
+                -0.24193484256251785, 
+                -0.39418292320785187, 
+                0.2917511463700144, 
+                -0.6571990706188697
+            ], 
+            "targets": [
+                13, 
+                3, 
+                8, 
+                7, 
+                3
+            ], 
+            "neuronType": "NEURON_ACTUATING"
+        }, 
+        {
+            "fired": 0, 
+            "targetCount": 3, 
+            "externalBit": 0, 
+            "sensorType": "SENSOR_LINEAR_THRESHOLD_UP", 
+            "externalIndex": 9, 
+            "thresh": 0.8008563497993808, 
+            "externalThreshold": 1.0047659279883419, 
+            "weights": [
+                -0.5225410115207123, 
+                -0.22802022855778215, 
+                -0.8075050599820526
+            ], 
+            "targets": [
+                2, 
+                10, 
+                4
+            ], 
+            "neuronType": "NEURON_SENSORY"
+        }, 
+        {
+            "fired": 0, 
+            "targetCount": 0, 
+            "externalBit": 0, 
+            "sensorType": "SENSOR_BINARY", 
+            "externalIndex": 0, 
+            "thresh": 0.9247493795960413, 
+            "externalThreshold": 0, 
+            "weights": [], 
+            "targets": [], 
+            "neuronType": "NEURON_HIDDEN"
+        }
+    ]
+}
