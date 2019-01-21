@@ -82,6 +82,7 @@ def evalute_pendulum_cart_performance(test_brain, visualization_mode):
 	for c in range(trials):
 		env = gym.make('CartPole-v0')
 		observations = env.reset()
+		test_instance = copy.deepcopy(test_brain)
 		score = 0
 		while True:#for h in range(desired_score):
 			#score += 1
@@ -100,9 +101,9 @@ def evalute_pendulum_cart_performance(test_brain, visualization_mode):
 
 			sum = 0
 			for i in range(5):
-				sum += test_brain.advance(observations, 1)[0]
+				sum += test_instance.advance(observations, 1)[0]
 				if visualization_mode == Learning_flags.VISUALIZATION_ON: 
-					visualization.visualize_brain(brain.print_brain_to_json(test_brain))	
+					visualization.visualize_brain(brain.print_brain_to_json(test_instance))	
 			action = int(sum >=3)
 
 			if visualization_mode == Learning_flags.VISUALIZATION_ON:
@@ -137,6 +138,7 @@ def evaluate_space_invaders_performance(test_brain, visualization_mode):
 	output_count = 3
 	for i in range(trials):
 		env = gym.make('SpaceInvaders-ram-v0')
+		test_instance = copy.deepcopy(test_brain)
 		observations = env.reset()
 		score = 0
 		while 1:
@@ -157,9 +159,9 @@ def evaluate_space_invaders_performance(test_brain, visualization_mode):
 
 			raw_output = []
 			for i in range(brain_speed):
-				raw_output.append ( test_brain.advance(observations, 3))
+				raw_output.append ( test_instance.advance(observations, 3))
 				#if visualization_mode == Learning_flags.VISUALIZATION_ON: 
-				#	visualization.visualize_brain(brain.print_brain_to_json(test_brain))	
+				#	visualization.visualize_brain(brain.print_brain_to_json(test_instance))	
 
 			for i in range(output_count):
 				for c in range(brain_speed):	
@@ -198,6 +200,7 @@ def evaluate_pong_performance(test_brain, visualization_mode):
 	output_count = 3
 	for i in range(trials):
 		env = gym.make('Pong-ram-v0')
+		test_instance = copy.deepcopy(test_brain)
 		observations = env.reset()
 		score = 0
 		while 1:
@@ -219,9 +222,9 @@ def evaluate_pong_performance(test_brain, visualization_mode):
 
 			raw_output = []
 			for i in range(brain_speed):
-				raw_output.append ( test_brain.advance(observations, 3))
+				raw_output.append ( test_instance.advance(observations, 3))
 				#if visualization_mode == Learning_flags.VISUALIZATION_ON: 
-				#	visualization.visualize_brain(brain.print_brain_to_json(test_brain))	
+				#	visualization.visualize_brain(brain.print_brain_to_json(test_instance))	
 
 			for i in range(output_count):
 				for c in range(brain_speed):	
@@ -287,7 +290,7 @@ def evaluate_berzerk_performance(test_brain, visualization_mode):
 			for i in range(brain_speed):
 				raw_output.append ( test_brain.advance(observations, 5))
 				#if visualization_mode == Learning_flags.VISUALIZATION_ON: 
-				#	visualization.visualize_brain(brain.print_brain_to_json(test_brain))	
+				#	visualization.visualize_brain(brain.print_brain_to_json(test_instance))	
 
 			for i in range(output_count):
 				for c in range(brain_speed):	
@@ -324,6 +327,7 @@ def evaluate_chopper_performance(test_brain, visualization_mode):
 	brain_speed = 5
 	for i in range(trials):
 		env = gym.make('ChopperCommand-ram-v0')
+		test_instance = copy.deepcopy(test_brain)
 		observations = env.reset()
 		score = 0
 		for c in range(1000):
@@ -345,9 +349,9 @@ def evaluate_chopper_performance(test_brain, visualization_mode):
 
 			raw_output = []
 			for i in range(brain_speed):
-				raw_output.append ( test_brain.advance(observations, 5))
+				raw_output.append ( test_instance.advance(observations, 5))
 				if visualization_mode == Learning_flags.VISUALIZATION_ON: 
-					visualization.visualize_brain(brain.print_brain_to_json(test_brain))	
+					visualization.visualize_brain(brain.print_brain_to_json(test_instance))	
 
 			for i in range(output_count):
 				for c in range(brain_speed):	
@@ -386,7 +390,7 @@ def evaluate_biped_performance(test_brain, visualization_mode):
 		
 
 		env = gym.make('BipedalWalker-v2')
-
+		test_instance = copy.deepcopy(test_brain)
 		observations = env.reset()
 		score = 0
 		counter = 0
@@ -410,9 +414,9 @@ def evaluate_biped_performance(test_brain, visualization_mode):
 
 			raw_output = []
 			for i in range(brain_speed):
-				raw_output.append ( test_brain.advance(observations, output_count))
+				raw_output.append ( test_instance.advance(observations, output_count))
 				#if visualization_mode == Learning_flags.VISUALIZATION_ON: 
-				#	visualization.visualize_brain(brain.print_brain_to_json(test_brain))	
+				#	visualization.visualize_brain(brain.print_brain_to_json(test_instance))	
 
 			for i in range(output_count/2):
 				for c in range(brain_speed):	
@@ -472,6 +476,7 @@ def evaluate_potion_store_performance(test_brain, visualization_mode):
 
 	for com in coms:
 		assert (health_potion_count <= potion_count)
+		test_instance = copy.deepcopy(test_brain)
 
 		health_potion_indices = com
 
@@ -493,9 +498,9 @@ def evaluate_potion_store_performance(test_brain, visualization_mode):
 
 			output = 0
 			for i in range(brain_speed):	
-				output += test_brain.advance(input, 1)[0]
+				output += test_instance.advance(input, 1)[0]
 				if visualization_mode == Learning_flags.VISUALIZATION_ON: 
-					visualization.visualize_brain(brain.print_brain_to_json(test_brain))	
+					visualization.visualize_brain(brain.print_brain_to_json(test_instance))	
 
 			
 			output = int(output > int(brain_speed/2))
@@ -519,6 +524,8 @@ def evaluate_potion_store_performance(test_brain, visualization_mode):
 						print('DRANK ' + str(potion_offer) + ': HEALTH POTION')
 
 			else: 	
+				correct_bit = 0
+				incorrect_bit = 0
 				if visualization_mode == Learning_flags.VISUALIZATION_ON:
 						print('DECLINED OFFER FOR ' + str(potion_offer))
 		
