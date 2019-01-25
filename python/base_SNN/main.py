@@ -60,7 +60,7 @@ def set_biped_params():
 	brain.Mutation_params.upper_input_bounds = [.00000001] * 24
 	brain.Mutation_params.lower_input_bounds = [-.00000001] * 24
 	brain.Mutation_params.mutation_cycles = 1
-	brain.Mutation_params().set_to_default_low_intensity()
+	#brain.Mutation_params().set_to_default_low_intensity()
 
 
 def set_chopper_params():

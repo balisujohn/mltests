@@ -437,8 +437,8 @@ def evaluate_biped_performance(test_brain, visualization_mode):
 				print('ACTION: ' + str(action))
 		
 			observations,reward,done,info = env.step(action)
-			if reward > 0:			
-				score += reward
+			#if reward > 0:			
+			score += reward
 			if done:
 				break
 		best_score += score
@@ -642,7 +642,7 @@ def population_learn(existing_brain, eval_function):
 			population.append( [0,copy.deepcopy(existing_brain)] )
 
 	
-	best_score = 0
+	best_score = float("-inf")
 	best_brain = None
 
 

@@ -1,3 +1,3 @@
 Code of Conduct 
 
-Use your judgement to treat other contributers with respect and kindness, no exceptions.
+Use your judgement to treat other contributors with respect and kindness, no exceptions.
