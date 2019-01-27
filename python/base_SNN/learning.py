@@ -134,7 +134,7 @@ def evaluate_space_invaders_performance(test_brain, visualization_mode):
 	best_score = 0.0
 	desired_score = 1000
 	brain_speed = 5
-	trials = 5
+	trials = 100
 	output_count = 3
 	for i in range(trials):
 		env = gym.make('SpaceInvaders-ram-v0')
