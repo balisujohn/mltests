@@ -13,8 +13,8 @@
 #include <fstream>
 #include <string>
 
-#include "edge.h"
-#include "input/consts_template.h"
+#include "neuron.h"
+#include "consts.h"
 
 using namespace std;
 

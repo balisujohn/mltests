@@ -24,15 +24,13 @@ const uint8_t NUM_LAYERS = 4;
 // number of nodes in any layer limited to 255
 // network can thus have up to 255^255 or ~4.653e613 neurons
 // 5 layers -> up to ~1.078 trillion (255^5) neurons
-uint8_t LAYERS_SIZE [NUM_LAYERS] = {
-5,
-5,
-5,
-5};
+uint8_t LAYERS_SIZE [NUM_LAYERS] = { 5, 5, 5, 5 };
 
 // input/output size is up to 65535, this can be changed relatively easily
-const uint16_t SIZE_INPUT = 5;
-const uint16_t SIZE_OUTPUT = 5;
+uint16_t SIZE_INPUT = 5;
+uint16_t SIZE_OUTPUT = 5;
+
+// weight type
 typedef float weight;
 // voltage type
 typedef float voltage;
@@ -52,32 +50,6 @@ const voltage V_RECOVERY = -30.0;
 // percentage of voltage remaining after every timestep, if not fired
 const voltage V_DECAY = 0.1;
 
-struct spike
-{
-	spike() : v(V_SPIKEAMP), t(TIME_CURRENT + 1) {}
-
-	spike(weight wgt, time delay)
-		: v(V_SPIKEAMP * wgt), t(TIME_CURRENT + delay) {}
-
-	voltage v;
-	time t;
-};
-
-class spike_timesort
-{
-public:
-spike_timesort() {}
-
-// comparator for spikes
-inline bool operator() (const spike & lhs, const spike & rhs) const
-{
-	return (lhs.t < rhs.t);
-}
-
-};
-
-typedef priority_queue < spike, vector < spike >, spike_timesort > spikeTrain;
-
 // margin for comparing floats
 const float EPSILON = 0.1;
 
@@ -91,6 +63,8 @@ inline bool zero_f(float a)
 {
 	return fabs(a) <= EPSILON;
 }
+
+
 
 // custom type of "neuron_coord" as a size_t array of length NUM_LAYERS
 struct neuron_coord
