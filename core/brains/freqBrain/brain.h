@@ -23,6 +23,7 @@ private:
 graph layers [NUM_LAYERS];
 // neurons with nonzero voltage
 unordered_map < neuron_coord, neuron, coordHasher > active_neurons;
+
 // edges that have been modified
 unordered_map < coord_pair, edge_base, coordPairHasher > mod_edges;
 unordered_map < neuron_coord, edge, coordHasher > add_edges;
