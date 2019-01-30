@@ -67,17 +67,18 @@ berzerk
 xor
 
 
-
-
+## public dropbox
+Related papers, meeting notes, and other materials can be found at:  
+https://www.dropbox.com/sh/da4xj31ezf5fn2b/AAAUyeak-1Eqfr3ifujCWAsJa?dl=0  
 
 
 If any of these areas sound interesting to you, don't hesitate to contribute. I can be reached at balisujohn at gmail dot com and other contributors can be reached at their emails if they have provided them.  We are very interested in recieving input and contributions.
 
 
 Contributors:  
-John Balis   
+John Balis: balisujohn at gmail dot com  
 William Derksen  
-Mikhail Ivanitskiy
+Michael Ivanitskiy: mivanits at umich dot edu OR mivanitskiy at hotmail dot com  
 
 Inline dependencies:  
 cJSON, courtesy of Dave Gamble and cJSON contributors
