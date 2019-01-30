@@ -160,8 +160,8 @@ def evaluate_space_invaders_performance(test_brain, visualization_mode):
 			raw_output = []
 			for i in range(brain_speed):
 				raw_output.append ( test_instance.advance(observations, 3))
-				#if visualization_mode == Learning_flags.VISUALIZATION_ON: 
-				#	visualization.visualize_brain(brain.print_brain_to_json(test_instance))	
+				if visualization_mode == Learning_flags.VISUALIZATION_ON: 
+					visualization.visualize_brain(brain.print_brain_to_json(test_instance))	
 
 			for i in range(output_count):
 				for c in range(brain_speed):	
@@ -186,7 +186,7 @@ def evaluate_space_invaders_performance(test_brain, visualization_mode):
 	return (best_score/(desired_score* trials)) * 100
 
 #unsolved
-#evaluates space invaders performance on an emulated Atari
+#evaluates space pong performance on an emulated Atari
 def evaluate_pong_performance(test_brain, visualization_mode):
 
 	#top_indices = [87, 79, 80, 77, 112, 1, 8, 72, 6, 28, 3, 110, 82, 85, 78, 9, 81, 90, 106, 74]
@@ -196,7 +196,7 @@ def evaluate_pong_performance(test_brain, visualization_mode):
 	best_score = 0
 	desired_score = 2000.0
 	brain_speed = 5
-	trials = 5
+	trials = 100
 	output_count = 3
 	for i in range(trials):
 		env = gym.make('Pong-ram-v0')
@@ -223,8 +223,8 @@ def evaluate_pong_performance(test_brain, visualization_mode):
 			raw_output = []
 			for i in range(brain_speed):
 				raw_output.append ( test_instance.advance(observations, 3))
-				#if visualization_mode == Learning_flags.VISUALIZATION_ON: 
-				#	visualization.visualize_brain(brain.print_brain_to_json(test_instance))	
+				if visualization_mode == Learning_flags.VISUALIZATION_ON: 
+					visualization.visualize_brain(brain.print_brain_to_json(test_instance))	
 
 			for i in range(output_count):
 				for c in range(brain_speed):	
@@ -266,6 +266,7 @@ def evaluate_berzerk_performance(test_brain, visualization_mode):
 	brain_speed = 5
 	output_count = 5
 	for i in range(trials):
+		test_instance = copy.deepcopy(test_brain)
 		env = gym.make('Berzerk-ram-v0')
 		observations = env.reset()
 		score = 0
@@ -288,9 +289,9 @@ def evaluate_berzerk_performance(test_brain, visualization_mode):
 
 			raw_output = []
 			for i in range(brain_speed):
-				raw_output.append ( test_brain.advance(observations, 5))
-				#if visualization_mode == Learning_flags.VISUALIZATION_ON: 
-				#	visualization.visualize_brain(brain.print_brain_to_json(test_instance))	
+				raw_output.append ( test_instance.advance(observations, 5))
+				if visualization_mode == Learning_flags.VISUALIZATION_ON: 
+					visualization.visualize_brain(brain.print_brain_to_json(test_instance))	
 
 			for i in range(output_count):
 				for c in range(brain_speed):	
