@@ -46,8 +46,8 @@ class Brain_flags(Enum): ## dont change the existing ones without updating in mu
 
 class Mutation_params():
 	swap_prob = .1
-	neuron_count_prob = .25
-	neuron_count_bias = .6
+	neuron_count_prob = .5
+	neuron_count_bias = 0 #we will always remove neurons this way in this configuration, new neurons are added with a reflex_mutation
 	target_limit = 5
 	target_count_prob = .25
 	target_count_bias = .6
@@ -55,7 +55,8 @@ class Mutation_params():
 	potential_prob = .1
 	potential_strength = .1
 	threshold_prob = .1
-	threshold_strength = .1 
+	threshold_strength = .1
+	reflex_pair_prob = .25 
 	input_count = 	10
 	output_count = 10
 
@@ -337,6 +338,37 @@ class Brain:
 						neuron.targets[i] = index1
 			#self.verify_network_consistency()
 	
+	
+	#reflex pair mutation
+	# simple topologies often rely on simple input-output mappings. This mutation attempts to capitalize on this.
+
+	def reflex_pair_mutation(self):
+		input_count = Mutation_params().input_count
+		output_count = Mutation_params().output_count
+
+		if uniform(0,1) > Mutation_params().reflex_pair_prob:
+
+			old_neuron_count = self.neuron_count
+			sensor = Neuron()
+			sensor.type = Brain_flags.NEURON_SENSORY
+			sensor.sensor_type = Brain_flags(randrange(5,8))
+			sensor.external_index = randrange(input_count)
+			sensor.external_thresh = uniform(Mutation_params.lower_input_bounds[sensor.external_index],Mutation_params.upper_input_bounds[sensor.external_index])
+			sensor.potential_weights.append(.23) #this horrible magic number is just a starting point for guaranteed activation
+			sensor.targets.append(old_neuron_count+1)
+			sensor.target_count+= 1		
+			actuator = Neuron()
+			actuator.type = Brain_flags.NEURON_ACTUATING
+			actuator.external_index = randrange(output_count)
+			actuator.activation_potential = .1
+			self.neurons.append(sensor)
+			self.neurons.append(actuator)
+			self.neuron_count += 2
+
+
+
+
+
 	def default_mutation(self, input_count, output_count):
 
 		for i in range(Mutation_params().mutation_cycles):
@@ -354,8 +386,9 @@ class Brain:
 			self.type_mutation(input_count, output_count,Mutation_params().sensory_prob,Mutation_params().actuating_prob,Mutation_params().hidden_prob)
 			#self.verify_network_consistency()
 			self.neuron_count_mutation(input_count, output_count, Mutation_params().neuron_count_prob,Mutation_params().neuron_count_bias)
-		#	self.verify_network_consistency()
-		
+			#self.verify_network_consistency()
+			self.reflex_pair_mutation()
+			self.verify_network_consistency()
 	
 	def mutation_stress_test(self,mutation_count):
 		for i in range(mutation_count):

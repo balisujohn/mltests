@@ -108,6 +108,14 @@ learning_techniques = {
 'imp':learning.impatient_learn
 }
 
+# test mode for development purposes
+if sys.argv[1] == 'test':
+	set_space_invaders_params()
+	b = brain.Brain(1)
+	b.reflex_pair_mutation()
+	test_result = learning.visualize_performance(b,learning.evaluate_space_invaders_performance)
+
+
 
 
 
