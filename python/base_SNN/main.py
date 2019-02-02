@@ -43,6 +43,8 @@ def set_cart_pole_params():
 def set_xor_params():
 	brain.Mutation_params.input_count = 2
 	brain.Mutation_params.output_count = 1
+	brain.Mutation_params.neuron_count_bias = .5
+	brain.Mutation_params.reflex_pair_prob = 0
 	brain.Mutation_params.upper_input_bounds = [1] * 2
 	brain.Mutation_params.lower_input_bounds = [-1] * 2
 

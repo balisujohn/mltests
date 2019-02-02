@@ -346,7 +346,7 @@ class Brain:
 		input_count = Mutation_params().input_count
 		output_count = Mutation_params().output_count
 
-		if uniform(0,1) > Mutation_params().reflex_pair_prob:
+		if uniform(0,1) < Mutation_params().reflex_pair_prob:
 
 			old_neuron_count = self.neuron_count
 			sensor = Neuron()
