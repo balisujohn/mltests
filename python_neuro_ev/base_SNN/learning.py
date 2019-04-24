@@ -516,8 +516,7 @@ def evaluate_potion_store_performance(test_brain, visualization_mode):
 					if visualization_mode == Learning_flags.VISUALIZATION_ON:
 						print('DRANK ' + str(potion_offer) + ': POISION')
 		
-				
-			 	else: 
+				else: 
 					correct_potions += 1
 					correct_bit = 1
 					incorrect_bit = 0
@@ -625,10 +624,7 @@ def learn(existing_brain, eval_function):
 
 def population_learn(existing_brain, eval_function):
 	
-
- 	population_size  = brain.Mutation_params().population_size
-
-	
+	population_size  = brain.Mutation_params().population_size
 	input_size = brain.Mutation_params().input_count
 	output_size = brain.Mutation_params().output_count
 
