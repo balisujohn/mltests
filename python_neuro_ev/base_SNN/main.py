@@ -125,7 +125,7 @@ if sys.argv[1] == 'test':
 
 #core user interface dialouge
 
-logging.disable(sys.maxint)
+logging.disable(999999999999999)
 
 if len(sys.argv) == 3 and sys.argv[1] == 'stress':
 	mutation_count = int(sys.argv[2])
