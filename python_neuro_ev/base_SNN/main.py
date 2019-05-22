@@ -13,6 +13,7 @@ import logging
 
 
 def set_potion_store_params(): # make sure you update the variables in the learning function if you update input_count here
+	brain.Mutation_params.set_mutation_to_default_1(brain.Mutation_params)
 	brain.Mutation_params.input_count = 8
 	brain.Mutation_params.output_count = 1
 	brain.Mutation_params.upper_input_bounds = [.00000001] * 8
@@ -21,26 +22,33 @@ def set_potion_store_params(): # make sure you update the variables in the learn
 
 
 def set_space_invaders_params():
+	brain.Mutation_params.set_mutation_to_default_1(brain.Mutation_params)
 	brain.Mutation_params.input_count = 128
 	brain.Mutation_params.output_count = 3
 	brain.Mutation_params.upper_input_bounds = [1] * 128
 	brain.Mutation_params.lower_input_bounds = [-1] * 128
 
 def set_pong_params():
+	brain.Mutation_params.set_mutation_to_default_1(brain.Mutation_params)
+	brain.Mutation_params.reflex_pair_prob=.2
 	brain.Mutation_params.input_count = 128
 	brain.Mutation_params.output_count = 3
 	brain.Mutation_params.upper_input_bounds = [1] * 128
 	brain.Mutation_params.lower_input_bounds = [-1] * 128
 
 
-def set_cart_pole_params():
+def set_cart_pole_params(): ##future ready dependent on mutations defaults 1
+	brain.Mutation_params.set_mutation_to_default_1(brain.Mutation_params)
+	brain.Mutation_params.reflex_pair_prob = .25
+	brain.Mutation_params.target_count_bias = .7
 	brain.Mutation_params.input_count = 4
 	brain.Mutation_params.output_count = 1
 	brain.Mutation_params.upper_input_bounds = [.00000001] * 4
 	brain.Mutation_params.lower_input_bounds = [-.000000001] * 4
 
 
-def set_xor_params():
+def set_xor_params(): ##future ready dependent on mutations defaults 1
+	brain.Mutation_params.set_mutation_to_default_1(brain.Mutation_params)
 	brain.Mutation_params.input_count = 2
 	brain.Mutation_params.output_count = 1
 	brain.Mutation_params.neuron_count_bias = .5
@@ -50,6 +58,7 @@ def set_xor_params():
 
 
 def set_berzerk_params():
+	brain.Mutation_params.set_mutation_to_default_1(brain.Mutation_params)
 	brain.Mutation_params.input_count = 128
 	brain.Mutation_params.output_count = 5
 	brain.Mutation_params.upper_input_bounds = [1] * 128
@@ -57,6 +66,7 @@ def set_berzerk_params():
 
 
 def set_biped_params():
+	brain.Mutation_params.set_mutation_to_default_1(brain.Mutation_params)
 	brain.Mutation_params.input_count = 24
 	brain.Mutation_params.output_count = 8
 	brain.Mutation_params.upper_input_bounds = [.00000001] * 24
@@ -66,12 +76,14 @@ def set_biped_params():
 
 
 def set_chopper_params():
+	brain.Mutation_params.set_mutation_to_default_1(brain.Mutation_params)
 	brain.Mutation_params.input_count = 128
 	brain.Mutation_params.output_count = 5
 	brain.Mutation_params.upper_input_bounds = [1] * 128
 	brain.Mutation_params.lower_input_bounds = [-1] * 128
 
 def set_stress_test_params():
+	brain.Mutation_params.set_mutation_to_default_1(brain.Mutation_params)
 	brain.Mutation_params.input_count = 100
 	brain.Mutation_params.output_count = 100
 	brain.Mutation_params.upper_input_bounds = [.000000001] * 100

@@ -31,8 +31,10 @@ class Brain_flags(Enum): ## dont change the existing ones without updating in mu
 	SENSOR_LINEAR_THRESHOLD_UP = 5
 	SENSOR_LINEAR_THRESHOLD_DOWN = 6
 	SENSOR_BINARY = 7
-	PROCESSING_REPEATER = 8
+	PROCESSING_GENERIC= 8
 	PROCESSING_CORRELATOR = 9
+	PROCESSING_DECORRELATOR = 10
+	
 
 
 ##     ## ##     ## ########    ########  ########  ##     ##
@@ -66,6 +68,10 @@ class Mutation_params():
 	actuating_prob = .25
 	hidden_prob = .1
 
+	correlator_prob = .05
+	decorrelator_prob = .05
+	generic_prob = .01
+
 	mutation_cycles = 1
 	upper_input_bounds = []
 	lower_input_bounds = []
@@ -74,6 +80,43 @@ class Mutation_params():
 	innovation_counter = 0
 
 	activation_record_length = 10
+
+	def set_mutation_to_default_1(self): # most basic default setting, employing no experimental mutations
+		self.swap_prob = .1
+		self.neuron_count_prob = .5
+		self.neuron_count_bias = .5
+		self.target_limit = 5
+		self.target_count_prob = .25
+		self.target_count_bias = .5
+		self.retarget_prob = .25
+		self.potential_prob = .1
+		self.potential_strength = .1
+		self.threshold_prob = .1
+		self.threshold_strength = .1
+		self.reflex_pair_prob = 0
+		self.input_count = 	10
+		self.output_count = 10
+
+
+
+		self.sensory_prob = .25
+		self.actuating_prob = .25
+		self.hidden_prob = .1
+
+		self.correlator_prob = 0
+		self.decorrelator_prob = 0
+		self.generic_prob = 0
+
+
+		self.mutation_cycles = 1
+		self.upper_input_bounds = []
+		self.lower_input_bounds = []
+
+		self.population_size = 10
+		self.innovation_counter = 0
+
+		self.activation_record_length = 10
+
 
 	def supress_mutation(self):
 		self.swap_prob += (1-self.swap_prob)/2
@@ -133,7 +176,7 @@ class Neuron:
 		
 		self.type = Brain_flags.NEURON_HIDDEN
 		self.sensor_type = Brain_flags.SENSOR_BINARY # not initalized to consistent vales(not used until neuron set to sensory or actuating)
-		self.proc_type = Brain_flags.PROCESSING_REPEATER # generic neuron
+		self.proc_type = Brain_flags.PROCESSING_GENERIC # initialized to non weight-altering neuron
 		self.external_index = 0
 		self.external_thresh = 0
 		self.external_bit = 0
@@ -310,7 +353,7 @@ class Brain:
 
 
 
-	# note that the probabilities must add up to one or less here
+	# note that the probabilities must add up to one or less here #todo add automatic scaling
 	def type_mutation(self, input_count, output_count, sensory_mutation_prob, actuating_mutation_prob, hidden_mutation_prob):
 		for neuron in self.neurons:
 			selection = uniform(0,1)			
@@ -369,9 +412,23 @@ class Brain:
 						neuron.targets[i] = index1
 			#self.verify_network_consistency()
 	
+	#experimental neuron processing type mutation
+	def processing_mutation(self):
+		pass
+
+		"""for neuron in self.neurons:
+			selection = uniform(0,1)			
+			if selection < Mutation_params.generic_prob:
+			self.processing_type = 
 	
+			elif selection < Mutation_params.generic_prob + Mutation_params.correlator_prob:
+			
+			elif selection < Mutation_params.generic_prob + Mutation_params.correlator_prob + Mutation_params.decorrelator_prob:"""	
+		
+		
+
 	#reflex pair mutation
-	# simple topologies often rely on simple input-output mappings. This mutation attempts to capitalize on this.
+	#simple topologies often rely on simple input-output mappings. This mutation attempts to capitalize on this.
 
 	def reflex_pair_mutation(self):
 		input_count = Mutation_params().input_count
@@ -419,6 +476,7 @@ class Brain:
 			self.neuron_count_mutation(input_count, output_count, Mutation_params().neuron_count_prob,Mutation_params().neuron_count_bias)
 			#self.verify_network_consistency()
 			self.reflex_pair_mutation()
+			#self.correlator_mutation()
 			self.verify_network_consistency()
 	
 	def mutation_stress_test(self,mutation_count):
