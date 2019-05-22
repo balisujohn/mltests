@@ -419,10 +419,10 @@ def evaluate_biped_performance(test_brain, visualization_mode):
 				#if visualization_mode == Learning_flags.VISUALIZATION_ON: 
 				#	visualization.visualize_brain(brain.print_brain_to_json(test_instance))	
 
-			for i in range(output_count/2):
+			for i in range(int(output_count/2)):
 				for c in range(brain_speed):	
 					output[i] += raw_output[c][i]
-					output[i] -= raw_output[c][i + (output_count/2)]
+					output[i] -= raw_output[c][i + int(output_count/2)]
 
 				output[i] = (output[i]/float(brain_speed))
 
@@ -531,11 +531,11 @@ def evaluate_potion_store_performance(test_brain, visualization_mode):
 		
 
 			time += 1
-	
+			if visualization_mode == Learning_flags.VISUALIZATION_ON:
+				test_instance.print_activation_record()
 		total_score += correct_potions
 		if visualization_mode == Learning_flags.VISUALIZATION_ON:
 			print("NUMBER CORRECT: " + str(correct_potions))
-
 	return float(total_score/(correct_limit*15)) * 100.0
 			
 
