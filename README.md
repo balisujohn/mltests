@@ -41,7 +41,7 @@ provides a visualization of the performance of the toplogy specified by the prov
 
 ## Python architecture
 
-python ./main.py \<mode\> \<environment\> \<learning_algorithm\> \<file_name\>
+python3 ./main.py \<mode\> \<environment\> \<learning_algorithm\> \<file_name\>
 
 
 ### modes:
