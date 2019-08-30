@@ -10,7 +10,6 @@ import copy
 import math
 import utils
 import json
-import gym
 
 
 ######## ##    ## ##     ## ##     ##
@@ -31,10 +30,7 @@ class Brain_flags(Enum): ## dont change the existing ones without updating in mu
 	SENSOR_LINEAR_THRESHOLD_UP = 5
 	SENSOR_LINEAR_THRESHOLD_DOWN = 6
 	SENSOR_BINARY = 7
-	PROCESSING_GENERIC= 8
-	PROCESSING_CORRELATOR = 9
-	PROCESSING_DECORRELATOR = 10
-	
+
 
 
 ##     ## ##     ## ########    ########  ########  ##     ##
@@ -51,10 +47,10 @@ class Brain_flags(Enum): ## dont change the existing ones without updating in mu
 class Mutation_params():
 	swap_prob = .1
 	neuron_count_prob = .5
-	neuron_count_bias = .6 #currently slight growth bias 
+	neuron_count_bias = .5 
 	target_limit = 5
 	target_count_prob = .25
-	target_count_bias = .75
+	target_count_bias = .5
 	retarget_prob = .25
 	potential_prob = .1
 	potential_strength = .1
@@ -68,18 +64,11 @@ class Mutation_params():
 	actuating_prob = .25
 	hidden_prob = .1
 
-	correlator_prob = .05
-	decorrelator_prob = .05
-	generic_prob = .01
-
 	mutation_cycles = 1
 	upper_input_bounds = []
 	lower_input_bounds = []
 
-	population_size = 10
-	innovation_counter = 0
 
-	activation_record_length = 10
 
 	def set_mutation_to_default_1(self): # most basic default setting, employing no experimental mutations
 		self.swap_prob = .1
@@ -112,13 +101,8 @@ class Mutation_params():
 		self.upper_input_bounds = []
 		self.lower_input_bounds = []
 
-		self.population_size = 10
-		self.innovation_counter = 0
 
-		self.activation_record_length = 10
-
-
-	def supress_mutation(self):
+	def supress_mutation(self): #todo review for correctness
 		self.swap_prob += (1-self.swap_prob)/2
 		self.neuron_count_prob +=(1-self.neuron_count_prob)/2
 		self.target_count_prob +=(1-self.target_count_prob)/2
@@ -176,32 +160,11 @@ class Neuron:
 		
 		self.type = Brain_flags.NEURON_HIDDEN
 		self.sensor_type = Brain_flags.SENSOR_BINARY # not initalized to consistent vales(not used until neuron set to sensory or actuating)
-		self.proc_type = Brain_flags.PROCESSING_GENERIC # initialized to non weight-altering neuron
 		self.external_index = 0
 		self.external_thresh = 0
 		self.external_bit = 0
 		
-		self.activation_record = [[] for i in range(Mutation_params.activation_record_length)]
-		self.available_ar = 0
 
-
-#todo continue work on experimental activation record
-	def add_activation(self, source):
-		self.activation_record.append(source)
-		self.available_ar = min(self.available_ar+1, Mutation_params.activation_record_length)
-		assert(len(self.activation_record) == Mutation_params.activation_record_length + 1)
-		self.activation_record = self.activation_record[1:]
-		assert(len(self.activation_record) == Mutation_params.activation_record_length )
-
-
-	def print_activation_record(self):
-		print ("AVAILABLE ACTIVATION RECORDS: " + str(self.available_ar))
-		for index, activation in enumerate(self.activation_record):
-			print("T-" + str(index)  + " TIMEFRAME: ", end = "" )
-			for source in activation:
-				print(str(source), end = ",")
-			print()
-			 
 
 
 ########  ########     ###    #### ##    ##
@@ -412,20 +375,7 @@ class Brain:
 						neuron.targets[i] = index1
 			#self.verify_network_consistency()
 	
-	#experimental neuron processing type mutation
-	def processing_mutation(self):
-		pass
-
-		"""for neuron in self.neurons:
-			selection = uniform(0,1)			
-			if selection < Mutation_params.generic_prob:
-			self.processing_type = 
 	
-			elif selection < Mutation_params.generic_prob + Mutation_params.correlator_prob:
-			
-			elif selection < Mutation_params.generic_prob + Mutation_params.correlator_prob + Mutation_params.decorrelator_prob:"""	
-		
-		
 
 	#reflex pair mutation
 	#simple topologies often rely on simple input-output mappings. This mutation attempts to capitalize on this.
@@ -545,8 +495,8 @@ class Brain:
 					
 					assert(self.neurons[i].targets[c] < self.neuron_count)
 					sums[self.neurons[i].targets[c]] += self.neurons[i].potential_weights[c]
-					if i not in current_av_record[self.neurons[i].targets[c]]:
-						current_av_record[self.neurons[i].targets[c]].append(i)
+					#if i not in current_av_record[self.neurons[i].targets[c]]:
+					#	current_av_record[self.neurons[i].targets[c]].append(i)
 
 				
 				self.neurons[i].fired = 1
@@ -560,8 +510,8 @@ class Brain:
 					
 							assert(self.neurons[i].targets[c] < self.neuron_count)
 							sums[self.neurons[i].targets[c]] += self.neurons[i].potential_weights[c]
-							if i not in current_av_record[self.neurons[i].targets[c]]:
-								current_av_record[self.neurons[i].targets[c]].append(i)
+							#if i not in current_av_record[self.neurons[i].targets[c]]:
+							#	current_av_record[self.neurons[i].targets[c]].append(i)
 						self.neurons[i].fired = 1
 						self.neurons[i].excitation = 0.0
 				elif self.neurons[i].sensor_type == Brain_flags.SENSOR_LINEAR_THRESHOLD_UP:
@@ -570,8 +520,8 @@ class Brain:
 					
 							assert(self.neurons[i].targets[c] < self.neuron_count)
 							sums[self.neurons[i].targets[c]] += self.neurons[i].potential_weights[c]
-							if i not in current_av_record[self.neurons[i].targets[c]]:
-								current_av_record[self.neurons[i].targets[c]].append(i)
+							#if i not in current_av_record[self.neurons[i].targets[c]]:
+								#current_av_record[self.neurons[i].targets[c]].append(i)
 						self.neurons[i].fired = 1
 						self.neurons[i].excitation = 0.0
 				elif self.neurons[i].sensor_type == Brain_flags.SENSOR_LINEAR_THRESHOLD_DOWN:
@@ -580,8 +530,8 @@ class Brain:
 					
 							assert(self.neurons[i].targets[c] < self.neuron_count)
 							sums[self.neurons[i].targets[c]] += self.neurons[i].potential_weights[c]
-							if i not in current_av_record[self.neurons[i].targets[c]]:
-								current_av_record[self.neurons[i].targets[c]].append(i)
+						#	if i not in current_av_record[self.neurons[i].targets[c]]:
+							#	current_av_record[self.neurons[i].targets[c]].append(i)
 						self.neurons[i].fired = 1
 						self.neurons[i].excitation = 0.0
 				elif self.neurons[i].sensor_type == Brain_flags.SENSOR_BINARY:
@@ -590,15 +540,15 @@ class Brain:
 					
 							assert(self.neurons[i].targets[c] < self.neuron_count)
 							sums[self.neurons[i].targets[c]] += self.neurons[i].potential_weights[c]
-							if i not in current_av_record[self.neurons[i].targets[c]]:
-								current_av_record[self.neurons[i].targets[c]].append(i)
+							#if i not in current_av_record[self.neurons[i].targets[c]]:
+							#	current_av_record[self.neurons[i].targets[c]].append(i)
 						self.neurons[i].fired = 1
 						self.neurons[i].excitation = 0.0
 			self.neurons[i].excitation = self.neurons[i].excitation/2.0
 		
 		for i in range(self.neuron_count):
 			self.neurons[i].excitation += sums[i]
-			self.neurons[i].add_activation(current_av_record[i])
+			#self.neurons[i].add_activation(current_av_record[i])
 
 
 		#assert(len(inputs) + output_length + 1 <= self.neuron_count )
