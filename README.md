@@ -31,18 +31,18 @@ microworlds 1 and 2 can be run from the command line in three modes
 runs neuro-evolution from scratch, saving generated toplogy to ./log.txt
 
 ```
-./microworld1 improve \<file_name\>
+./microworld1 improve <file_name>
 ```
 runs neuro-evolution, starting from an existing topology, and saves to ./log.txt as higher-scoring topologies are found
 ```
-./microworld1 analyze \<file_name\>
+./microworld1 analyze <file_name>
 ```
 provides a visualization of the performance of the toplogy specified by the provided file on the microworld task.
 
 
 ## Python architecture
 ```
-python3 ./main.py \<mode\> \<environment\> \<learning_algorithm\> \<file_name\>
+python3 ./main.py <mode> <environment> <learning_algorithm> <file_name>
 ```
 
 ### modes:
