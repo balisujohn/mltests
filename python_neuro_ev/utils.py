@@ -1,4 +1,16 @@
 import gym
+from time import sleep 
+from os import system, name 
+
+
+#takes sleep time in seconds after clearing as an argument
+def clear(sleep_time): 
+  
+	if name == 'nt': 
+		_ = system('cls')
+	else: 
+		_ = system('clear') 
+	sleep(sleep_time)
 
 
 

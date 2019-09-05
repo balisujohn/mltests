@@ -1,49 +1,89 @@
 
+import sys
+import os
+sys.path.insert(0,"..")
 import numpy as np
 import copy
-import sys
-
-SECTOR_SIZE = 10
-SECTOR_COUNT = 2
-
-SYM_EMPTY = 0
-SYM_AGENT = 1
-SYM_STRIDER = 2
-SYM_CAPSULE = 3
+from random import uniform 
+from enum import IntEnum
+from utils import clear
+import pprint
 
 
-baseline_densities = {SYM_AGENT : .05, SYM_STRIDER: .01 , SYM_CAPSULE : .25}
-degen_enabled = {SYM_AGENT : False, SYM_STRIDER: False , SYM_CAPSULE : True}
-
-def norm_dict(data):
-	scaling = sum(data.values())
-	for key in data:
-		data[key] /= scaling
-	
-
-def create_sector():
-	info = {SYM_EMPTY : 0, SYM_AGENT: 0, SYM_CAPSULE : 0, SYM_STRIDER : 0} # 
-	sector_shape = (SECTOR_SIZE, SECTOR_SIZE)
-	return info, np.zeros(sector_shape)
+class Object_type(IntEnum):
+	EMPTY = 0
+	AGENT = 1
+	STRIDER = 2
+	CAPSULE = 3
 
 
-def transform_cell(info,curr_sym):
-	if curr_sym == SYM_EMPTY:
-		densities = dict([(key, info[key]/ SECTOR_SIZE ** SECTOR_SIZE) for key in info])
-		offsets = dict([(key,baseline_densities[key] - info[key]) for key in baseline_densities])	
-		norm_dict(offsets)
-		print(offsets)
+class Grid():
+
+	def __init__(self, sector_size):
+		self.info = {Object_type.AGENT : 0, Object_type.EMPTY: sector_size * sector_size, Object_type.CAPSULE : 0, Object_type.STRIDER : 0} 
+		sector_shape = (sector_size, sector_size)
+		self.grid = np.zeros(sector_shape)
+		# for objects which may experience spontaneous generation and degeneration, these numbers
+		# describe as a percent the percent of occupied space generation and degeneration will trend 
+		# towards for each item. 
+		self.baseline_densities = {Object_type.EMPTY : .30, Object_type.STRIDER: .01 , Object_type.CAPSULE : .25}
+		# specifies whether spontaneous degeneration is enabled for items.
+		self.degen_enabled = {Object_type.AGENT : False, Object_type.STRIDER: False , Object_type.CAPSULE : True}
+		self.sector_size = sector_size
 
 
-def passive_physics(info, sector):
-	old_info = copy.deepcopy(info)
-	for i in range(len(sector)):
-		for c in range(len(sector[0])):
-				sym = transform_cell(old_info,sector[i][c])
-				sector[i][c] = sym
-				info[sym] += 1
-				sys.exit(1)
-	
+	def visualize_grid(self):
+		for i in range(self.sector_size):
+			for c in range(self.sector_size):
+				print(self.grid[i][c], end = "")
+			print()
+
+
+
+	def norm_dict(self, value_dict):
+		result = copy.deepcopy(value_dict)
+		val_sum = sum(result.values())
+		for key in value_dict:
+			result[key] = result[key]/float(val_sum) 
+		return result
+
+
+	def passive_cell_update(self, curr_sym, offsets, baseline_densities):
+		#print([value for key,value in offsets.items()])
+		# the probability of any sort of generation or degeneration occuring is equal to the current offset from baseline densities
+		#divided by the total possible offset form baseline densities. 
+	#	print("offsets")
+		#print(offsets)
+		#print(offsets.values())
+		if uniform(0,1) < sum ([abs(value) for value in offsets.values()]) / len(list(baseline_densities.values())):
+			selector = uniform(0,1)
+			total_prob = 0.0
+			offsets = self.norm_dict(offsets)
+			for key, value in offsets.items():
+				total_prob += value
+				if total_prob  >= selector:
+					return key
+				
+
+		return curr_sym
+
+	def passive_physics(self):
+		old_info = copy.deepcopy(self.info)
+		densities = dict([(key, old_info[key]/ self.sector_size * self.sector_size) for key in old_info])
+	#	print(densities)
+		offsets = dict([(key,self.baseline_densities[key] - densities[key]) for key in self.baseline_densities])	
+		#print(offsets)
+		for i in range(self.sector_size):
+			for c in range(self.sector_size):
+				sym = self.passive_cell_update(self.grid[i][c],offsets, self.baseline_densities)
+				if int(sym) != self.grid[i][c]:
+					self.info[Object_type(self.grid[i][c])] -= 1
+					self.info[sym] += 1
+					self.grid[i][c] = int(sym)
+				
+
+			
+		
 
 
 
@@ -53,11 +93,13 @@ def passive_physics(info, sector):
 
 #physics/agent pass
 # physics objects and agent updates
-
-(info, sector) = create_sector()
-info = passive_physics(info,sector)
-
-
+if __name__ == '__main__':
+	grid = Grid(20)
+	for i in range(999999999):
+		grid.passive_physics()
+		grid.visualize_grid()
+		pprint.pprint(grid.info)
+		clear(1)
 
 
 
