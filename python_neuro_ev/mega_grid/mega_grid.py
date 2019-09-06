@@ -26,9 +26,9 @@ class Grid():
 		# for objects which may experience spontaneous generation and degeneration, these numbers
 		# describe as a percent the percent of occupied space generation and degeneration will trend 
 		# towards for each item. 
-		self.baseline_densities = {Object_type.EMPTY : .30, Object_type.STRIDER: .01 , Object_type.CAPSULE : .25}
+		self.baseline_densities = { Object_type.EMPTY : .74, Object_type.STRIDER: .01 , Object_type.CAPSULE : .25}
 		# specifies whether spontaneous degeneration is enabled for items.
-		self.degen_enabled = {Object_type.AGENT : False, Object_type.STRIDER: False , Object_type.CAPSULE : True}
+		self.degen_enabled = {Object_type.AGENT : False, Object_type.STRIDER: True , Object_type.CAPSULE : True ,Object_type.EMPTY : True}
 		self.sector_size = sector_size
 
 
@@ -55,7 +55,7 @@ class Grid():
 	#	print("offsets")
 		#print(offsets)
 		#print(offsets.values())
-		if uniform(0,1) < sum ([abs(value) for value in offsets.values()]) / len(list(baseline_densities.values())):
+		if uniform(0,1) < sum ([abs(value) for value in offsets.values()]) / len(list(baseline_densities.values())) and self.degen_enabled[curr_sym]:
 			selector = uniform(0,1)
 			total_prob = 0.0
 			offsets = self.norm_dict(offsets)
@@ -69,9 +69,9 @@ class Grid():
 
 	def passive_physics(self):
 		old_info = copy.deepcopy(self.info)
-		densities = dict([(key, old_info[key]/ self.sector_size * self.sector_size) for key in old_info])
-	#	print(densities)
-		offsets = dict([(key,self.baseline_densities[key] - densities[key]) for key in self.baseline_densities])	
+		densities = dict([(key, old_info[key]/ (self.sector_size * self.sector_size)) for key in old_info])
+		#print(densities)
+		offsets = dict([(key,abs(self.baseline_densities[key] - densities[key])) for key in self.baseline_densities])	
 		#print(offsets)
 		for i in range(self.sector_size):
 			for c in range(self.sector_size):

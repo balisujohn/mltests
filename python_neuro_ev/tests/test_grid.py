@@ -1,5 +1,5 @@
 import unittest
-from unittest.mock import patch
+from unittest.mock import patch , call
 import sys
 import os
 sys.path.append(os.path.join(os.path.dirname(__file__), "../mega_grid"))
@@ -51,8 +51,21 @@ class test_grid(unittest.TestCase):
         result = grid.passive_cell_update(grid.grid[0][0], offsets, baseline_densities)
         self.assertEqual(result , Object_type.EMPTY)
 
-
-
+    @patch('mega_grid.Grid.passive_cell_update')
+    def test_passive_physics(self, mock_passive_cell_update):
+        grid = Grid(2)
+        mock_passive_cell_update.return_value = Object_type.CAPSULE
+        grid.passive_physics()
+        desired_result = [
+            call.mock_passive_cell_update(0,{Object_type.EMPTY:  0.26, Object_type.STRIDER:  0.01, Object_type.CAPSULE:  0.25}, {Object_type.EMPTY:  0.74, Object_type.STRIDER:  0.01, Object_type.CAPSULE:  0.25}),
+            call.mock_passive_cell_update(0,{Object_type.EMPTY:  0.26, Object_type.STRIDER:  0.01, Object_type.CAPSULE:  0.25}, {Object_type.EMPTY:  0.74, Object_type.STRIDER:  0.01, Object_type.CAPSULE:  0.25}),
+            call.mock_passive_cell_update(0,{Object_type.EMPTY:  0.26, Object_type.STRIDER:  0.01, Object_type.CAPSULE:  0.25}, {Object_type.EMPTY:  0.74, Object_type.STRIDER:  0.01, Object_type.CAPSULE:  0.25}),
+            call.mock_passive_cell_update(0,{Object_type.EMPTY:  0.26, Object_type.STRIDER:  0.01, Object_type.CAPSULE:  0.25}, {Object_type.EMPTY:  0.74, Object_type.STRIDER:  0.01, Object_type.CAPSULE:  0.25})
+        ]
+        self.assertEqual(desired_result, mock_passive_cell_update.mock_calls)
+        for i in range(grid.sector_size):
+            for c in range(grid.sector_size):
+                self.assertEqual(grid.grid[i][c], int(Object_type.CAPSULE))
 
 if __name__ == '__main__':
     unittest.main()
