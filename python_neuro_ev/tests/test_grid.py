@@ -67,5 +67,25 @@ class test_grid(unittest.TestCase):
             for c in range(grid.sector_size):
                 self.assertEqual(grid.grid[i][c], int(Object_type.CAPSULE))
 
+
+
+    def test_sense(self):
+        grid = Grid(3)
+        grid.grid[0][1] = Object_type.CAPSULE
+        grid.grid[2][0] = Object_type.STRIDER
+        result1 = grid.sense((1,0), Direction.UP)
+        self.assertEqual(result1, (0,0,0))
+        result2 = grid.sense((1,1), Direction.UP)
+        self.assertEqual(result2, (0,0,1))
+        result3 = grid.sense((2,0), Direction.LEFT)
+        self.assertEqual(result3, (0,0,1))
+        result4 = grid.sense((0,0), Direction.RIGHT)
+        self.assertEqual(result4, (0,0,1))
+        result5 = grid.sense((0,0), Direction.DOWN)
+        self.assertEqual(result5, (0,1,0))
+
+
+
+
 if __name__ == '__main__':
     unittest.main()

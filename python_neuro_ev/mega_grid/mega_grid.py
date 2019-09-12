@@ -17,7 +17,17 @@ class Object_type(IntEnum):
 	CAPSULE = 3
 
 
+class Direction(IntEnum):
+	UP = 0
+	RIGHT = 1
+	DOWN = 2
+	LEFT = 3
+
+
+
 class Grid():
+
+	object_colors = {Object_type.AGENT: (1,0,0), Object_type.STRIDER: (0,1,0), Object_type.CAPSULE: (0,0,1)}
 
 	def __init__(self, sector_size):
 		self.info = {Object_type.AGENT : 0, Object_type.EMPTY: sector_size * sector_size, Object_type.CAPSULE : 0, Object_type.STRIDER : 0} 
@@ -39,6 +49,35 @@ class Grid():
 			print()
 
 
+	def sense(self, coordinates, direction): # ray tracing in a 2 dimensional discrete grid to determine the value of a single pixel sensor
+		x_coord = coordinates[0]
+		y_coord = coordinates[1]
+
+		if direction == Direction.UP:
+			while y_coord > 0:
+				y_coord -= 1
+				if self.grid[y_coord][x_coord] != int(Object_type.EMPTY):
+					return self.object_colors[Object_type(self.grid[y_coord][x_coord])]
+
+		elif direction == Direction.LEFT:
+			while x_coord > 0:
+				x_coord -= 1
+				if self.grid[y_coord][x_coord] != int(Object_type.EMPTY):
+					return self.object_colors[Object_type(self.grid[y_coord][x_coord])]
+
+		elif direction == Direction.RIGHT:
+			while x_coord < self.sector_size-1:
+				x_coord += 1
+				if self.grid[y_coord][x_coord] != int(Object_type.EMPTY):
+					return self.object_colors[Object_type(self.grid[y_coord][x_coord])]
+
+		elif direction == Direction.DOWN:
+			while y_coord < self.sector_size-1:
+				y_coord += 1
+				if self.grid[y_coord][x_coord] != int(Object_type.EMPTY):
+					return self.object_colors[Object_type(self.grid[y_coord][x_coord])]
+
+		return (0,0,0)
 
 	def norm_dict(self, value_dict):
 		result = copy.deepcopy(value_dict)
@@ -70,9 +109,9 @@ class Grid():
 	def passive_physics(self):
 		old_info = copy.deepcopy(self.info)
 		densities = dict([(key, old_info[key]/ (self.sector_size * self.sector_size)) for key in old_info])
-		#print(densities)
+		print(densities)
 		offsets = dict([(key,abs(self.baseline_densities[key] - densities[key])) for key in self.baseline_densities])	
-		#print(offsets)
+		print(offsets)
 		for i in range(self.sector_size):
 			for c in range(self.sector_size):
 				sym = self.passive_cell_update(self.grid[i][c],offsets, self.baseline_densities)
@@ -82,8 +121,15 @@ class Grid():
 					self.grid[i][c] = int(sym)
 				
 
-			
-		
+class Agent():
+	def __init__(self, coords, brain):
+		self.coords = coords
+		self.brain = brain
+		self.direction = Direction.UP
+	
+	## sensing calculate sensory data
+	## evaluation decide on action
+	## active physics(actuation phase)
 
 
 
