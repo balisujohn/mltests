@@ -17,11 +17,20 @@ class Object_type(IntEnum):
 	CAPSULE = 3
 
 
+
+# enum for direction, we're going to be a bit hacky with this and actually use the integer to make cycling through directions easier
 class Direction(IntEnum):
 	UP = 0
 	RIGHT = 1
 	DOWN = 2
 	LEFT = 3
+
+
+class Action_type (IntEnum):
+	MOVE = 0
+
+
+
 
 
 
@@ -33,6 +42,8 @@ class Grid():
 		self.info = {Object_type.AGENT : 0, Object_type.EMPTY: sector_size * sector_size, Object_type.CAPSULE : 0, Object_type.STRIDER : 0} 
 		sector_shape = (sector_size, sector_size)
 		self.grid = np.zeros(sector_shape)
+		self.agents = {}
+		self.movement_queue = []
 		# for objects which may experience spontaneous generation and degeneration, these numbers
 		# describe as a percent the percent of occupied space generation and degeneration will trend 
 		# towards for each item. 
@@ -49,8 +60,27 @@ class Grid():
 			print()
 
 
-	def sense(self, coordinates, direction): # ray tracing in a 2 dimensional discrete grid to determine the value of a single pixel sensor
-		x_coord = coordinates[0]
+	def add_agent(self, coords): #todo add new brain 
+		self.grid[coords[1]][coords[0]] = Object_type.AGENT
+		dummy_brain = []
+		self.agents[coords] = Agent(dummy_brain)
+
+	def check_movement(self, coords):
+		for coord in coords:
+			if coord < 0 or coord >= self.sector_size:
+				return False
+		if Object_type(self.grid[coords[1]][coords[0]]) != Object_type.EMPTY:
+			return False
+		return True
+
+
+
+	###
+	# ray tracing in a 2 dimensional discrete grid to determine the value of a single pixel sensor
+	# for now we are forgoing depth perception
+	###
+	def sense(self, coordinates, direction): 
+		x_coord = coordinates[0] 
 		y_coord = coordinates[1]
 
 		if direction == Direction.UP:
@@ -122,14 +152,45 @@ class Grid():
 				
 
 class Agent():
-	def __init__(self, coords, brain):
-		self.coords = coords
+	def __init__(self, brain):
 		self.brain = brain
 		self.direction = Direction.UP
 	
 	## sensing calculate sensory data
 	## evaluation decide on action
 	## active physics(actuation phase)
+
+	def apply_direction_offset(self, direction):
+		offset = int(direction)
+		return Direction((self.direction + offset) % 4)
+
+
+
+	###
+	# moves the agent if there is no physical obstruction in the world, updating both the the agent's and the world's info for the new frame of time. 
+	###
+	def move(self , relative_direction, grid, coords):
+		move_direction = self.apply_direction_offset(relative_direction)
+		if move_direction == Direction.UP:
+			new_coords = (coords[0], coords[1]-1)
+			grid.movement_queue.append((coords, new_coords , Action_type.MOVE))
+		elif move_direction == Direction.RIGHT:
+			new_coords = (coords[0]+1, coords[1])
+			grid.movement_queue.append((coords, new_coords,Action_type.MOVE))
+		elif move_direction == Direction.DOWN:
+			new_coords = (coords[0], coords[1]+1)
+			grid.movement_queue.append((coords, new_coords,Action_type.MOVE))
+		elif move_direction == Direction.LEFT:
+			new_coords = (coords[0]-1, coords[1])
+			grid.movement_queue.append((coords, new_coords,Action_type.MOVE))
+		
+
+
+		##
+		# should only be called with Direction.LEFT or Direction.RIGHT
+		##
+	def turn(self, turn_direction):
+		self.direction = self.apply_direction_offset(turn_direction)
 
 
 
