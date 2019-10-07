@@ -1,13 +1,15 @@
 
 import sys
 import os
-sys.path.insert(0,"..")
+sys.path.insert(0,".")
+sys.path.insert(0,"./base_SNN")
 import numpy as np
 import copy
-from random import uniform 
+from random import uniform,shuffle
 from enum import IntEnum
 from utils import clear
 import pprint
+import brain
 
 
 class Object_type(IntEnum):
@@ -62,8 +64,8 @@ class Grid():
 
 	def add_agent(self, coords): #todo add new brain 
 		self.grid[coords[1]][coords[0]] = Object_type.AGENT
-		dummy_brain = []
-		self.agents[coords] = Agent(dummy_brain)
+		brain_instance = brain.Brain()
+		self.agents[coords] = Agent(brain_instance)
 
 	def check_movement(self, coords):
 		for coord in coords:
@@ -149,6 +151,14 @@ class Grid():
 					self.info[Object_type(self.grid[i][c])] -= 1
 					self.info[sym] += 1
 					self.grid[i][c] = int(sym)
+
+
+	def advance_agents(self):
+		## get randomly ordered list of agents, sense, run, harvest actuation and publish to movement_queue
+		agent_keys = list(self.agents.keys())
+		shuffle(agent_keys)
+		for key in agent_keys: #useful to note here that each 'key' is a tuple containing agent location in (x,y) format
+			pass
 				
 
 class Agent():

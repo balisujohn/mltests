@@ -2,10 +2,8 @@ import unittest
 from unittest.mock import patch , call
 import sys
 import os
-sys.path.append(os.path.join(os.path.dirname(__file__), "../mega_grid"))
+sys.path.insert(0,"./mega_grid")
 from mega_grid import *
-
-
 class test_grid(unittest.TestCase):
     
     def test_norm_dict(self):

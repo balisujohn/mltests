@@ -1,5 +1,5 @@
 import sys
-sys.path.insert(0,"..")
+sys.path.insert(0,".")
 
 #John Balis 2019
 #for support email balisujohn@gmail.com
@@ -45,6 +45,7 @@ class Brain_flags(Enum): ## dont change the existing ones without updating in mu
 #Global mutation parameters, here set to defaults
 
 class Mutation_params():
+	neuron_start_count = 1
 	swap_prob = .1
 	neuron_count_prob = .5
 	neuron_count_bias = .5 
@@ -71,6 +72,7 @@ class Mutation_params():
 
 
 	def set_mutation_to_default_1(self): # most basic default setting, employing no experimental mutations
+		self.neuron_start_count = 1
 		self.swap_prob = .1
 		self.neuron_count_prob = .5
 		self.neuron_count_bias = .5
@@ -190,10 +192,10 @@ class Brain:
 
 
 
-	def __init__(self, neuron_count):
-		self.neuron_count = neuron_count
+	def __init__(self):
+		self.neuron_count = Mutation_params.neuron_start_count
 		self.neurons = []
-		for i in range(neuron_count):			
+		for i in range(self.neuron_count):			
 			self.neurons.append(Neuron())
 	
          ########  ########  #### ##    ## ########
@@ -216,10 +218,10 @@ class Brain:
 		print('NEURON COUNT RECORD: ' + str(self.neuron_count))
 		print('NEURON COUNT: ' + str(len(self.neurons)))
 			
-	def print_activation_record(self):
-		for index, neuron in enumerate(self.neurons):
-			print("NEURON " + str(index) + ":")		
-			neuron.print_activation_record()
+	#def print_activation_record(self):
+		#for index, neuron in enumerate(self.neurons):
+		#	print("NEURON " + str(index) + ":")		
+		#	neuron.print_activation_record()
 		
 
 
@@ -645,7 +647,8 @@ def print_brain_to_file(brain):
 def load_brain_from_file(file_name):
 	with open(file_name) as json_file:
 		brain_json = json.load(json_file)
-		load_brain = Brain(0)
+		load_brain = Brain()
+		load_brain.neurons = []
 		load_brain.neuron_count = brain_json['neuronCount']
 		for neuron_json in brain_json['neurons']:
 			new_neuron = Neuron()

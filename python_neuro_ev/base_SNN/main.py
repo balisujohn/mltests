@@ -15,7 +15,12 @@ import logging
 def set_potion_store_params(): # make sure you update the variables in the learning function if you update input_count here
 	brain.Mutation_params.set_mutation_to_default_1(brain.Mutation_params)
 	brain.Mutation_params.input_count = 8
+	brain.Mutation_params.mutation_cycles = 5
 	brain.Mutation_params.output_count = 1
+	brain.Mutation_params.neuron_count_bias = .9
+	brain.Mutation_params.reflex_pair_prob = .1
+	brain.Mutation_params.target_count_bias = .75
+
 	brain.Mutation_params.upper_input_bounds = [.00000001] * 8
 	brain.Mutation_params.lower_input_bounds = [-.000000001] * 8
 

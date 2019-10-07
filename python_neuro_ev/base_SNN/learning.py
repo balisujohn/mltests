@@ -1,5 +1,5 @@
 import sys
-sys.path.insert(0,"..")
+sys.path.insert(0,".")
 import brain
 import logging
 from enum import Enum
@@ -531,8 +531,8 @@ def evaluate_potion_store_performance(test_brain, visualization_mode):
 		
 
 			time += 1
-			if visualization_mode == Learning_flags.VISUALIZATION_ON:
-				test_instance.print_activation_record()
+			#if visualization_mode == Learning_flags.VISUALIZATION_ON:
+				#test_instance.print_activation_record()
 		total_score += correct_potions
 		if visualization_mode == Learning_flags.VISUALIZATION_ON:
 			print("NUMBER CORRECT: " + str(correct_potions))
@@ -580,7 +580,7 @@ def learn(existing_brain, eval_function):
 	if existing_brain != None:
 		best_brain = existing_brain
 	else:
-		best_brain = brain.Brain(1)
+		best_brain = brain.Brain()
 	benchmark_instance = copy.deepcopy(best_brain)
 	best_score = eval_function(benchmark_instance, Learning_flags.VISUALIZATION_OFF)
 	print('NEW BEST SCORE: ' + str(best_score))
@@ -633,7 +633,7 @@ def population_learn(existing_brain, eval_function):
 
 	if existing_brain == None:
 		for i in range(population_size):
-			population.append( [0,brain.Brain(1)] )
+			population.append( [0,brain.Brain()] )
 	else:
 		for i in range(population_size):
 			population.append( [0,copy.deepcopy(existing_brain)] )
@@ -691,7 +691,7 @@ def impatient_learn(existing_brain, eval_function):
 	if existing_brain != None:
 		best_brain = existing_brain
 	else:
-		best_brain = brain.Brain(1)
+		best_brain = brain.Brain()
 	benchmark_instance = copy.deepcopy(best_brain)
 
 	best_score = eval_function(benchmark_instance, Learning_flags.VISUALIZATION_OFF)
