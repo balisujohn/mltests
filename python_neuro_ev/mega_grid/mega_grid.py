@@ -12,6 +12,16 @@ import pprint
 import brain
 
 
+def init_mega_grid_params():
+	brain.Mutation_params.set_mutation_to_default_1(brain.Mutation_params)
+	brain.Mutation_params.input_count = 3
+	brain.Mutation_params.output_count = 3
+	brain.Mutation_params.upper_input_bounds = [.0000001] * 3
+	brain.Mutation_params.lower_input_bounds = [-.0000001] * 3
+
+
+
+
 class Object_type(IntEnum):
 	EMPTY = 0
 	AGENT = 1
@@ -158,7 +168,25 @@ class Grid():
 		agent_keys = list(self.agents.keys())
 		shuffle(agent_keys)
 		for key in agent_keys: #useful to note here that each 'key' is a tuple containing agent location in (x,y) format
-			pass
+			agent = self.agents[key]
+			#sense
+			observations = self.sense(key, agent.direction)
+			output = []
+			for i in range(len(observations)): ## setting our bounds appropriately for threshold mutations
+				brain.Mutation_params().upper_input_bounds[i] = max(brain.Mutation_params().upper_input_bounds[i],observations[i])
+				brain.Mutation_params().lower_input_bounds[i] = min(brain.Mutation_params().lower_input_bounds[i],observations[i])
+
+			
+			for i in range(5):
+				output.append(test_instance.advance(observations, 3))
+				
+
+			#harvest actuation
+			
+
+
+
+			#public to movement_queue
 				
 
 class Agent():

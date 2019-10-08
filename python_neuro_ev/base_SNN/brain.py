@@ -10,6 +10,7 @@ import copy
 import math
 import utils
 import json
+import numpy 
 
 
 ######## ##    ## ##     ## ##     ##
@@ -568,7 +569,15 @@ class Brain:
 			else:
 				outputs[i] = 0
 		return outputs
-	
+
+
+
+	def advance_n_with_mode(self, inputs, output_length, n_iterations):
+		results = []
+		for i in range(n_iterations):
+			results.append(self.advance(input,output_length))
+		return utils.extract_output_modes(results)
+
 
  ######  ########   #######   ######   ######   #######  ##     ## ######## ########
 ##    ## ##     ## ##     ## ##    ## ##    ## ##     ## ##     ## ##       ##     ##

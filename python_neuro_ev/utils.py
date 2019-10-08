@@ -60,6 +60,25 @@ def binary_array_to_decimal(array):
 
 	return result
 	
+###
+# output is a list of lists, we return the mode of each list position across the lists
+#
+###
+def extract_output_modes(output):
+	result = [0]  * len(output[0])
+	for i in range(len(output[0])):
+		ones = 0
+		zeros = 0
+		for c in range(len(output)):
+			if output[c][i] == 1:
+				ones += 1
+			else: 
+				zeros += 1
+		if ones >= zeros:
+			result[i] = 1
+		else: 
+			result[i] = 0
+	return result 
 
 
 
