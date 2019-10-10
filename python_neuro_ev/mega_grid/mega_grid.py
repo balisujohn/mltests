@@ -6,15 +6,18 @@ sys.path.insert(0,"./base_SNN")
 import numpy as np
 import copy
 from random import uniform,shuffle
-from enum import IntEnum
+from enum import IntEnum, Enum
 from utils import clear
 import pprint
 import brain
-
+import utils 
 
 def init_mega_grid_params():
 	brain.Mutation_params.set_mutation_to_default_1(brain.Mutation_params)
+	brain.Mutation_params.neuron_start_count = 10
 	brain.Mutation_params.input_count = 3
+	brain.Mutation_params.reflex_pair_prob = .40
+	brain.Mutation_params.mutation_cycles = 5
 	brain.Mutation_params.output_count = 3
 	brain.Mutation_params.upper_input_bounds = [.0000001] * 3
 	brain.Mutation_params.lower_input_bounds = [-.0000001] * 3
@@ -39,9 +42,14 @@ class Direction(IntEnum):
 
 
 class Action_type (IntEnum):
-	MOVE = 0
+	PASS = 0
+	MOVE = 1
+	INTERACT = 2
 
-
+#Flags to determine visualization and learning mode DEPRECATED TODO REFACTOR
+class Learning_flags(Enum):
+	VISUALIZATION_ON = 1
+	VISUALIZATION_OFF = 2
 
 
 
@@ -55,7 +63,7 @@ class Grid():
 		sector_shape = (sector_size, sector_size)
 		self.grid = np.zeros(sector_shape)
 		self.agents = {}
-		self.movement_queue = []
+		self.action_queue = []
 		# for objects which may experience spontaneous generation and degeneration, these numbers
 		# describe as a percent the percent of occupied space generation and degeneration will trend 
 		# towards for each item. 
@@ -68,12 +76,30 @@ class Grid():
 	def visualize_grid(self):
 		for i in range(self.sector_size):
 			for c in range(self.sector_size):
-				print(self.grid[i][c], end = "")
+				print(int(self.grid[i][c]), end = "")
+			print()
+
+	def visualize_detailed_grid(self):
+		for i in range(self.sector_size):
+			for c in range(self.sector_size):
+				if self.grid[i][c] == int(Object_type.AGENT):
+					if self.agents[(c,i)].direction == Direction.UP:
+						print('^' , end = "")
+					if self.agents[(c,i)].direction == Direction.RIGHT:
+						print('>' , end = "")
+					if self.agents[(c,i)].direction == Direction.DOWN:
+						print('v' , end = "")
+					if self.agents[(c,i)].direction == Direction.LEFT:
+						print('<' , end = "")
+				else:
+					print(int(self.grid[i][c]), end = "")
 			print()
 
 
 	def add_agent(self, coords): #todo add new brain 
-		self.grid[coords[1]][coords[0]] = Object_type.AGENT
+		if self.grid[coords[1]][coords[0]] != int(Object_type.AGENT):
+			self.info[Object_type.AGENT] += 1
+		self.grid[coords[1]][coords[0]] = int(Object_type.AGENT)
 		brain_instance = brain.Brain()
 		self.agents[coords] = Agent(brain_instance)
 
@@ -84,6 +110,11 @@ class Grid():
 		if Object_type(self.grid[coords[1]][coords[0]]) != Object_type.EMPTY:
 			return False
 		return True
+
+	def move(self, start, dest):
+		if Object_type(self.grid[dest[1]][dest[0]]) == Object_type.EMPTY:
+			self.grid[dest[1]][dest[0]] = self.grid[start[1]][start[0]]
+			self.grid[start[1]][start[0]] = int(Object_type.EMPTY)
 
 
 
@@ -136,7 +167,7 @@ class Grid():
 	#	print("offsets")
 		#print(offsets)
 		#print(offsets.values())
-		if uniform(0,1) < sum ([abs(value) for value in offsets.values()]) / len(list(baseline_densities.values())) and self.degen_enabled[curr_sym]:
+		if (uniform(0,1) < sum ([abs(value) for value in offsets.values()]) / len(list(baseline_densities.values()))) and self.degen_enabled[Object_type(curr_sym)]:
 			selector = uniform(0,1)
 			total_prob = 0.0
 			offsets = self.norm_dict(offsets)
@@ -151,9 +182,7 @@ class Grid():
 	def passive_physics(self):
 		old_info = copy.deepcopy(self.info)
 		densities = dict([(key, old_info[key]/ (self.sector_size * self.sector_size)) for key in old_info])
-		print(densities)
 		offsets = dict([(key,abs(self.baseline_densities[key] - densities[key])) for key in self.baseline_densities])	
-		print(offsets)
 		for i in range(self.sector_size):
 			for c in range(self.sector_size):
 				sym = self.passive_cell_update(self.grid[i][c],offsets, self.baseline_densities)
@@ -164,11 +193,12 @@ class Grid():
 
 
 	def advance_agents(self):
-		## get randomly ordered list of agents, sense, run, harvest actuation and publish to movement_queue
+		## get randomly ordered list of agents, sense, run, harvest actuation and publish to action_queue
 		agent_keys = list(self.agents.keys())
 		shuffle(agent_keys)
 		for key in agent_keys: #useful to note here that each 'key' is a tuple containing agent location in (x,y) format
 			agent = self.agents[key]
+			agent.energy -= 1
 			#sense
 			observations = self.sense(key, agent.direction)
 			output = []
@@ -176,23 +206,30 @@ class Grid():
 				brain.Mutation_params().upper_input_bounds[i] = max(brain.Mutation_params().upper_input_bounds[i],observations[i])
 				brain.Mutation_params().lower_input_bounds[i] = min(brain.Mutation_params().lower_input_bounds[i],observations[i])
 
+
+			print(observations)
+			result = agent.brain.advance_n_with_mode(observations, 3, 10, utils.Visualization_flags.VISUALIZATION_ON)
+			print(result)
+			numerical_result = utils.binary_array_to_decimal(result)
+			print(numerical_result)
+			agent.generate_action(numerical_result, self.grid, key)
+
 			
-			for i in range(5):
-				output.append(test_instance.advance(observations, 3))
-				
-
-			#harvest actuation
-			
+	def active_physics(self):
+		for action in self.action_queue:
+			if (action[2] == Action_type.MOVE):
+				self.move(action[0], action[1])
 
 
 
-			#public to movement_queue
+			#public to action_queue
 				
 
 class Agent():
 	def __init__(self, brain):
 		self.brain = brain
 		self.direction = Direction.UP
+		self.energy = 20
 	
 	## sensing calculate sensory data
 	## evaluation decide on action
@@ -202,25 +239,26 @@ class Agent():
 		offset = int(direction)
 		return Direction((self.direction + offset) % 4)
 
-
+	def mutate(self):
+		self.brain.default_mutation(3,3)
 
 	###
 	# moves the agent if there is no physical obstruction in the world, updating both the the agent's and the world's info for the new frame of time. 
 	###
-	def move(self , relative_direction, grid, coords):
+	def publish_movement_action(self , relative_direction, grid, coords):
 		move_direction = self.apply_direction_offset(relative_direction)
 		if move_direction == Direction.UP:
 			new_coords = (coords[0], coords[1]-1)
-			grid.movement_queue.append((coords, new_coords , Action_type.MOVE))
+			grid.action_queue.append((coords, new_coords , Action_type.MOVE))
 		elif move_direction == Direction.RIGHT:
 			new_coords = (coords[0]+1, coords[1])
-			grid.movement_queue.append((coords, new_coords,Action_type.MOVE))
+			grid.action_queue.append((coords, new_coords,Action_type.MOVE))
 		elif move_direction == Direction.DOWN:
 			new_coords = (coords[0], coords[1]+1)
-			grid.movement_queue.append((coords, new_coords,Action_type.MOVE))
+			grid.action_queue.append((coords, new_coords,Action_type.MOVE))
 		elif move_direction == Direction.LEFT:
 			new_coords = (coords[0]-1, coords[1])
-			grid.movement_queue.append((coords, new_coords,Action_type.MOVE))
+			grid.action_queue.append((coords, new_coords,Action_type.MOVE))
 		
 
 
@@ -230,6 +268,24 @@ class Agent():
 	def turn(self, turn_direction):
 		self.direction = self.apply_direction_offset(turn_direction)
 
+	
+	def generate_action(self, selection, grid, coords):
+		if selection == 0:
+			pass ## no action
+		elif selection == 1:
+			self.turn(Direction.LEFT)
+		elif selection == 2:
+			self.turn(Direction.RIGHT)
+		elif selection == 3:
+			self.publish_movement_action(Direction.UP, self, coords)
+		elif selection == 4:
+			self.publish_movement_action(Direction.RIGHT, self, coords)
+		elif selection == 5:
+			self.publish_movement_action(Direction.DOWN, self, coords)
+		elif selection == 6:
+			self.publish_movement_action(Direction.LEFT, self, coords)
+		elif selection == 7:
+			pass #interact
 
 
 #phases of a world-frame
@@ -239,10 +295,17 @@ class Agent():
 #physics/agent pass
 # physics objects and agent updates
 if __name__ == '__main__':
+	init_mega_grid_params()
 	grid = Grid(20)
+	grid.add_agent((1,1))
+	grid.agents[(1,1)].mutate()
+
+
 	for i in range(999999999):
 		grid.passive_physics()
-		grid.visualize_grid()
+		grid.advance_agents()
+		grid.active_physics()
+		grid.visualize_detailed_grid()
 		pprint.pprint(grid.info)
 		clear(1)
 

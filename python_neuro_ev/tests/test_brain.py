@@ -3,7 +3,6 @@ from unittest.mock import patch
 import sys
 import os
 sys.path.insert(0,"./base_SNN")
-print(os.path.dirname(os.path.realpath(__file__)))
 import brain 
 
 

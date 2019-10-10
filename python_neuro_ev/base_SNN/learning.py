@@ -17,7 +17,7 @@ from itertools import combinations
 #for support email balisujohn@gmail.com
 
 
-#Flags to determine visualization and learning mode
+#Flags to determine visualization and learning mode DEPRECATED TODO REFACTOR
 class Learning_flags(Enum):
 	VISUALIZATION_ON = 1
 	VISUALIZATION_OFF = 2

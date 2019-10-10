@@ -10,7 +10,8 @@ import copy
 import math
 import utils
 import json
-import numpy 
+import numpy
+import visualization 
 
 
 ######## ##    ## ##     ## ##     ##
@@ -572,10 +573,13 @@ class Brain:
 
 
 
-	def advance_n_with_mode(self, inputs, output_length, n_iterations):
+	def advance_n_with_mode(self, inputs, output_length, n_iterations, visualization_flag):
 		results = []
 		for i in range(n_iterations):
-			results.append(self.advance(input,output_length))
+			results.append(self.advance(inputs,output_length))
+			if visualization_flag == utils.Visualization_flags.VISUALIZATION_ON:
+				visualization.visualize_brain(print_brain_to_json(self))	
+
 		return utils.extract_output_modes(results)
 
 

@@ -28,7 +28,7 @@ def render_changes():
 
 	
 
-def visualize_brain(input):
+def visualize_brain(input): ## visualizing a brain with fixed topology for the visualization session
 	brain = json.loads(input)
 
 	global g
@@ -69,4 +69,5 @@ def visualize_brain(input):
 				color_map[g.vertex(neuron_index)] = 'blue'
 			else:
 				color_map[g.vertex(neuron_index)] = 'gray'
+
 
