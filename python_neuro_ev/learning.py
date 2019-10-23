@@ -1,5 +1,6 @@
 import sys
 sys.path.insert(0,".")
+sys.path.insert(0,"./base_SNN")
 import brain
 import logging
 from enum import Enum
@@ -21,6 +22,11 @@ from itertools import combinations
 class Learning_flags(Enum):
 	VISUALIZATION_ON = 1
 	VISUALIZATION_OFF = 2
+
+
+
+def evaluate_solo_mega_grid(brain, visualization_mode):
+	test_instance = copy.deepcopy(brain) 
 
 
 
@@ -123,7 +129,7 @@ def evalute_pendulum_cart_performance(test_brain, visualization_mode):
 
 
 
-#unsolved
+#unsolved 
 #evaluates space invaders performance on an emulated Atari
 def evaluate_space_invaders_performance(test_brain, visualization_mode):
 

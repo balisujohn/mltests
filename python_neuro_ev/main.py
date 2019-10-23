@@ -1,6 +1,7 @@
+import sys
+sys.path.insert(0,"./base_SNN")
 import learning
 import brain
-import sys
 import gym 
 import logging
 
