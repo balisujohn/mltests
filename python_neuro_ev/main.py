@@ -1,7 +1,9 @@
 import sys
 sys.path.insert(0,"./base_SNN")
+sys.path.insert(0,"./mega_grid")
 import learning
 import brain
+from mega_grid import init_mega_grid_params
 import gym 
 import logging
 
@@ -11,6 +13,9 @@ import logging
 
 
 #parameterizations for various evaluation environments
+
+def set_solo_mega_grid_params():
+	init_mega_grid_params()
 
 
 def set_potion_store_params(): # make sure you update the variables in the learning function if you update input_count here
@@ -104,7 +109,8 @@ environments ={
 'chopper':learning.evaluate_chopper_performance,
 'pong':learning.evaluate_pong_performance,
 'pshoppe':learning.evaluate_potion_store_performance,
-'biped':learning.evaluate_biped_performance
+'biped':learning.evaluate_biped_performance,
+'sologrid':learning.evaluate_solo_mega_grid_performance
 }
 
 
@@ -117,7 +123,8 @@ environment_settings= {
 'chopper':set_chopper_params,
 'pong':set_pong_params,
 'pshoppe':set_potion_store_params,
-'biped':set_biped_params
+'biped':set_biped_params,
+'sologrid':set_solo_mega_grid_params
 
 }
 

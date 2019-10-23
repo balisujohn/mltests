@@ -1,6 +1,8 @@
 import sys
 sys.path.insert(0,".")
 sys.path.insert(0,"./base_SNN")
+sys.path.insert(0,"./mega_grid")
+import pprint
 import brain
 import logging
 from enum import Enum
@@ -9,7 +11,9 @@ import copy
 from random import randrange
 from random import uniform 
 import utils
+from utils import clear
 import gym
+import mega_grid
 import visualization
 from itertools import combinations 
 
@@ -25,8 +29,43 @@ class Learning_flags(Enum):
 
 
 
-def evaluate_solo_mega_grid(brain, visualization_mode):
-	test_instance = copy.deepcopy(brain) 
+def evaluate_solo_mega_grid_performance(brain, visualization_mode):
+	# We will see how long our agent survives on average over 10 trials of 1000 frames of time
+
+	#todo refactor this dumb bandaid
+	if visualization_mode == Learning_flags.VISUALIZATION_ON:
+		visualization_mode = utils.Visualization_flags.VISUALIZATION_ON
+	if visualization_mode == Learning_flags.VISUALIZATION_OFF:
+		visualization_mode = utils.Visualization_flags.VISUALIZATION_OFF
+
+
+	trials = 10
+	frame_limit = 1000
+
+	score = 0.0
+
+	for i in range(trials):
+		test_instance = copy.deepcopy(brain)
+		mega_grid.init_mega_grid_params()
+		grid = mega_grid.Grid(20)
+		grid.add_agent((0,0))
+		grid.agents[(0,0)].brain = test_instance
+		for c in range(frame_limit):
+			if grid.agents[(0,0)].energy <= 0:
+				break
+			score = score + 1
+			grid.passive_physics()
+			grid.advance_agents(visualization_mode)
+			grid.active_physics()
+			if visualization_mode == utils.Visualization_flags.VISUALIZATION_ON:
+				grid.visualize_detailed_grid()
+				pprint.pprint(grid.info)
+				clear(.0001)
+		
+	return score/ (trials * frame_limit) * 100
+			
+
+
 
 
 

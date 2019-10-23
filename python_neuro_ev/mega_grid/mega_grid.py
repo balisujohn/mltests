@@ -12,12 +12,14 @@ import pprint
 import brain
 import utils 
 
+
+
 def init_mega_grid_params():
 	brain.Mutation_params.set_mutation_to_default_1(brain.Mutation_params)
-	brain.Mutation_params.neuron_start_count = 10
+	brain.Mutation_params.neuron_start_count = 4
 	brain.Mutation_params.input_count = 3
-	brain.Mutation_params.reflex_pair_prob = .40
-	brain.Mutation_params.mutation_cycles = 5
+	brain.Mutation_params.reflex_pair_prob = .1
+	brain.Mutation_params.mutation_cycles = 1
 	brain.Mutation_params.output_count = 3
 	brain.Mutation_params.upper_input_bounds = [.0000001] * 3
 	brain.Mutation_params.lower_input_bounds = [-.0000001] * 3
@@ -46,10 +48,6 @@ class Action_type (IntEnum):
 	MOVE = 1
 	INTERACT = 2
 
-#Flags to determine visualization and learning mode DEPRECATED TODO REFACTOR
-class Learning_flags(Enum):
-	VISUALIZATION_ON = 1
-	VISUALIZATION_OFF = 2
 
 
 
@@ -116,6 +114,11 @@ class Grid():
 			self.grid[dest[1]][dest[0]] = self.grid[start[1]][start[0]]
 			self.grid[start[1]][start[0]] = int(Object_type.EMPTY)
 
+	def interact(self, agent, other):
+		if Object_type(self.grid[other[1]][other[0]]) == Object_type.CAPSULE:
+			self.grid[other[1]][other[0]] = int(Object_type.EMPTY)
+			self.agents[(agent[1],agent[0])].energy += 10
+			self.info[Object_type.CAPSULE] -= 1
 
 
 	###
@@ -192,7 +195,7 @@ class Grid():
 					self.grid[i][c] = int(sym)
 
 
-	def advance_agents(self):
+	def advance_agents(self,visualization_mode):
 		## get randomly ordered list of agents, sense, run, harvest actuation and publish to action_queue
 		agent_keys = list(self.agents.keys())
 		shuffle(agent_keys)
@@ -207,18 +210,20 @@ class Grid():
 				brain.Mutation_params().lower_input_bounds[i] = min(brain.Mutation_params().lower_input_bounds[i],observations[i])
 
 
-			print(observations)
-			result = agent.brain.advance_n_with_mode(observations, 3, 10, utils.Visualization_flags.VISUALIZATION_ON)
+		#	print(observations)
+			result = agent.brain.advance_n_with_mode(observations, 3, 10, visualization_mode)
 			print(result)
 			numerical_result = utils.binary_array_to_decimal(result)
-			print(numerical_result)
-			agent.generate_action(numerical_result, self.grid, key)
+			#print(numerical_result)
+			agent.generate_action(numerical_result, self, key)
 
 			
 	def active_physics(self):
 		for action in self.action_queue:
 			if (action[2] == Action_type.MOVE):
 				self.move(action[0], action[1])
+			elif (action[2] == Action_type.INTERACT):
+				self.interact(action[0], action[1])
 
 
 
@@ -261,6 +266,20 @@ class Agent():
 			grid.action_queue.append((coords, new_coords,Action_type.MOVE))
 		
 
+	def publish_interact_action(self,grid,coords):
+		if self.direction == Direction.UP:
+			new_coords = (coords[0], coords[1]-1)
+			grid.action_queue.append((coords, new_coords , Action_type.INTERACT))
+		elif self.direction == Direction.RIGHT:
+			new_coords = (coords[0]+1, coords[1])
+			grid.action_queue.append((coords, new_coords,Action_type.INTERACT))
+		elif self.direction == Direction.DOWN:
+			new_coords = (coords[0], coords[1]+1)
+			grid.action_queue.append((coords, new_coords,Action_type.INTERACT))
+		elif self.direction == Direction.LEFT:
+			new_coords = (coords[0]-1, coords[1])
+			grid.action_queue.append((coords, new_coords,Action_type.INTERACT))
+
 
 		##
 		# should only be called with Direction.LEFT or Direction.RIGHT
@@ -273,19 +292,21 @@ class Agent():
 		if selection == 0:
 			pass ## no action
 		elif selection == 1:
-			self.turn(Direction.LEFT)
+			self.publish_interact_action(grid,coords)
 		elif selection == 2:
-			self.turn(Direction.RIGHT)
+			self.turn(Direction.LEFT)
 		elif selection == 3:
-			self.publish_movement_action(Direction.UP, self, coords)
+			self.turn(Direction.RIGHT)
 		elif selection == 4:
-			self.publish_movement_action(Direction.RIGHT, self, coords)
+			self.publish_movement_action(Direction.UP, grid, coords)
 		elif selection == 5:
-			self.publish_movement_action(Direction.DOWN, self, coords)
+			self.publish_movement_action(Direction.RIGHT, grid, coords)
 		elif selection == 6:
-			self.publish_movement_action(Direction.LEFT, self, coords)
+			self.publish_movement_action(Direction.DOWN, grid, coords)
 		elif selection == 7:
-			pass #interact
+			self.publish_movement_action(Direction.LEFT, grid, coords)
+		
+			
 
 
 #phases of a world-frame
