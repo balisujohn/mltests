@@ -1,5 +1,6 @@
 import sys
 sys.path.insert(0,".")
+sys.path.insert(0,"..")
 
 #John Balis 2019
 #for support email balisujohn@gmail.com
@@ -577,7 +578,7 @@ class Brain:
 		results = []
 		for i in range(n_iterations):
 			results.append(self.advance(inputs,output_length))
-			if visualization_flag == utils.Visualization_flags.VISUALIZATION_ON:
+			if visualization_flag == visualization.Visualization_flags.VISUALIZATION_ON:
 				visualization.visualize_brain(print_brain_to_json(self))	
 
 		return utils.extract_output_modes(results)

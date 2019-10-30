@@ -22,24 +22,13 @@ from itertools import combinations
 #for support email balisujohn@gmail.com
 
 
-#Flags to determine visualization and learning mode DEPRECATED TODO REFACTOR
-class Learning_flags(Enum):
-	VISUALIZATION_ON = 1
-	VISUALIZATION_OFF = 2
 
 
 
 def evaluate_solo_mega_grid_performance(brain, visualization_mode):
 	# We will see how long our agent survives on average over 10 trials of 1000 frames of time
 
-	#todo refactor this dumb bandaid
-	if visualization_mode == Learning_flags.VISUALIZATION_ON:
-		visualization_mode = utils.Visualization_flags.VISUALIZATION_ON
-	if visualization_mode == Learning_flags.VISUALIZATION_OFF:
-		visualization_mode = utils.Visualization_flags.VISUALIZATION_OFF
-
-
-	trials = 10
+	trials = 1
 	frame_limit = 1000
 
 	score = 0.0
@@ -49,17 +38,19 @@ def evaluate_solo_mega_grid_performance(brain, visualization_mode):
 		mega_grid.init_mega_grid_params()
 		grid = mega_grid.Grid(20)
 		grid.add_agent((0,0))
+		agent = grid.agents[(0,0)]
 		grid.agents[(0,0)].brain = test_instance
 		for c in range(frame_limit):
-			if grid.agents[(0,0)].energy <= 0:
+			if agent.energy <= 0:
 				break
 			score = score + 1
 			grid.passive_physics()
 			grid.advance_agents(visualization_mode)
 			grid.active_physics()
-			if visualization_mode == utils.Visualization_flags.VISUALIZATION_ON:
+			if visualization_mode == visualization.Visualization_flags.VISUALIZATION_ON:
 				grid.visualize_detailed_grid()
 				pprint.pprint(grid.info)
+				print(agent.energy)
 				clear(.0001)
 		
 	return score/ (trials * frame_limit) * 100
@@ -94,7 +85,7 @@ def evaluate_xor_performance(brain, visualization_mode):
 		output_4 = test_instance_4.advance(input_4,1)
 
 
-	if visualization_mode == Learning_flags.VISUALIZATION_ON:
+	if visualization_mode == visualization.Visualization_flags.VISUALIZATION_ON:
 		print('')
 		print('INPUTS: '+ str([input_1,input_2,input_3,input_4]))
 		print('OUTPUTS: ' + str([output_1, output_2, output_3,output_4]))
@@ -131,7 +122,7 @@ def evalute_pendulum_cart_performance(test_brain, visualization_mode):
 		score = 0
 		while True:#for h in range(desired_score):
 			#score += 1
-			if visualization_mode == Learning_flags.VISUALIZATION_ON:
+			if visualization_mode == visualization.Visualization_flags.VISUALIZATION_ON:
 				env.render()
 
 
@@ -147,11 +138,11 @@ def evalute_pendulum_cart_performance(test_brain, visualization_mode):
 			sum = 0
 			for i in range(5):
 				sum += test_instance.advance(observations, 1)[0]
-				if visualization_mode == Learning_flags.VISUALIZATION_ON: 
+				if visualization_mode == visualization.Visualization_flags.VISUALIZATION_ON: 
 					visualization.visualize_brain(brain.print_brain_to_json(test_instance))	
 			action = int(sum >=3)
 
-			if visualization_mode == Learning_flags.VISUALIZATION_ON:
+			if visualization_mode == visualization.Visualization_flags.VISUALIZATION_ON:
 				print('ACTION: ' + str(action))
 				
 
@@ -188,7 +179,7 @@ def evaluate_space_invaders_performance(test_brain, visualization_mode):
 		score = 0
 		while 1:
 			#score += 1
-			if visualization_mode == Learning_flags.VISUALIZATION_ON:
+			if visualization_mode == visualization.Visualization_flags.VISUALIZATION_ON:
 				env.render()
 
 
@@ -205,7 +196,7 @@ def evaluate_space_invaders_performance(test_brain, visualization_mode):
 			raw_output = []
 			for i in range(brain_speed):
 				raw_output.append ( test_instance.advance(observations, 3))
-				if visualization_mode == Learning_flags.VISUALIZATION_ON: 
+				if visualization_mode == visualization.Visualization_flags.VISUALIZATION_ON: 
 					visualization.visualize_brain(brain.print_brain_to_json(test_instance))	
 
 			for i in range(output_count):
@@ -217,7 +208,7 @@ def evaluate_space_invaders_performance(test_brain, visualization_mode):
 
 			action = min(utils.binary_array_to_decimal(output), 5)
 
-			if visualization_mode == Learning_flags.VISUALIZATION_ON:
+			if visualization_mode == visualization.Visualization_flags.VISUALIZATION_ON:
 				print('ACTION: ' + str(action))
 		
 			observations,reward,done,info = env.step(action)
@@ -251,7 +242,7 @@ def evaluate_pong_performance(test_brain, visualization_mode):
 		while 1:
 			
 			#score += 1
-			if visualization_mode == Learning_flags.VISUALIZATION_ON:
+			if visualization_mode == visualization.Visualization_flags.VISUALIZATION_ON:
 				env.render()
 
 
@@ -268,7 +259,7 @@ def evaluate_pong_performance(test_brain, visualization_mode):
 			raw_output = []
 			for i in range(brain_speed):
 				raw_output.append ( test_instance.advance(observations, 3))
-				if visualization_mode == Learning_flags.VISUALIZATION_ON: 
+				if visualization_mode == visualization.Visualization_flags.VISUALIZATION_ON: 
 					visualization.visualize_brain(brain.print_brain_to_json(test_instance))	
 
 			for i in range(output_count):
@@ -280,7 +271,7 @@ def evaluate_pong_performance(test_brain, visualization_mode):
 
 			action = min(utils.binary_array_to_decimal(output), 5)
 
-			if visualization_mode == Learning_flags.VISUALIZATION_ON:
+			if visualization_mode == visualization.Visualization_flags.VISUALIZATION_ON:
 				print('ACTION: ' + str(action))
 		
 			observations,reward,done,info = env.step(action)
@@ -317,7 +308,7 @@ def evaluate_berzerk_performance(test_brain, visualization_mode):
 		score = 0
 		for c in range(1000):
 			#score += 1
-			if visualization_mode == Learning_flags.VISUALIZATION_ON:
+			if visualization_mode == visualization.Visualization_flags.VISUALIZATION_ON:
 				env.render()
 
 
@@ -335,7 +326,7 @@ def evaluate_berzerk_performance(test_brain, visualization_mode):
 			raw_output = []
 			for i in range(brain_speed):
 				raw_output.append ( test_instance.advance(observations, 5))
-				if visualization_mode == Learning_flags.VISUALIZATION_ON: 
+				if visualization_mode == visualization.Visualization_flags.VISUALIZATION_ON: 
 					visualization.visualize_brain(brain.print_brain_to_json(test_instance))	
 
 			for i in range(output_count):
@@ -346,7 +337,7 @@ def evaluate_berzerk_performance(test_brain, visualization_mode):
 		
 			action = min(utils.binary_array_to_decimal(output), 17)
 
-			if visualization_mode == Learning_flags.VISUALIZATION_ON:
+			if visualization_mode == visualization.Visualization_flags.VISUALIZATION_ON:
 				print('ACTION: ' + str(action))
 		
 			observations,reward,done,info = env.step(action)
@@ -378,7 +369,7 @@ def evaluate_chopper_performance(test_brain, visualization_mode):
 		score = 0
 		for c in range(1000):
 			#score += 1
-			if visualization_mode == Learning_flags.VISUALIZATION_ON:
+			if visualization_mode == visualization.Visualization_flags.VISUALIZATION_ON:
 				env.render()
 
 
@@ -396,7 +387,7 @@ def evaluate_chopper_performance(test_brain, visualization_mode):
 			raw_output = []
 			for i in range(brain_speed):
 				raw_output.append ( test_instance.advance(observations, 5))
-				if visualization_mode == Learning_flags.VISUALIZATION_ON: 
+				if visualization_mode == visualization.Visualization_flags.VISUALIZATION_ON: 
 					visualization.visualize_brain(brain.print_brain_to_json(test_instance))	
 
 			for i in range(output_count):
@@ -406,7 +397,7 @@ def evaluate_chopper_performance(test_brain, visualization_mode):
 
 			action = min(utils.binary_array_to_decimal(output), 17)
 
-			if visualization_mode == Learning_flags.VISUALIZATION_ON:
+			if visualization_mode == visualization.Visualization_flags.VISUALIZATION_ON:
 				print('ACTION: ' + str(action))
 		
 			observations,reward,done,info = env.step(action)
@@ -443,7 +434,7 @@ def evaluate_biped_performance(test_brain, visualization_mode):
 		while counter < 1000:
 			counter += 1
 			#score += 1
-			if visualization_mode == Learning_flags.VISUALIZATION_ON:
+			if visualization_mode == visualization.Visualization_flags.VISUALIZATION_ON:
 				env.render()
 
 
@@ -461,7 +452,7 @@ def evaluate_biped_performance(test_brain, visualization_mode):
 			raw_output = []
 			for i in range(brain_speed):
 				raw_output.append ( test_instance.advance(observations, output_count))
-				#if visualization_mode == Learning_flags.VISUALIZATION_ON: 
+				#if visualization_mode == visualization.Visualization_flags.VISUALIZATION_ON: 
 				#	visualization.visualize_brain(brain.print_brain_to_json(test_instance))	
 
 			for i in range(int(output_count/2)):
@@ -478,7 +469,7 @@ def evaluate_biped_performance(test_brain, visualization_mode):
 
 
 
-			if visualization_mode == Learning_flags.VISUALIZATION_ON:
+			if visualization_mode == visualization.Visualization_flags.VISUALIZATION_ON:
 				print(counter)
 				print('ACTION: ' + str(action))
 		
@@ -545,7 +536,7 @@ def evaluate_potion_store_performance(test_brain, visualization_mode):
 			output = 0
 			for i in range(brain_speed):	
 				output += test_instance.advance(input, 1)[0]
-				if visualization_mode == Learning_flags.VISUALIZATION_ON: 
+				if visualization_mode == visualization.Visualization_flags.VISUALIZATION_ON: 
 					visualization.visualize_brain(brain.print_brain_to_json(test_instance))	
 
 			
@@ -558,28 +549,28 @@ def evaluate_potion_store_performance(test_brain, visualization_mode):
 					incorrect_potions += 1
 					incorrect_bit = 1
 					correct_bit = 0
-					if visualization_mode == Learning_flags.VISUALIZATION_ON:
+					if visualization_mode == visualization.Visualization_flags.VISUALIZATION_ON:
 						print('DRANK ' + str(potion_offer) + ': POISION')
 		
 				else: 
 					correct_potions += 1
 					correct_bit = 1
 					incorrect_bit = 0
-					if visualization_mode == Learning_flags.VISUALIZATION_ON:
+					if visualization_mode == visualization.Visualization_flags.VISUALIZATION_ON:
 						print('DRANK ' + str(potion_offer) + ': HEALTH POTION')
 
 			else: 	
 				correct_bit = 0
 				incorrect_bit = 0
-				if visualization_mode == Learning_flags.VISUALIZATION_ON:
+				if visualization_mode == visualization.Visualization_flags.VISUALIZATION_ON:
 						print('DECLINED OFFER FOR ' + str(potion_offer))
 		
 
 			time += 1
-			#if visualization_mode == Learning_flags.VISUALIZATION_ON:
+			#if visualization_mode == visualization.Visualization_flags.VISUALIZATION_ON:
 				#test_instance.print_activation_record()
 		total_score += correct_potions
-		if visualization_mode == Learning_flags.VISUALIZATION_ON:
+		if visualization_mode == visualization.Visualization_flags.VISUALIZATION_ON:
 			print("NUMBER CORRECT: " + str(correct_potions))
 	return float(total_score/(correct_limit*15)) * 100.0
 			
@@ -610,7 +601,7 @@ def analyze(brain, input_count, output_count):
 # visualization for when the system is run in analysis mode
 def visualize_performance(brain, eval_function):
 	while 1:
-		eval_function(brain, Learning_flags.VISUALIZATION_ON)	
+		eval_function(brain, visualization.Visualization_flags.VISUALIZATION_ON)	
 
 
 # naive learning algorithm, starting from existing topology
@@ -627,7 +618,7 @@ def learn(existing_brain, eval_function):
 	else:
 		best_brain = brain.Brain()
 	benchmark_instance = copy.deepcopy(best_brain)
-	best_score = eval_function(benchmark_instance, Learning_flags.VISUALIZATION_OFF)
+	best_score = eval_function(benchmark_instance, visualization.Visualization_flags.VISUALIZATION_OFF)
 	print('NEW BEST SCORE: ' + str(best_score))
 	
 	counter = 0
@@ -646,7 +637,7 @@ def learn(existing_brain, eval_function):
 
 		test_instance = copy.deepcopy(mutant)
 
-		score = eval_function(test_instance, Learning_flags.VISUALIZATION_OFF)
+		score = eval_function(test_instance, visualization.Visualization_flags.VISUALIZATION_OFF)
 		
 		average += score
 		if ((counter % 100) == 0):
@@ -692,7 +683,7 @@ def population_learn(existing_brain, eval_function):
 
 		for i in range(len(population)):
 			test_instance = copy.deepcopy(population[i][1])
-			population[i][0] = eval_function(test_instance,Learning_flags.VISUALIZATION_OFF) 
+			population[i][0] = eval_function(test_instance,  visualization.Visualization_flags.VISUALIZATION_OFF) 
 			if population[i][0] >= best_score:
 				best_score = population[i][0]
 				best_brain = population[i][1]
@@ -739,7 +730,7 @@ def impatient_learn(existing_brain, eval_function):
 		best_brain = brain.Brain()
 	benchmark_instance = copy.deepcopy(best_brain)
 
-	best_score = eval_function(benchmark_instance, Learning_flags.VISUALIZATION_OFF)
+	best_score = eval_function(benchmark_instance, visualization.Visualization_flags.VISUALIZATION_OFF)
 	print('NEW BEST SCORE: ' + str(best_score))
 	
 	counter = 0
@@ -761,7 +752,7 @@ def impatient_learn(existing_brain, eval_function):
 
 		test_instance = copy.deepcopy(mutant)
 
-		score = eval_function(test_instance, Learning_flags.VISUALIZATION_OFF)
+		score = eval_function(test_instance, visualization.Visualization_flags.VISUALIZATION_OFF)
 		
 		average += score
 		if ((counter % 100) == 0):

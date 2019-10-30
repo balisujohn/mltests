@@ -4,10 +4,6 @@ from enum import Enum
 from os import system, name 
 
 
-#Flags to determine visualization and learning mode DEPRECATED TODO REFACTOR
-class Visualization_flags(Enum):
-	VISUALIZATION_ON = 1
-	VISUALIZATION_OFF = 2
 
 
 

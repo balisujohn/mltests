@@ -3,6 +3,7 @@ sys.path.insert(0,"./base_SNN")
 sys.path.insert(0,"./mega_grid")
 import learning
 import brain
+import visualization
 from mega_grid import init_mega_grid_params
 import gym 
 import logging

@@ -10,6 +10,7 @@ from enum import IntEnum, Enum
 from utils import clear
 import pprint
 import brain
+import visualization
 import utils 
 
 
@@ -101,23 +102,36 @@ class Grid():
 		brain_instance = brain.Brain()
 		self.agents[coords] = Agent(brain_instance)
 
-	def check_movement(self, coords):
+
+	def check_bounds(self, coords):
 		for coord in coords:
 			if coord < 0 or coord >= self.sector_size:
 				return False
+		return True
+
+	def check_movement(self, coords):
+		if not self.check_bounds(coords):
+			return False
 		if Object_type(self.grid[coords[1]][coords[0]]) != Object_type.EMPTY:
 			return False
 		return True
 
 	def move(self, start, dest):
+		if not self.check_movement(dest):
+			return
 		if Object_type(self.grid[dest[1]][dest[0]]) == Object_type.EMPTY:
 			self.grid[dest[1]][dest[0]] = self.grid[start[1]][start[0]]
 			self.grid[start[1]][start[0]] = int(Object_type.EMPTY)
+		
+			agent = self.agents.pop(start)
+			self.agents[(dest)] = agent 
 
 	def interact(self, agent, other):
+		if not self.check_bounds(other):
+			return
 		if Object_type(self.grid[other[1]][other[0]]) == Object_type.CAPSULE:
 			self.grid[other[1]][other[0]] = int(Object_type.EMPTY)
-			self.agents[(agent[1],agent[0])].energy += 10
+			self.agents[(agent[0],agent[0])].energy += 10
 			self.info[Object_type.CAPSULE] -= 1
 
 
@@ -210,11 +224,16 @@ class Grid():
 				brain.Mutation_params().lower_input_bounds[i] = min(brain.Mutation_params().lower_input_bounds[i],observations[i])
 
 
-		#	print(observations)
 			result = agent.brain.advance_n_with_mode(observations, 3, 10, visualization_mode)
-			print(result)
+			
+			
+			
 			numerical_result = utils.binary_array_to_decimal(result)
-			#print(numerical_result)
+			print(result)
+			print(numerical_result)
+			if visualization_mode == visualization.Visualization_flags.VISUALIZATION_ON:
+				print(result)
+				print(numerical_result)
 			agent.generate_action(numerical_result, self, key)
 
 			
@@ -234,7 +253,7 @@ class Agent():
 	def __init__(self, brain):
 		self.brain = brain
 		self.direction = Direction.UP
-		self.energy = 20
+		self.energy = 30
 	
 	## sensing calculate sensory data
 	## evaluation decide on action
