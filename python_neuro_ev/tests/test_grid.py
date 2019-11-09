@@ -175,8 +175,24 @@ class test_grid(unittest.TestCase):
         expected_call_stack = [call.mock_apply_direction_offset(Direction.LEFT)]
         self.assertEqual(agent.direction, Direction.DOWN )
         self.assertEqual(mock_apply_direction_offset.mock_calls, expected_call_stack)
+        
+    @patch('mega_grid.Grid.check_movement')
+    def test_move(self, mock_check_movement):
+        mock_check_movement.return_value = True
+        grid = Grid(3)
+        grid.add_agent((1,1)) 
+        agent = grid.agents[(1,1)]
+        grid.move((1,1),(2,1))
+        self.assertEqual(grid.grid[1][2], Object_type.AGENT)
+        self.assertEqual(grid.grid[1][1], Object_type.EMPTY)
+        grid.move((2,1),(0,0))
+        self.assertEqual(grid.grid[0][0], Object_type.AGENT)
+        self.assertEqual(grid.grid[2][1], Object_type.EMPTY)
+        mock_check_movement.return_value = False
+        grid.move((0,0),(2,2))
+        self.assertEqual(grid.grid[0][0], Object_type.AGENT)
+        self.assertEqual(grid.grid[2][2], Object_type.EMPTY)
 
-       
 
 
 if __name__ == '__main__':

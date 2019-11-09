@@ -20,7 +20,7 @@ def init_mega_grid_params():
 	brain.Mutation_params.neuron_start_count = 4
 	brain.Mutation_params.input_count = 3
 	brain.Mutation_params.reflex_pair_prob = .1
-	brain.Mutation_params.mutation_cycles = 1
+	brain.Mutation_params.mutation_cycles = 3
 	brain.Mutation_params.output_count = 3
 	brain.Mutation_params.upper_input_bounds = [.0000001] * 3
 	brain.Mutation_params.lower_input_bounds = [-.0000001] * 3
@@ -123,16 +123,27 @@ class Grid():
 			self.grid[dest[1]][dest[0]] = self.grid[start[1]][start[0]]
 			self.grid[start[1]][start[0]] = int(Object_type.EMPTY)
 		
+			if start not in self.agents:
+				print("list of agents")
+				print(self.agents.keys())
+				print("agent to be moved")
+				print(start)
+				print("movement queue")
+				print(self.action_queue)
+				self.visualize_detailed_grid()
+				return
+			assert(start in self.agents.keys())
 			agent = self.agents.pop(start)
-			self.agents[(dest)] = agent 
+			self.agents[dest] = agent 
 
 	def interact(self, agent, other):
 		if not self.check_bounds(other):
 			return
 		if Object_type(self.grid[other[1]][other[0]]) == Object_type.CAPSULE:
 			self.grid[other[1]][other[0]] = int(Object_type.EMPTY)
-			self.agents[(agent[0],agent[0])].energy += 10
+			self.agents[agent].energy += 100
 			self.info[Object_type.CAPSULE] -= 1
+		#	print("chomp")
 
 
 	###
@@ -215,6 +226,7 @@ class Grid():
 		shuffle(agent_keys)
 		for key in agent_keys: #useful to note here that each 'key' is a tuple containing agent location in (x,y) format
 			agent = self.agents[key]
+			assert(self.grid[key[1]][key[0]] == Object_type.AGENT)
 			agent.energy -= 1
 			#sense
 			observations = self.sense(key, agent.direction)
@@ -229,8 +241,8 @@ class Grid():
 			
 			
 			numerical_result = utils.binary_array_to_decimal(result)
-			print(result)
-			print(numerical_result)
+		#	print(result)
+		#	print(numerical_result)
 			if visualization_mode == visualization.Visualization_flags.VISUALIZATION_ON:
 				print(result)
 				print(numerical_result)
@@ -242,7 +254,9 @@ class Grid():
 			if (action[2] == Action_type.MOVE):
 				self.move(action[0], action[1])
 			elif (action[2] == Action_type.INTERACT):
+			#	print("CHOMP")
 				self.interact(action[0], action[1])
+		self.action_queue = []
 
 
 
@@ -253,7 +267,7 @@ class Agent():
 	def __init__(self, brain):
 		self.brain = brain
 		self.direction = Direction.UP
-		self.energy = 30
+		self.energy = 20
 	
 	## sensing calculate sensory data
 	## evaluation decide on action
@@ -308,9 +322,11 @@ class Agent():
 
 	
 	def generate_action(self, selection, grid, coords):
+		#print(selection)
 		if selection == 0:
 			pass ## no action
 		elif selection == 1:
+			#print("should chomp")
 			self.publish_interact_action(grid,coords)
 		elif selection == 2:
 			self.turn(Direction.LEFT)
