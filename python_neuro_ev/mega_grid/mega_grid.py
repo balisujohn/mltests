@@ -145,7 +145,7 @@ class Grid():
 			return
 		if Object_type(self.grid[other[1]][other[0]]) == Object_type.CAPSULE:
 			self.grid[other[1]][other[0]] = int(Object_type.EMPTY)
-			self.agents[agent].energy += 100
+			self.agents[agent].energy += 5
 			self.info[Object_type.CAPSULE] -= 1
 
 
