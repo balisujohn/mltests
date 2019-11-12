@@ -28,7 +28,7 @@ from itertools import combinations
 def evaluate_solo_mega_grid_performance(brain, visualization_mode):
 	# We will see how long our agent survives on average over 10 trials of 1000 frames of time
 
-	trials = 100
+	trials = 1
 	frame_limit = 1000
 
 	score = 0.0
@@ -40,7 +40,7 @@ def evaluate_solo_mega_grid_performance(brain, visualization_mode):
 		grid.add_agent((3,4))
 		agent = grid.agents[(3,4)]
 		grid.agents[(3,4)].brain = test_instance
-		grid.passive_physics()
+		grid.populate_to_percent(mega_grid.Object_type.CAPSULE, .99)
 		for c in range(frame_limit):
 			if agent.energy <= 0:
 				break

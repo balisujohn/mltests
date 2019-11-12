@@ -4,6 +4,7 @@ import os
 sys.path.insert(0,".")
 sys.path.insert(0,"./base_SNN")
 import numpy as np
+import random
 import copy
 from random import uniform,shuffle
 from enum import IntEnum, Enum
@@ -17,13 +18,16 @@ import utils
 
 def init_mega_grid_params():
 	brain.Mutation_params.set_mutation_to_default_1(brain.Mutation_params)
-	brain.Mutation_params.neuron_start_count = 4
+	brain.Mutation_params.neuron_start_count = 1
+	brain.Mutation_params.neuron_count_bias = .4
+	brain.Mutation_params.target_count_bias = .6
+	brain.Mutation_params.neuron_count_prob = .8
 	brain.Mutation_params.input_count = 3
 	brain.Mutation_params.reflex_pair_prob = .1
-	brain.Mutation_params.mutation_cycles = 3
-	brain.Mutation_params.output_count = 3
-	brain.Mutation_params.upper_input_bounds = [.0000001] * 3
-	brain.Mutation_params.lower_input_bounds = [-.0000001] * 3
+	brain.Mutation_params.mutation_cycles = 1
+	brain.Mutation_params.output_count = 7
+	brain.Mutation_params.upper_input_bounds = [.0000001] * 7
+	brain.Mutation_params.lower_input_bounds = [-.0000001] * 7
 
 
 
@@ -143,7 +147,6 @@ class Grid():
 			self.grid[other[1]][other[0]] = int(Object_type.EMPTY)
 			self.agents[agent].energy += 100
 			self.info[Object_type.CAPSULE] -= 1
-		#	print("chomp")
 
 
 	###
@@ -153,7 +156,6 @@ class Grid():
 	def sense(self, coordinates, direction): 
 		x_coord = coordinates[0] 
 		y_coord = coordinates[1]
-
 		if direction == Direction.UP:
 			while y_coord > 0:
 				y_coord -= 1
@@ -186,6 +188,16 @@ class Grid():
 		for key in value_dict:
 			result[key] = result[key]/float(val_sum) 
 		return result
+
+	def populate_to_percent(self, object_type, density):
+		random.seed(1)
+		for i in range(self.sector_size):
+			for c in range(self.sector_size):
+				if uniform(0,1) <= density and self.grid[i][c] != int(Object_type.AGENT): # This function is not allowed to overwrite agents
+					self.grid[i][c] = int(object_type)
+					self.info[Object_type.CAPSULE] += 1
+		random.seed() # we reseed the prng with current time
+
 
 
 	def passive_cell_update(self, curr_sym, offsets, baseline_densities):
@@ -236,7 +248,7 @@ class Grid():
 				brain.Mutation_params().lower_input_bounds[i] = min(brain.Mutation_params().lower_input_bounds[i],observations[i])
 
 
-			result = agent.brain.advance_n_with_mode(observations, 3, 10, visualization_mode)
+			result = agent.brain.advance_n_with_mode(observations, 	brain.Mutation_params.output_count , 10, visualization_mode)
 			
 			
 			
@@ -324,22 +336,21 @@ class Agent():
 	def generate_action(self, selection, grid, coords):
 		#print(selection)
 		if selection == 0:
-			pass ## no action
+			pass ## no action (no action will also be applied if no elif is triggered)
 		elif selection == 1:
-			#print("should chomp")
-			self.publish_interact_action(grid,coords)
-		elif selection == 2:
 			self.turn(Direction.LEFT)
-		elif selection == 3:
+		elif selection == 2:
 			self.turn(Direction.RIGHT)
 		elif selection == 4:
 			self.publish_movement_action(Direction.UP, grid, coords)
-		elif selection == 5:
+		elif selection == 8:
 			self.publish_movement_action(Direction.RIGHT, grid, coords)
-		elif selection == 6:
+		elif selection == 16:
 			self.publish_movement_action(Direction.DOWN, grid, coords)
-		elif selection == 7:
+		elif selection == 32:
 			self.publish_movement_action(Direction.LEFT, grid, coords)
+		elif selection == 64:
+			self.publish_interact_action(grid,coords)
 		
 			
 

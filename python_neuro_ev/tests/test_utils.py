@@ -25,6 +25,18 @@ class Test_Utils(unittest.TestCase):
         expected_output = 51
         self.assertEqual(utils.binary_array_to_decimal(input), expected_output)
 
+
+    def test_decimal_to_binary_array(self):
+        input = 41
+        expected_output = [1,0,1,0,0,1] 
+        self.assertEqual(utils.decimal_to_binary_array(input), expected_output)
+        input = 40
+        expected_output = [1,0,1,0,0,0] 
+        self.assertEqual(utils.decimal_to_binary_array(input), expected_output)
+        input = 0
+        expected_output = [0] 
+        self.assertEqual(utils.decimal_to_binary_array(input), expected_output)
+
         
 
 if __name__ == '__main__':

@@ -63,6 +63,19 @@ def binary_array_to_decimal(array):
 			result += pow(2, (len(array)-1) - index)
 
 	return result
+
+def decimal_to_binary_array(integer, bounded= False, bound = 0):
+	if integer == 0:
+		return [0]
+	if bounded and integer > bound:
+		integer = bound
+	result = []
+	while integer != 0:
+		result.insert(0,integer & 1)
+		integer = integer >> 1
+	return result 
+
+
 	
 ###
 # output is a list of lists, we return the mode of each list position across the lists
