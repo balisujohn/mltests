@@ -1,19 +1,26 @@
-#!/bin/sh
+#!/bin/bash
 
 
 UBUNTU_VERSION="$(lsb_release -c -s)"
 
-if [$UBUNTU_VERSION != "bionic"]; then
-	echo "You are using an invalid version of Ubuntu, or something other than UBUNTU, please request a submit a request to the mltests project for a setup script for your operating system, or switch to a recommended ubuntu 18.04 development VM"
+if [ $UBUNTU_VERSION != "bionic" ]; then
+	echo "You are using an invalid version of Ubuntu, or something other than UBUNTU, please submit a request to the mltests project for a setup script for your operating system, or switch to a recommended ubuntu 18.04 development VM or Docker image"
 	exit;
 fi
 echo "You are using Bionic Beaver, proceeding with setup"
 
+read -e -a REPLY -p "This script makes global config changes, as it is intended to be run in a VM. Please enter the following phrase: 'I read the above message':  "
+
+if [ ${REPLY[0]} != "I" ] ||  [ ${REPLY[1]} != "read" ] ||  [ ${REPLY[2]} != "the" ] || [ ${REPLY[3]} != "above" ] || [ ${REPLY[4]} != "message" ]; then
+	echo "terminating setup script"
+	exit;
+fi
+
 
 #python3 setup
-apt-get upgrade
-apt-get install python3=3.6.7-1~18.04
-apt-get install python3-pip=9.0.1-2.3~ubuntu1.18.04.1
+apt-get --yes --allow-unauthenticated upgrade
+apt-get --yes --allow-unauthenticated install python3=3.6.7-1~18.04
+apt-get --yes --allow-unauthenticated install python3-pip=9.0.1-2.3~ubuntu1.18.04.1
 
 #adding graph-tool to the sources list
 if grep -q  "deb http://downloads.skewed.de/apt/$UBUNTU_VERSION $UBUNTU_VERSION universe" /etc/apt/sources.list  &&  grep -q  "deb-src http://downloads.skewed.de/apt/$UBUNTU_VERSION $UBUNTU_VERSION universe" /etc/apt/sources.list
@@ -27,8 +34,8 @@ fi
 apt-key adv --keyserver keys.openpgp.org --recv-key 612DEFB798507F25
 
 apt-get update
-apt-get install python3-graph-tool=2.29-1
+apt-get  --yes --allow-unauthenticated install python3-graph-tool=2.29-1
 
-pip3 install -U -r ./requirements.txt
+sudo -u john pip3 install -U -r ./requirements.txt
 
 
