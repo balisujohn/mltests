@@ -31,15 +31,13 @@ docker run --rm \
 ````
 taken from https://github.com/mviereck/x11docker/wiki/Short-setups-to-provide-X-display-to-container.
 
-Please note that this breaks container isolation!i
+Please note that this breaks container isolation!
 
-### To access the docker environment without graphical interface access, run:
+### Docker without GUI:
 ````
 docker run -it mltests-dev -it
 
 ````
-
-
 
 
 ## C++ architecture
