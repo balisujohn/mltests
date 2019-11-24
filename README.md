@@ -1,4 +1,5 @@
-# mltests
+#
+mltests
 
 ## About
 
@@ -20,25 +21,25 @@ Vim is included by default, feel free to add your own editor to the Dockerfile t
 
 ### Running dev Docker image with GUI(Recommended)
 ````
-xhost +SI:localuser:$(id -un)
+xhost +SI:localuser:root
 docker run --rm \
             -e DISPLAY=$DISPLAY \
             -v /tmp/.X11-unix:/tmp/.X11-unix:rw \
             --ipc=host \
-            --user $(id -u):$(id -g) \
+            --user 0:0 \
             --cap-drop=ALL \
             --security-opt=no-new-privileges \
 	    -it \
             mltests-dev
 
 ````
-taken from https://github.com/mviereck/x11docker/wiki/Short-setups-to-provide-X-display-to-container.
+Adapted from https://github.com/mviereck/x11docker/wiki/Short-setups-to-provide-X-display-to-container.
 
 Please note that this breaks container isolation!
 
 ### Running dev Docker image without GUI:
 ````
-docker run -it mltests-dev
+docker run -it --user 0:0  mltests-dev
 ````
 
 ## Python architecture
