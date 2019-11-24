@@ -9,13 +9,16 @@ There are currently distinct Python and C++ architectures, each with a default b
 frequency-domain based spiking neural network. This document includes instructions on how to work with each architecture. The docker development environment is intended for use with the python architecture. Here is a showcase video, showing the behavior of some of the topologies stored in this repository: 
 https://www.youtube.com/watch?v=zFZZjQkz7RA
 
-## Docker setup
+## Building dev Docker image
 To set up the mltests dev environment with Docker, run the following commands in bash:
 ````
 cd mltests
 docker build -t mltests-dev .
 ````
-### Docker with GUI(Recommended)
+
+Vim is included by default, feel free to add your own editor to the Dockerfile to suit your own preferences. In GUI mode, you can use visual editors! Git is included by default, so you can use git directly with your own fork of the mltests project from inside the Docker container.
+
+### Running dev Docker image with GUI(Recommended)
 ````
 xhost +SI:localuser:$(id -un)
 docker run --rm \
@@ -33,10 +36,42 @@ taken from https://github.com/mviereck/x11docker/wiki/Short-setups-to-provide-X-
 
 Please note that this breaks container isolation!
 
-### Docker without GUI:
+### Running dev Docker image without GUI:
 ````
 docker run -it mltests-dev
 ````
+
+## Python architecture
+```
+cd python_neuro_ev
+python3 ./main.py <mode> <environment> <learning_algorithm> <file_name>
+```
+
+### modes:
+
+#### train 
+
+runs neuro-evolution from scratch, saving generated toplogy to ./log.txt
+
+#### improve
+
+runs neuro-evolution, starting from an existing topology, and saves to ./log.txt as higher-scoring topologies are found
+
+#### analyze
+ 
+provides a visualization of the performance of the toplogy specified by the provided file on the microworld task.
+
+
+### environments:
+
+cartpole
+chopper
+berzerk
+xor
+biped
+pshoppe
+
+
 
 
 ## C++ architecture
@@ -68,35 +103,7 @@ runs neuro-evolution, starting from an existing topology, and saves to ./log.txt
 provides a visualization of the performance of the toplogy specified by the provided file on the microworld task.
 
 
-## Python architecture
-```
-cd python_neuro_ev
-python3 ./main.py <mode> <environment> <learning_algorithm> <file_name>
-```
 
-### modes:
-
-#### train 
-
-runs neuro-evolution from scratch, saving generated toplogy to ./log.txt
-
-#### improve
-
-runs neuro-evolution, starting from an existing topology, and saves to ./log.txt as higher-scoring topologies are found
-
-#### analyze
- 
-provides a visualization of the performance of the toplogy specified by the provided file on the microworld task.
-
-
-### environments:
-
-cartpole
-chopper
-berzerk
-xor
-biped
-pshoppe
 
 
 
