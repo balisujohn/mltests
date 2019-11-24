@@ -6,7 +6,7 @@ Hi all,
 
 This is a project with the loose goal of finding interesting ways to generate intelligent agents through trial and error. 
 There are currently distinct Python and C++ architectures, each with a default basic spiking neural network and a experimental 
-frequency-domain based spiking neural network. This document includes instructions on how to work with each architecture. Here is a showcase video, showing the behavior of some of the topologies stored in this repository: 
+frequency-domain based spiking neural network. This document includes instructions on how to work with each architecture. The docker development environment is intended for use with the python architecture. Here is a showcase video, showing the behavior of some of the topologies stored in this repository: 
 https://www.youtube.com/watch?v=zFZZjQkz7RA
 
 ## Docker setup
