@@ -20,11 +20,12 @@ Vim is included by default, feel free to add your own editor to the Dockerfile t
 
 ### Running dev Docker image with GUI(Recommended)
 ````
+xhost +SI:localuser:root
 docker run --rm \
             -e DISPLAY=$DISPLAY \
             -v /tmp/.X11-unix:/tmp/.X11-unix:rw \
             --ipc=host \
-            --user=root \
+            --user 0:0 \
             --cap-drop=ALL \
             --security-opt=no-new-privileges \
 	    -it \
