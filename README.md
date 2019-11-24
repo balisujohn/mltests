@@ -28,7 +28,7 @@ docker run --rm \
             --user $(id -u):$(id -g) \
             --cap-drop=ALL \
             --security-opt=no-new-privileges \
-	    --it \
+	    -it \
             mltests-dev
 
 ````
