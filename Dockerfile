@@ -2,8 +2,6 @@ FROM ubuntu:18.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-COPY . ./mltests
-
 #python3 setup
 RUN apt-get update
 RUN apt-get --yes install dialog
@@ -33,13 +31,11 @@ RUN apt-get  --yes install python3-graph-tool=2.29-1
 # installing git and cloning the project repo
 RUN apt-get --yes install git
 #WORKDIR /home
-#RUN git clone https://github.com/balisujohn/mltests.git
+RUN git clone https://github.com/balisujohn/mltests.git
 WORKDIR /mltests
-#RUN git checkout dev-setup
-#RUN git pull origin dev-setup
+
 
 
 #updating our python environment to match the requirements file
-RUN ls
 RUN pip3 install -U -r ./python_neuro_ev/requirements.txt
 

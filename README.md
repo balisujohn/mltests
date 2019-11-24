@@ -25,7 +25,7 @@ docker run --rm \
             -e DISPLAY=$DISPLAY \
             -v /tmp/.X11-unix:/tmp/.X11-unix:rw \
             --ipc=host \
-            --user $(id -u):$(id -g) \
+            --user=root \
             --cap-drop=ALL \
             --security-opt=no-new-privileges \
 	    -it \
@@ -38,7 +38,7 @@ Please note that this breaks container isolation!
 
 ### Running dev Docker image without GUI:
 ````
-docker run -it mltests-dev
+docker run -it --user=root mltests-dev
 ````
 
 ## Python architecture
