@@ -1,4 +1,5 @@
-# mltests
+#
+mltests
 
 ## About
 
@@ -38,7 +39,7 @@ Please note that this breaks container isolation!
 
 ### Running dev Docker image without GUI:
 ````
-docker run -it --user=root mltests-dev
+docker run -it --user 0:0  mltests-dev
 ````
 
 ## Python architecture
