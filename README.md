@@ -35,8 +35,7 @@ Please note that this breaks container isolation!
 
 ### Docker without GUI:
 ````
-docker run -it mltests-dev -it
-
+docker run -it mltests-dev
 ````
 
 
