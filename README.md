@@ -1,6 +1,6 @@
 # mltests
 
-# Development docker image in progress :^)
+# About
 
 Hi all,
 
@@ -9,10 +9,40 @@ There are currently distinct Python and C++ architectures, each with a default b
 frequency-domain based spiking neural network. This document includes instructions on how to work with each architecture. Here is a showcase video, showing the behavior of some of the topologies stored in this repository: 
 https://www.youtube.com/watch?v=zFZZjQkz7RA
 
+## Docker setup
+To set up the mltests dev environment with Docker, run the following commands in bash:
+````
+cd mltests
+docker build -t mltests-dev .
+````
+### Docker with GUI(Recommended)
+````
+xhost +SI:localuser:$(id -un)
+docker run --rm \
+            -e DISPLAY=$DISPLAY \
+            -v /tmp/.X11-unix:/tmp/.X11-unix:rw \
+            --ipc=host \
+            --user $(id -u):$(id -g) \
+            --cap-drop=ALL \
+            --security-opt=no-new-privileges \
+	    --it \
+            mltests-dev
+
+````
+taken from https://github.com/mviereck/x11docker/wiki/Short-setups-to-provide-X-display-to-container.
+
+Please note that this breaks container isolation!i
+
+### To access the docker environment without graphical interface access, run:
+````
+docker run -it mltests-dev -it
+
+````
+
+
+
+
 ## C++ architecture
-
-
-
 enter the following commands in bash, from the project directory
 ```
 make
