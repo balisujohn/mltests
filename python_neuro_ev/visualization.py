@@ -65,7 +65,8 @@ def visualize_brain(input): ## visualizing a brain with fixed topology for the v
 
 		pos = sfdp_layout(g,K=1)
 
-		win = GraphWindow(g,pos, async = True,  geometry =(500,400) ,vertex_text=g.vertex_index, vertex_font_size=18,vertex_fill_color = color_map)
+		async_arg = { 'async': True, }
+		win = GraphWindow(g,pos, **async_arg,  geometry =(500,400) ,vertex_text=g.vertex_index, vertex_font_size=18,vertex_fill_color = color_map)
 		cid = GObject.idle_add(render_changes)
 		win.connect("delete_event", Gtk.main_quit)
 		win.show_all()
