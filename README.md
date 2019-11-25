@@ -105,6 +105,20 @@ provides a visualization of the performance of the toplogy specified by the prov
 
 
 
+#### analyze
+ 
+provides a visualization of the performance of the toplogy specified by the provided file on the microworld task.
+
+
+### environments:
+
+cartpole
+chopper
+berzerk
+xor
+biped
+pshoppe
+sologrid
 
 
 

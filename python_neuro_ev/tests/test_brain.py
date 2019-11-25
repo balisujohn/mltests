@@ -2,15 +2,14 @@ import unittest
 from unittest.mock import patch
 import sys
 import os
-sys.path.append(os.path.join(os.path.dirname(__file__), "../base_SNN"))
+sys.path.insert(0,"./base_SNN")
 import brain 
-
 
 
 class test_Brain(unittest.TestCase):
     
     def test_mutation_params_constructor(self):
-      
+        self.assertEqual(brain.Mutation_params().neuron_start_count, 1)
         self.assertEqual(brain.Mutation_params().swap_prob,.1)
         self.assertEqual(brain.Mutation_params().neuron_count_prob,.5)
         self.assertEqual(brain.Mutation_params().neuron_count_bias,.5)
@@ -39,6 +38,7 @@ class test_Brain(unittest.TestCase):
         param_instance = brain.Mutation_params()
         param_instance.swap_prob= 999
         param_instance.set_mutation_to_default_1()
+        self.assertEqual(brain.Mutation_params().neuron_start_count, 1)
         self.assertEqual(param_instance.swap_prob,.1)
         self.assertEqual(param_instance.neuron_count_prob,.5)
         self.assertEqual(param_instance.neuron_count_bias,.5)

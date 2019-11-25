@@ -1,6 +1,10 @@
+import sys
+sys.path.insert(0,"./base_SNN")
+sys.path.insert(0,"./mega_grid")
 import learning
 import brain
-import sys
+import visualization
+from mega_grid import init_mega_grid_params
 import gym 
 import logging
 
@@ -11,11 +15,19 @@ import logging
 
 #parameterizations for various evaluation environments
 
+def set_solo_mega_grid_params():
+	init_mega_grid_params()
+
 
 def set_potion_store_params(): # make sure you update the variables in the learning function if you update input_count here
 	brain.Mutation_params.set_mutation_to_default_1(brain.Mutation_params)
 	brain.Mutation_params.input_count = 8
+	brain.Mutation_params.mutation_cycles = 5
 	brain.Mutation_params.output_count = 1
+	brain.Mutation_params.neuron_count_bias = .9
+	brain.Mutation_params.reflex_pair_prob = .1
+	brain.Mutation_params.target_count_bias = .75
+
 	brain.Mutation_params.upper_input_bounds = [.00000001] * 8
 	brain.Mutation_params.lower_input_bounds = [-.000000001] * 8
 
@@ -98,7 +110,8 @@ environments ={
 'chopper':learning.evaluate_chopper_performance,
 'pong':learning.evaluate_pong_performance,
 'pshoppe':learning.evaluate_potion_store_performance,
-'biped':learning.evaluate_biped_performance
+'biped':learning.evaluate_biped_performance,
+'sologrid':learning.evaluate_solo_mega_grid_performance
 }
 
 
@@ -111,7 +124,8 @@ environment_settings= {
 'chopper':set_chopper_params,
 'pong':set_pong_params,
 'pshoppe':set_potion_store_params,
-'biped':set_biped_params
+'biped':set_biped_params,
+'sologrid':set_solo_mega_grid_params
 
 }
 

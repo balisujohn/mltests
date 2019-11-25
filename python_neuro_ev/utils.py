@@ -1,4 +1,20 @@
 import gym
+from time import sleep 
+from enum import Enum
+from os import system, name 
+
+
+
+
+
+#takes sleep time in seconds after clearing as an argument
+def clear(sleep_time): 
+  
+	if name == 'nt': 
+		_ = system('cls')
+	else: 
+		_ = system('clear') 
+	sleep(sleep_time)
 
 
 
@@ -47,7 +63,39 @@ def binary_array_to_decimal(array):
 			result += pow(2, (len(array)-1) - index)
 
 	return result
+
+def decimal_to_binary_array(integer, bounded= False, bound = 0):
+	if integer == 0:
+		return [0]
+	if bounded and integer > bound:
+		integer = bound
+	result = []
+	while integer != 0:
+		result.insert(0,integer & 1)
+		integer = integer >> 1
+	return result 
+
+
 	
+###
+# output is a list of lists, we return the mode of each list position across the lists
+#
+###
+def extract_output_modes(output):
+	result = [0]  * len(output[0])
+	for i in range(len(output[0])):
+		ones = 0
+		zeros = 0
+		for c in range(len(output)):
+			if output[c][i] == 1:
+				ones += 1
+			else: 
+				zeros += 1
+		if ones >= zeros:
+			result[i] = 1
+		else: 
+			result[i] = 0
+	return result 
 
 
 

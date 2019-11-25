@@ -2,11 +2,19 @@ import json
 import sys
 from graph_tool.all import * 
 from numpy.random import *
+from enum import Enum
 
 from gi.repository import Gtk, Gdk, GdkPixbuf, GObject
 
 from threading import Thread
 from time import sleep
+
+
+#Flags to determine visualization 
+class Visualization_flags(Enum):
+	VISUALIZATION_ON = 1
+	VISUALIZATION_OFF = 2
+
 
 #John Balis 2019
 #for support email balisujohn@gmail.com
@@ -28,7 +36,7 @@ def render_changes():
 
 	
 
-def visualize_brain(input):
+def visualize_brain(input): ## visualizing a brain with fixed topology for the visualization session
 	brain = json.loads(input)
 
 	global g
@@ -70,4 +78,5 @@ def visualize_brain(input):
 				color_map[g.vertex(neuron_index)] = 'blue'
 			else:
 				color_map[g.vertex(neuron_index)] = 'gray'
+
 
