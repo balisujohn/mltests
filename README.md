@@ -106,14 +106,6 @@ provides a visualization of the performance of the toplogy specified by the prov
 
 
 
-#### analyze
- 
-provides a visualization of the performance of the toplogy specified by the provided file on the microworld task.
-
-
-
-
-
 ## Contact Information
 
 If any of these areas sound interesting to you, don't hesitate to contribute. I can be reached at balisujohn at gmail dot com and other contributors can be reached at their emails if they have provided them.  We are very interested in recieving input and contributions.
