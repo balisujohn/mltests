@@ -20,6 +20,14 @@ RUN cp /etc/apt/sources.list /etc/apt/sources.list.backup
 RUN echo "deb http://downloads.skewed.de/apt/bionic bionic universe" | tee -a /etc/apt/sources.list
 RUN echo "deb-src http://downloads.skewed.de/apt/bionic bionic universe" | tee -a /etc/apt/sources.list
 
+
+#installing vscodium
+RUN wget -qO - https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/master/pub.gpg | sudo apt-key add -
+RUN apt-add-repository 'deb https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/repos/debs/ vscodium main'
+RUN apt-get update
+RUN apt-get install codium
+
+
 #verifying the security of graph-tool
 RUN apt-key adv --keyserver keys.openpgp.org --recv-key 612DEFB798507F25
 
@@ -33,6 +41,7 @@ RUN apt-get --yes install git
 #WORKDIR /home
 RUN git clone https://github.com/balisujohn/mltests.git
 WORKDIR /mltests
+RUN git fetch -all
 
 
 
