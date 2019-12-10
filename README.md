@@ -17,13 +17,13 @@ cd mltests
 docker build -t mltests-dev .
 ````
 
-Vim is included by default, feel free to add your own editor to the Dockerfile to suit your own preferences. In GUI mode, you can use visual editors! Git is included by default, so you can use git directly with your own fork of the mltests project from inside the Docker container.
+vscodium and vim are included by default, feel free to add your own editor to the Dockerfile to suit your own preferences. In GUI mode, you can use vscodium! Git is included by default, so you can use git directly with your own fork of the mltests project from inside the Docker container.
 
 ### Running dev Docker image with GUI(Recommended)
+
 ````
 xhost +SI:localuser:root
-docker run --rm \
-            -e DISPLAY=$DISPLAY \
+docker run  -e DISPLAY=$DISPLAY \
             -v /tmp/.X11-unix:/tmp/.X11-unix:rw \
             --ipc=host \
             --user 0:0 \
@@ -33,6 +33,7 @@ docker run --rm \
             mltests-dev
 
 ````
+
 Adapted from https://github.com/mviereck/x11docker/wiki/Short-setups-to-provide-X-display-to-container.
 
 Please note that this breaks container isolation!
@@ -41,6 +42,29 @@ Please note that this breaks container isolation!
 ````
 docker run -it --user 0:0  mltests-dev
 ````
+
+
+### Revisting Existing Docker session
+
+To determine the name of your session, get a list of docker processes with 
+
+````
+docker ps -a
+
+````
+
+Then to start the session (with changes saved) type:
+
+````
+
+docker start -a -i <session name>
+
+````
+
+This is an important idea to get the hang of, since building from scratch pulls from the online git repo.
+
+
+
 
 ## Python architecture
 ```
