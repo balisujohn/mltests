@@ -21,7 +21,7 @@ RUN apt-get --yes install python-opengl
 
 #installing and configuring vscodium
 #this alias is used to force codium to run as a root user
-RUN echo 'alias codium="codium --user-data-dir=\\"~/.vscodium-root\\""' >> ~/.bashrc
+RUN echo 'alias codium="codium --user-data-dir=\\"/.vscodium-root\\""' >> ~/.bashrc
 RUN . ~/.bashrc
 RUN apt-get --yes install libasound2
 RUN apt-get --yes install software-properties-common 
