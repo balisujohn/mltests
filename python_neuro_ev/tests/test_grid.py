@@ -182,23 +182,23 @@ class test_grid(unittest.TestCase):
         grid = Grid(3)
         grid.add_agent((1,1)) 
         agent = grid.agents[(1,1)]
-        self.assert_( (1,1) in grid.agents.keys() )
+        self.assertTrue( (1,1) in grid.agents.keys() )
         grid.move((1,1),(2,1))
         self.assertEqual(grid.grid[1][2], Object_type.AGENT)
         self.assertEqual(grid.grid[1][1], Object_type.EMPTY)
-        self.assert_( (1,1) not in grid.agents.keys() )
-        self.assert_( (2,1) in grid.agents.keys() )
+        self.assertTrue( (1,1) not in grid.agents.keys() )
+        self.assertTrue( (2,1) in grid.agents.keys() )
         grid.move((2,1),(0,0))
         self.assertEqual(grid.grid[0][0], Object_type.AGENT)
         self.assertEqual(grid.grid[2][1], Object_type.EMPTY)
-        self.assert_( (2,1) not in grid.agents.keys() )
-        self.assert_( (0,0) in grid.agents.keys() )
+        self.assertTrue( (2,1) not in grid.agents.keys() )
+        self.assertTrue( (0,0) in grid.agents.keys() )
         mock_check_movement.return_value = False
         grid.move((0,0),(2,2))
         self.assertEqual(grid.grid[0][0], Object_type.AGENT)
         self.assertEqual(grid.grid[2][2], Object_type.EMPTY)
-        self.assert_( (2,2) not in grid.agents.keys() )
-        self.assert_( (0,0) in grid.agents.keys() )
+        self.assertTrue( (2,2) not in grid.agents.keys() )
+        self.assertTrue( (0,0) in grid.agents.keys() )
 
 
 

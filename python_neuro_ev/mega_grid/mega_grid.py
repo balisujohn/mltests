@@ -201,22 +201,15 @@ class Grid():
 
 
 	def passive_cell_update(self, curr_sym, offsets, baseline_densities):
-		#print([value for key,value in offsets.items()])
-		# the probability of any sort of generation or degeneration occuring is equal to the current offset from baseline densities
-		#divided by the total possible offset form baseline densities. 
-	#	print("offsets")
-		#print(offsets)
-		#print(offsets.values())
+		print(curr_sym)
 		if (uniform(0,1) < sum ([abs(value) for value in offsets.values()]) / len(list(baseline_densities.values()))) and self.degen_enabled[Object_type(curr_sym)]:
 			selector = uniform(0,1)
 			total_prob = 0.0
-			offsets = self.norm_dict(offsets)
-			for key, value in offsets.items():
-				total_prob += value
+			normed_offsets = self.norm_dict(offsets)
+			for key, value in sorted(normed_offsets.items()): #this sort is important because otherwise dictionary 
+				total_prob += value # iteration order is not guaranteed to be consistent
 				if total_prob  >= selector:
 					return key
-				
-
 		return curr_sym
 
 	def passive_physics(self):
