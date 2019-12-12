@@ -55,10 +55,10 @@ class test_grid(unittest.TestCase):
         mock_passive_cell_update.return_value = Object_type.CAPSULE
         grid.passive_physics()
         desired_result = [
-            call.mock_passive_cell_update(0,{Object_type.EMPTY:  0.26, Object_type.STRIDER:  0.01, Object_type.CAPSULE:  0.25}, {Object_type.EMPTY:  0.74, Object_type.STRIDER:  0.01, Object_type.CAPSULE:  0.25}),
-            call.mock_passive_cell_update(0,{Object_type.EMPTY:  0.26, Object_type.STRIDER:  0.01, Object_type.CAPSULE:  0.25}, {Object_type.EMPTY:  0.74, Object_type.STRIDER:  0.01, Object_type.CAPSULE:  0.25}),
-            call.mock_passive_cell_update(0,{Object_type.EMPTY:  0.26, Object_type.STRIDER:  0.01, Object_type.CAPSULE:  0.25}, {Object_type.EMPTY:  0.74, Object_type.STRIDER:  0.01, Object_type.CAPSULE:  0.25}),
-            call.mock_passive_cell_update(0,{Object_type.EMPTY:  0.26, Object_type.STRIDER:  0.01, Object_type.CAPSULE:  0.25}, {Object_type.EMPTY:  0.74, Object_type.STRIDER:  0.01, Object_type.CAPSULE:  0.25})
+            call.mock_passive_cell_update(Object_type.EMPTY,{Object_type.EMPTY:  0.0, Object_type.STRIDER:  0.01, Object_type.CAPSULE:  0.25}, {Object_type.EMPTY:  0.74, Object_type.STRIDER:  0.01, Object_type.CAPSULE:  0.25}),
+            call.mock_passive_cell_update(Object_type.EMPTY,{Object_type.EMPTY:  0.0, Object_type.STRIDER:  0.01, Object_type.CAPSULE:  0.25}, {Object_type.EMPTY:  0.74, Object_type.STRIDER:  0.01, Object_type.CAPSULE:  0.25}),
+            call.mock_passive_cell_update(Object_type.EMPTY,{Object_type.EMPTY:  0.0, Object_type.STRIDER:  0.01, Object_type.CAPSULE:  0.25}, {Object_type.EMPTY:  0.74, Object_type.STRIDER:  0.01, Object_type.CAPSULE:  0.25}),
+            call.mock_passive_cell_update(Object_type.EMPTY,{Object_type.EMPTY:  0.0, Object_type.STRIDER:  0.01, Object_type.CAPSULE:  0.25}, {Object_type.EMPTY:  0.74, Object_type.STRIDER:  0.01, Object_type.CAPSULE:  0.25})
         ]
         self.assertEqual(desired_result, mock_passive_cell_update.mock_calls)
         for i in range(grid.sector_size):

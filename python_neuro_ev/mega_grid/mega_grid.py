@@ -147,6 +147,8 @@ class Grid():
 			self.grid[other[1]][other[0]] = int(Object_type.EMPTY)
 			self.agents[agent].energy += 5
 			self.info[Object_type.CAPSULE] -= 1
+			self.info[Object_type.EMPTY] += 1
+
 
 
 	###
@@ -194,28 +196,29 @@ class Grid():
 		for i in range(self.sector_size):
 			for c in range(self.sector_size):
 				if uniform(0,1) <= density and self.grid[i][c] != int(Object_type.AGENT): # This function is not allowed to overwrite agents
+					self.info[Object_type(self.grid[i][c])] -= 1
 					self.grid[i][c] = int(object_type)
 					self.info[Object_type.CAPSULE] += 1
+
 		random.seed() # we reseed the prng with current time
 
 
 
 	def passive_cell_update(self, curr_sym, offsets, baseline_densities):
-		print(curr_sym)
-		if (uniform(0,1) < sum ([abs(value) for value in offsets.values()]) / len(list(baseline_densities.values()))) and self.degen_enabled[Object_type(curr_sym)]:
+		if (uniform(0,1)  < sum ([abs(value) for value in offsets.values()]) / len(list(baseline_densities.values()))) and self.degen_enabled[Object_type(curr_sym)]:
 			selector = uniform(0,1)
-			total_prob = 0.0
+			total_prob = 0
 			normed_offsets = self.norm_dict(offsets)
 			for key, value in sorted(normed_offsets.items()): #this sort is important because otherwise dictionary 
 				total_prob += value # iteration order is not guaranteed to be consistent
 				if total_prob  >= selector:
 					return key
-		return curr_sym
+		return Object_type(curr_sym)
 
 	def passive_physics(self):
 		old_info = copy.deepcopy(self.info)
 		densities = dict([(key, old_info[key]/ (self.sector_size * self.sector_size)) for key in old_info])
-		offsets = dict([(key,abs(self.baseline_densities[key] - densities[key])) for key in self.baseline_densities])	
+		offsets = dict([(key,max(self.baseline_densities[key] - densities[key],0)) for key in self.baseline_densities])	
 		for i in range(self.sector_size):
 			for c in range(self.sector_size):
 				sym = self.passive_cell_update(self.grid[i][c],offsets, self.baseline_densities)

@@ -22,29 +22,60 @@ from itertools import combinations
 #for support email balisujohn@gmail.com
 
 
-
+Object_type = mega_grid.Object_type
 
 
 def evaluate_solo_mega_grid_performance(brain, visualization_mode):
-	# We will see how long our agent survives on average over 10 trials of 1000 frames of time
 
-	trials = 1
-	frame_limit = 1000
+	local_params = {}
+
+	mode = 2
+
+
+	if mode == 1: #this mode is compatible with save.5
+		local_params['trials'] = 1
+		local_params['frame_limit'] = 1000
+		local_params['grid_size'] = 20
+		local_params['agent_coords'] = (3,4)
+		local_params['capsule_percent'] = .99
+		local_params['starting_energy'] = 20
+		local_params['regen_enabled'] = False
+		local_params['baseline_densities']={	Object_type.EMPTY : .74, 
+												Object_type.STRIDER: .01,
+												Object_type.CAPSULE : .25
+											}
+	elif mode == 2:
+		local_params['trials'] = 1
+		local_params['frame_limit'] = 1000
+		local_params['grid_size'] = 20
+		local_params['agent_coords'] = (3,4)
+		local_params['capsule_percent'] = .55
+		local_params['starting_energy'] = 100
+		local_params['regen_enabled'] = True
+		local_params['baseline_densities']={	Object_type.EMPTY : 0.1, 
+												Object_type.STRIDER: 0.0,
+												Object_type.CAPSULE : 0.9
+											}
+
 
 	score = 0.0
 
-	for i in range(trials):
+	for i in range(local_params['trials']):
 		test_instance = copy.deepcopy(brain)
 		mega_grid.init_mega_grid_params()
 		grid = mega_grid.Grid(20)
-		grid.add_agent((3,4))
-		agent = grid.agents[(3,4)]
-		grid.agents[(3,4)].brain = test_instance
-		grid.populate_to_percent(mega_grid.Object_type.CAPSULE, .99)
-		for c in range(frame_limit):
+		grid.add_agent(local_params['agent_coords'])
+		agent = grid.agents[local_params['agent_coords']]
+		agent.energy = local_params['starting_energy']
+		grid.baseline_densities = local_params['baseline_densities']
+		grid.agents[local_params['agent_coords']].brain = test_instance
+		grid.populate_to_percent(mega_grid.Object_type.CAPSULE, local_params['capsule_percent'])
+		for c in range(local_params['frame_limit']):
 			if agent.energy <= 0:
 				break
 			score = score + 1
+			if local_params['regen_enabled'] == True:
+				grid.passive_physics()
 			grid.advance_agents(visualization_mode)
 			grid.active_physics()
 			if visualization_mode == visualization.Visualization_flags.VISUALIZATION_ON:
@@ -53,7 +84,7 @@ def evaluate_solo_mega_grid_performance(brain, visualization_mode):
 				print(agent.energy)
 				clear(.0001)
 		
-	return score/ (trials * frame_limit) * 100
+	return score/ (local_params['trials'] * local_params['frame_limit']) * 100
 			
 
 
