@@ -55,7 +55,7 @@ docker ps -a
 
 
 
-If the Docker session you are starting is a needs graphical windows, you will need the following line:
+If the Docker session you are starting needs graphical windows, you will need the following line:
 
 ````
 xhost +SI:localuser:root
