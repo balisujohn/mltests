@@ -19,11 +19,11 @@ import utils
 def init_mega_grid_params():
 	brain.Mutation_params.set_mutation_to_default_1(brain.Mutation_params)
 	brain.Mutation_params.neuron_start_count = 1
-	brain.Mutation_params.neuron_count_bias = .4
-	brain.Mutation_params.target_count_bias = .6
-	brain.Mutation_params.neuron_count_prob = .8
+	brain.Mutation_params.neuron_count_bias = .6
+	brain.Mutation_params.target_count_bias = .99
+	brain.Mutation_params.neuron_count_prob = .1
 	brain.Mutation_params.input_count = 3
-	brain.Mutation_params.reflex_pair_prob = .1
+	brain.Mutation_params.reflex_pair_prob = 0
 	brain.Mutation_params.mutation_cycles = 1
 	brain.Mutation_params.output_count = 7
 	brain.Mutation_params.upper_input_bounds = [.0000001] * 7
@@ -74,6 +74,7 @@ class Grid():
 		# specifies whether spontaneous degeneration is enabled for items.
 		self.degen_enabled = {Object_type.AGENT : False, Object_type.STRIDER: True , Object_type.CAPSULE : True ,Object_type.EMPTY : True}
 		self.sector_size = sector_size
+		self.capsule_energy_content = 10
 
 
 	def visualize_grid(self):
@@ -145,7 +146,7 @@ class Grid():
 			return
 		if Object_type(self.grid[other[1]][other[0]]) == Object_type.CAPSULE:
 			self.grid[other[1]][other[0]] = int(Object_type.EMPTY)
-			self.agents[agent].energy += 5
+			self.agents[agent].energy += self.capsule_energy_content
 			self.info[Object_type.CAPSULE] -= 1
 			self.info[Object_type.EMPTY] += 1
 
@@ -192,7 +193,6 @@ class Grid():
 		return result
 
 	def populate_to_percent(self, object_type, density):
-		random.seed(1)
 		for i in range(self.sector_size):
 			for c in range(self.sector_size):
 				if uniform(0,1) <= density and self.grid[i][c] != int(Object_type.AGENT): # This function is not allowed to overwrite agents
@@ -200,7 +200,6 @@ class Grid():
 					self.grid[i][c] = int(object_type)
 					self.info[Object_type.CAPSULE] += 1
 
-		random.seed() # we reseed the prng with current time
 
 
 

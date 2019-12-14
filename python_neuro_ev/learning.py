@@ -10,6 +10,7 @@ import os
 import copy
 from random import randrange
 from random import uniform 
+import random
 import utils
 from utils import clear
 import gym
@@ -32,30 +33,35 @@ def evaluate_solo_mega_grid_performance(brain, visualization_mode):
 	mode = 2
 
 
-	if mode == 1: #this mode is compatible with save.5
+	if mode == 1: #this mode is compatible with save.5 scoring perfectly
 		local_params['trials'] = 1
 		local_params['frame_limit'] = 1000
 		local_params['grid_size'] = 20
 		local_params['agent_coords'] = (3,4)
-		local_params['capsule_percent'] = .99
+		local_params['capsule_percent'] = 1
 		local_params['starting_energy'] = 20
 		local_params['regen_enabled'] = False
 		local_params['baseline_densities']={	Object_type.EMPTY : .74, 
 												Object_type.STRIDER: .01,
 												Object_type.CAPSULE : .25
 											}
+		local_params['capsule_energy_content'] = 5
+
 	elif mode == 2:
+		random.seed(0)
 		local_params['trials'] = 1
 		local_params['frame_limit'] = 1000
-		local_params['grid_size'] = 20
+		local_params['grid_size'] = 10
 		local_params['agent_coords'] = (3,4)
 		local_params['capsule_percent'] = .55
 		local_params['starting_energy'] = 100
 		local_params['regen_enabled'] = True
-		local_params['baseline_densities']={	Object_type.EMPTY : 0.1, 
+		local_params['baseline_densities']={	Object_type.EMPTY : 0.8, 
 												Object_type.STRIDER: 0.0,
-												Object_type.CAPSULE : 0.9
+												Object_type.CAPSULE : 0.2
 											}
+		local_params['capsule_energy_content'] = 5
+
 
 
 	score = 0.0
@@ -63,10 +69,11 @@ def evaluate_solo_mega_grid_performance(brain, visualization_mode):
 	for i in range(local_params['trials']):
 		test_instance = copy.deepcopy(brain)
 		mega_grid.init_mega_grid_params()
-		grid = mega_grid.Grid(20)
+		grid = mega_grid.Grid(local_params['grid_size'])
 		grid.add_agent(local_params['agent_coords'])
 		agent = grid.agents[local_params['agent_coords']]
 		agent.energy = local_params['starting_energy']
+		grid.capsule_energy_content = local_params['capsule_energy_content']
 		grid.baseline_densities = local_params['baseline_densities']
 		grid.agents[local_params['agent_coords']].brain = test_instance
 		grid.populate_to_percent(mega_grid.Object_type.CAPSULE, local_params['capsule_percent'])
@@ -83,7 +90,7 @@ def evaluate_solo_mega_grid_performance(brain, visualization_mode):
 				pprint.pprint(grid.info)
 				print(agent.energy)
 				clear(.0001)
-		
+	random.seed()
 	return score/ (local_params['trials'] * local_params['frame_limit']) * 100
 			
 
