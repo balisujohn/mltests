@@ -19,15 +19,15 @@ import utils
 def init_mega_grid_params():
 	brain.Mutation_params.set_mutation_to_default_1(brain.Mutation_params)
 	brain.Mutation_params.neuron_start_count = 1
-	brain.Mutation_params.neuron_count_bias = .6
-	brain.Mutation_params.target_count_bias = .99
-	brain.Mutation_params.neuron_count_prob = .1
-	brain.Mutation_params.input_count = 3
-	brain.Mutation_params.reflex_pair_prob = 0
+	brain.Mutation_params.neuron_count_bias = .4
+	brain.Mutation_params.target_count_bias = .5
+	brain.Mutation_params.neuron_count_prob = .5
+	brain.Mutation_params.input_count = 6
+	brain.Mutation_params.reflex_pair_prob = .1
 	brain.Mutation_params.mutation_cycles = 1
 	brain.Mutation_params.output_count = 7
-	brain.Mutation_params.upper_input_bounds = [.0000001] * 7
-	brain.Mutation_params.lower_input_bounds = [-.0000001] * 7
+	brain.Mutation_params.upper_input_bounds = [.0000001] * 6
+	brain.Mutation_params.lower_input_bounds = [-.0000001] * 6
 
 
 
@@ -257,8 +257,9 @@ class Grid():
 		#	print(result)
 		#	print(numerical_result)
 			if visualization_mode == visualization.Visualization_flags.VISUALIZATION_ON:
-				print(result)
-				print(numerical_result)
+				print("OUTPUT:\n" + str(result))
+				print("INPUT:\n" + str(observations))
+
 			agent.generate_action(numerical_result, self, key)
 
 			
