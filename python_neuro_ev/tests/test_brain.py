@@ -79,5 +79,25 @@ class test_Brain(unittest.TestCase):
             self.assertEqual(instance.external_thresh, 0)
             self.assertEqual(instance.external_bit, 0)
 
+
+
+    def test_update_input_bounds(self):
+        instance = brain.Brain()
+        brain.Mutation_params.upper_input_bounds = [.001,.001,1000]
+        brain.Mutation_params.lower_input_bounds = [-.001,-.001,-1000]
+        observations = [5,-5,1,6]
+        target_upper_result = [5,.001,1000,6]
+        target_lower_result = [-.001, -5,-1000,-.001]
+        instance.update_input_bounds(observations) # in the future it will be prudent to refactor this to an instance variable within a brain instance
+        self.assertEqual(target_upper_result, brain.Mutation_params().upper_input_bounds)
+        self.assertEqual(target_lower_result, brain.Mutation_params().lower_input_bounds)
+        brain.Mutation_params.upper_input_bounds = [.001,.001,1000]
+        brain.Mutation_params.lower_input_bounds = [-.001,-.001,-1000]
+        observations = [5,-5]
+        target_upper_result = [5,.001]
+        target_lower_result = [-.001, -5]
+        instance.update_input_bounds(observations) # in the future it will be prudent to refactor this to an instance variable within a brain instance
+        self.assertEqual(target_upper_result, brain.Mutation_params().upper_input_bounds)
+        self.assertEqual(target_lower_result, brain.Mutation_params().lower_input_bounds)
 if __name__ == '__main__':
     unittest.main()

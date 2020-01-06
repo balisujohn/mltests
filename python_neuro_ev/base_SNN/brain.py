@@ -256,6 +256,24 @@ class Brain:
 				assert(target < self.neuron_count)
 				assert(target != i)
 		pass
+
+		#This function updates the maximum and minimum observed values for a given input
+	def update_input_bounds(self, observations):
+
+		if(len(observations) != len(Mutation_params().upper_input_bounds) or len(observations) != len(Mutation_params().lower_input_bounds )):
+			if len(observations) > len(Mutation_params().upper_input_bounds):
+				Mutation_params.upper_input_bounds = Mutation_params.upper_input_bounds + [.001 for i in range(len(observations) - len(Mutation_params().upper_input_bounds))]
+			if len(observations) > len(Mutation_params().lower_input_bounds):
+				Mutation_params.lower_input_bounds = Mutation_params.lower_input_bounds + [-.001 for i in range(len(observations) - len(Mutation_params().lower_input_bounds))]
+			if len(observations) < len(Mutation_params().upper_input_bounds):
+				Mutation_params.upper_input_bounds = Mutation_params.upper_input_bounds[: len(observations)]
+			if len(observations) < len(Mutation_params().lower_input_bounds):
+				Mutation_params.lower_input_bounds = Mutation_params.lower_input_bounds[:len(observations)]
+
+		for i in range(len(observations)):
+			Mutation_params.upper_input_bounds[i] = max(Mutation_params().upper_input_bounds[i],observations[i])
+			Mutation_params.lower_input_bounds[i] = min(Mutation_params().lower_input_bounds[i],observations[i])
+
 		
 
          ##     ## ##     ## ########    ###    ######## ########
@@ -507,7 +525,7 @@ class Brain:
 				self.neurons[i].fired = 1
 				self.neurons[i].excitation = 0
 
-			elif neuron.type == Brain_flags.NEURON_SENSORY:
+			elif neuron.type == Brain_flags.NEURON_SENSORY and neuron.external_index < len(inputs):
 				observation = inputs[neuron.external_index]
 				if neuron.sensor_type == Brain_flags.SENSOR_BIT:
 					if (observation >> neuron.external_bit) & 1:	

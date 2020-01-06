@@ -244,10 +244,10 @@ class Grid():
 			#sense
 			observations = self.sense(key, agent.direction)
 			output = []
-			for i in range(len(observations)): ## setting our bounds appropriately for threshold mutations
-				brain.Mutation_params().upper_input_bounds[i] = max(brain.Mutation_params().upper_input_bounds[i],observations[i])
-				brain.Mutation_params().lower_input_bounds[i] = min(brain.Mutation_params().lower_input_bounds[i],observations[i])
-
+			#for i in range(len(observations)): ## setting our bounds appropriately for threshold mutations
+			#	brain.Mutation_params().upper_input_bounds[i] = max(brain.Mutation_params().upper_input_bounds[i],observations[i])
+			#	brain.Mutation_params().lower_input_bounds[i] = min(brain.Mutation_params().lower_input_bounds[i],observations[i])
+			agent.brain.update_input_bounds(observations)
 
 			result = agent.brain.advance_n_with_mode(observations, 	brain.Mutation_params.output_count , 10, visualization_mode)
 			
