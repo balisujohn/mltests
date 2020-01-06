@@ -48,7 +48,7 @@ def evaluate_solo_mega_grid_performance(brain, visualization_mode):
 		local_params['capsule_energy_content'] = 5
 
 	elif mode == 2:
-		random.seed(0)
+		#random.seed(0)
 		local_params['trials'] = 1
 		local_params['frame_limit'] = 1000
 		local_params['grid_size'] = 10

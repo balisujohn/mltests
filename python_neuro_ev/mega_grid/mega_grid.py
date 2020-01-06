@@ -8,7 +8,7 @@ import random
 import copy
 from random import uniform,shuffle
 from enum import IntEnum, Enum
-from utils import clear
+from utils import clear, decimal_to_binary_array
 import pprint
 import brain
 import visualization
@@ -159,31 +159,37 @@ class Grid():
 	def sense(self, coordinates, direction): 
 		x_coord = coordinates[0] 
 		y_coord = coordinates[1]
+		distance = 0
 		if direction == Direction.UP:
 			while y_coord > 0:
 				y_coord -= 1
 				if self.grid[y_coord][x_coord] != int(Object_type.EMPTY):
-					return self.object_colors[Object_type(self.grid[y_coord][x_coord])]
+					return self.object_colors[Object_type(self.grid[y_coord][x_coord])] + tuple(decimal_to_binary_array(distance, bounded = True, bound = 7, fixed_length = True, length = 3))
+				distance += 1
 
 		elif direction == Direction.LEFT:
 			while x_coord > 0:
 				x_coord -= 1
 				if self.grid[y_coord][x_coord] != int(Object_type.EMPTY):
-					return self.object_colors[Object_type(self.grid[y_coord][x_coord])]
+					return self.object_colors[Object_type(self.grid[y_coord][x_coord])] + tuple(decimal_to_binary_array(distance, bounded = True, bound = 7, fixed_length = True, length = 3))
+				distance += 1
+
 
 		elif direction == Direction.RIGHT:
 			while x_coord < self.sector_size-1:
 				x_coord += 1
 				if self.grid[y_coord][x_coord] != int(Object_type.EMPTY):
-					return self.object_colors[Object_type(self.grid[y_coord][x_coord])]
+					return self.object_colors[Object_type(self.grid[y_coord][x_coord])] + tuple(decimal_to_binary_array(distance, bounded = True, bound = 7, fixed_length = True, length = 3))
+				distance += 1
 
 		elif direction == Direction.DOWN:
 			while y_coord < self.sector_size-1:
 				y_coord += 1
 				if self.grid[y_coord][x_coord] != int(Object_type.EMPTY):
-					return self.object_colors[Object_type(self.grid[y_coord][x_coord])]
+					return self.object_colors[Object_type(self.grid[y_coord][x_coord])] + tuple(decimal_to_binary_array(distance, bounded = True, bound = 7, fixed_length = True, length = 3))
+				distance += 1
 
-		return (0,0,0)
+		return (0,0,0) + tuple(decimal_to_binary_array(distance, bounded = True, bound = 7, fixed_length = True, length = 3))
 
 	def norm_dict(self, value_dict):
 		result = copy.deepcopy(value_dict)

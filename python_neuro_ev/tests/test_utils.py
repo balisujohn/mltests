@@ -36,8 +36,25 @@ class Test_Utils(unittest.TestCase):
         input = 0
         expected_output = [0] 
         self.assertEqual(utils.decimal_to_binary_array(input), expected_output)
+        input = 0
+        expected_output = [0,0,0] 
+        self.assertEqual(utils.decimal_to_binary_array(input, fixed_length = True, length = 3), expected_output)
+        input = 1
+        expected_output = [0,0,1] 
+        self.assertEqual(utils.decimal_to_binary_array(input, fixed_length = True, length = 3), expected_output)
+        input = 2
+        expected_output = [0,1,0] 
+        self.assertEqual(utils.decimal_to_binary_array(input, fixed_length = True, length = 3), expected_output)
+        input = 3
+        expected_output = [0,1,1] 
+        self.assertEqual(utils.decimal_to_binary_array(input, bounded = True, bound = 7, fixed_length = True, length = 3), expected_output)
+        input = 7
+        expected_output = [1,1,1] 
+        self.assertEqual(utils.decimal_to_binary_array(input, bounded = True, bound = 7, fixed_length = True, length = 3), expected_output)
+        input = 87
+        expected_output = [1,1,1] 
+        self.assertEqual(utils.decimal_to_binary_array(input, bounded = True, bound = 7, fixed_length = True, length = 3), expected_output)
 
-        
 
 if __name__ == '__main__':
     unittest.main()

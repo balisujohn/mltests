@@ -64,15 +64,24 @@ def binary_array_to_decimal(array):
 
 	return result
 
-def decimal_to_binary_array(integer, bounded= False, bound = 0):
+def decimal_to_binary_array(integer, bounded= False, bound = 0, fixed_length = False, length = 0):
 	if integer == 0:
-		return [0]
+		if fixed_length:
+			return [0 for i in range(length)]
+		else:
+			return [0]
 	if bounded and integer > bound:
 		integer = bound
 	result = []
 	while integer != 0:
 		result.insert(0,integer & 1)
 		integer = integer >> 1
+	if fixed_length:
+		if len(result) > length:
+			result = result[length:]
+		elif len(result) < length:
+			result =  [0 for i in range(length- len(result))] + result 
+
 	return result 
 
 

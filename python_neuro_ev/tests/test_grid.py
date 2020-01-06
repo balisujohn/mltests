@@ -72,15 +72,20 @@ class test_grid(unittest.TestCase):
         grid.grid[0][1] = Object_type.CAPSULE
         grid.grid[2][0] = Object_type.STRIDER
         result1 = grid.sense((1,0), Direction.UP)
-        self.assertEqual(result1, (0,0,0))
+        self.assertEqual(result1, (0,0,0,0,0,0))
         result2 = grid.sense((1,1), Direction.UP)
-        self.assertEqual(result2, (0,0,1))
+        self.assertEqual(result2, (0,0,1,0,0,0))
         result3 = grid.sense((2,0), Direction.LEFT)
-        self.assertEqual(result3, (0,0,1))
+        self.assertEqual(result3, (0,0,1,0,0,0))
         result4 = grid.sense((0,0), Direction.RIGHT)
-        self.assertEqual(result4, (0,0,1))
+        self.assertEqual(result4, (0,0,1,0,0,0))
         result5 = grid.sense((0,0), Direction.DOWN)
-        self.assertEqual(result5, (0,1,0))
+        self.assertEqual(result5, (0,1,0,0,0,1))
+        result6 = grid.sense((2,0), Direction.DOWN)
+        self.assertEqual(result6, (0,0,0,0,1,0))
+        result7 = grid.sense((2,2), Direction.LEFT)
+        self.assertEqual(result7, (0,1,0,0,0,1))
+
 
 
     def test_add_agent(self):
