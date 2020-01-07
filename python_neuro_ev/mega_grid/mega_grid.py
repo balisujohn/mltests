@@ -74,8 +74,8 @@ class Grid():
 		# specifies whether spontaneous degeneration is enabled for items.
 		self.degen_enabled = {Object_type.AGENT : False, Object_type.STRIDER: True , Object_type.CAPSULE : True ,Object_type.EMPTY : True}
 		self.sector_size = sector_size
-		self.capsule_energy_content = 10
-
+		self.capsule_energy_content = 20
+		self.mutation_probability = .5
 
 	def visualize_grid(self):
 		for i in range(self.sector_size):
@@ -103,6 +103,7 @@ class Grid():
 	def add_agent(self, coords): #todo add new brain 
 		if self.grid[coords[1]][coords[0]] != int(Object_type.AGENT):
 			self.info[Object_type.AGENT] += 1
+			self.info[Object_type(self.grid[coords[1]][coords[0]])] -= 1
 		self.grid[coords[1]][coords[0]] = int(Object_type.AGENT)
 		brain_instance = brain.Brain()
 		self.agents[coords] = Agent(brain_instance)
@@ -137,16 +138,6 @@ class Grid():
 		if Object_type(self.grid[dest[1]][dest[0]]) == Object_type.EMPTY:
 			self.grid[dest[1]][dest[0]] = self.grid[start[1]][start[0]]
 			self.grid[start[1]][start[0]] = int(Object_type.EMPTY)
-		
-			if start not in self.agents:
-				print("list of agents")
-				print(self.agents.keys())
-				print("agent to be moved")
-				print(start)
-				print("movement queue")
-				print(self.action_queue)
-				self.visualize_detailed_grid()
-				return
 			assert(start in self.agents.keys())
 			agent = self.agents.pop(start)
 			self.agents[dest] = agent 
@@ -159,12 +150,34 @@ class Grid():
 			self.agents[agent].energy += self.capsule_energy_content
 			self.info[Object_type.CAPSULE] -= 1
 			self.info[Object_type.EMPTY] += 1
+	
+	def get_rear_cell(self, coords):
+		agent = self.agents[coords]
+		if agent.direction == Direction.UP:
+			return (coords[0], coords[1]+1)
+		elif agent.direction == Direction.LEFT:
+			return (coords[0]+1, coords[1])
+		elif agent.direction == Direction.DOWN:
+			return (coords[0], coords[1]-1)
+		elif agent.direction == Direction.RIGHT:
+			return (coords[0]-1, coords[1])
 
+
+
+	def reproduce_agent(self, coords):
+		agent = self.agents[coords]
+		target_location = self.get_rear_cell(coords)
+		if self.check_movement(target_location):
+			brain_replica = copy.deepcopy(agent.brain)
+			self.add_agent(target_location)
+			self.agents[target_location].brain = brain_replica
+			if uniform(0,1) < self.mutation_probability:
+				self.agents[target_location].mutate()			
 
 
 	###
 	# ray tracing in a 2 dimensional discrete grid to determine the value of a single pixel sensor
-	# for now we are forgoing depth perception
+	# we use the three least signficiant bits to encode depth perception information
 	###
 	def sense(self, coordinates, direction): 
 		x_coord = coordinates[0] 
@@ -253,6 +266,10 @@ class Grid():
 			if agent.energy <= 0:
 				self.remove_agent(key)
 				continue
+			elif agent.energy > 200:
+				self.reproduce_agent(key)
+				agent.energy -= 100
+			
 			agent.energy -= 1
 			
 			#sense
@@ -306,7 +323,7 @@ class Agent():
 		return Direction((self.direction + offset) % 4)
 
 	def mutate(self):
-		self.brain.default_mutation(3,3)
+		self.brain.default_mutation(6,7)
 
 	###
 	# moves the agent if there is no physical obstruction in the world, updating both the the agent's and the world's info for the new frame of time. 
@@ -389,7 +406,7 @@ if __name__ == '__main__':
 									Object_type.STRIDER: 0.0,
 									Object_type.CAPSULE : 0.2
 								}
-		for i in range(10):
+		for i in range(1):
 			location = (randrange(0,40),randrange(0,40))
 			grid.add_agent(location)
 			grid.agents[location].brain = copy.deepcopy(starter_brain)

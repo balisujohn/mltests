@@ -93,6 +93,22 @@ class test_grid(unittest.TestCase):
         grid.add_agent((0,1))
         self.assertEqual(grid.grid[1][0] , Object_type.AGENT)
         self.assertEqual(list(grid.agents.keys())[0], (0,1))
+        self.assertEqual(grid.info[Object_type.AGENT], 1)
+        self.assertEqual(grid.info[Object_type.EMPTY], 8)
+
+
+    def test_remove_agent(self):
+        grid = Grid(3)
+        grid.grid[1][0] = int(Object_type.AGENT)
+        grid.agents[(0,1)] = {"dummy": "object"}
+        grid.info[Object_type.EMPTY] = 8
+        grid.info[Object_type.AGENT]= 1
+        grid.remove_agent((0,1))
+        self.assertEqual(grid.grid[1][0] , Object_type.EMPTY)
+        self.assertTrue((0,1) not in grid.agents)
+        self.assertEqual(grid.info[Object_type.AGENT], 0)
+        self.assertEqual(grid.info[Object_type.EMPTY], 9)
+
 
 
 
