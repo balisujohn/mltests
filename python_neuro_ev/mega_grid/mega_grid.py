@@ -6,7 +6,7 @@ sys.path.insert(0,"./base_SNN")
 import numpy as np
 import random
 import copy
-from random import uniform,shuffle
+from random import uniform,shuffle,randrange
 from enum import IntEnum, Enum
 from utils import clear, decimal_to_binary_array
 import pprint
@@ -106,6 +106,16 @@ class Grid():
 		self.grid[coords[1]][coords[0]] = int(Object_type.AGENT)
 		brain_instance = brain.Brain()
 		self.agents[coords] = Agent(brain_instance)
+
+
+	def remove_agent(self, coords):
+		if self.grid[coords[1]][coords[0]] != int(Object_type.AGENT):
+			return
+		self.grid[coords[1]][coords[0]] = int(Object_type.EMPTY)
+		del self.agents[coords]
+		self.info[Object_type.AGENT] -= 1
+		self.info[Object_type.EMPTY] += 1
+
 
 
 	def check_bounds(self, coords):
@@ -240,7 +250,11 @@ class Grid():
 		for key in agent_keys: #useful to note here that each 'key' is a tuple containing agent location in (x,y) format
 			agent = self.agents[key]
 			assert(self.grid[key[1]][key[0]] == Object_type.AGENT)
+			if agent.energy <= 0:
+				self.remove_agent(key)
+				continue
 			agent.energy -= 1
+			
 			#sense
 			observations = self.sense(key, agent.direction)
 			output = []
@@ -364,19 +378,30 @@ class Agent():
 #physics/agent pass
 # physics objects and agent updates
 if __name__ == '__main__':
-	init_mega_grid_params()
-	grid = Grid(20)
-	grid.add_agent((1,1))
-	grid.agents[(1,1)].mutate()
+
+	if len(sys.argv) == 2:
+
+		starter_brain = brain.load_brain_from_file(sys.argv[1])
+
+		init_mega_grid_params()
+		grid = Grid(40)
+		grid.baseline_densities = {	Object_type.EMPTY : 0.8, 
+									Object_type.STRIDER: 0.0,
+									Object_type.CAPSULE : 0.2
+								}
+		for i in range(10):
+			location = (randrange(0,40),randrange(0,40))
+			grid.add_agent(location)
+			grid.agents[location].brain = copy.deepcopy(starter_brain)
 
 
-	for i in range(999999999):
-		grid.passive_physics()
-		grid.advance_agents()
-		grid.active_physics()
-		grid.visualize_detailed_grid()
-		pprint.pprint(grid.info)
-		clear(1)
+		for i in range(999999999):
+			grid.passive_physics()
+			grid.advance_agents(visualization.Visualization_flags.VISUALIZATION_OFF)
+			grid.active_physics()
+			grid.visualize_detailed_grid()
+			pprint.pprint(grid.info)
+			clear(0)
 
 
 
