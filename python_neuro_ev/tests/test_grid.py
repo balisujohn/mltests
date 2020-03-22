@@ -127,39 +127,57 @@ class test_grid(unittest.TestCase):
         self.assertEqual(grid.check_movement((3,3)), False)
 
 
-
-
+    def test_publish_interact_action(self):
+        grid = Grid(3)
+        grid.add_agent((1,1)) 
+        agent = grid.agents[(1,1)]
+        agent.direction = Direction.UP
+        grid.publish_interact_action(agent, (1,1))
+        self.assertEqual(grid.action_queue, [((1,1),(1,0),Action_type.INTERACT)])
+        agent.direction = Direction.RIGHT
+        grid.action_queue = []
+        grid.publish_interact_action(agent, (1,1))
+        self.assertEqual(grid.action_queue, [((1,1),(2,1),Action_type.INTERACT)])
+        agent.direction = Direction.DOWN
+        grid.action_queue = []
+        grid.publish_interact_action(agent, (1,1))
+        self.assertEqual(grid.action_queue, [((1,1),(1,2),Action_type.INTERACT)])
+        agent.direction = Direction.LEFT
+        grid.action_queue = []
+        grid.publish_interact_action( agent, (1,1))
+        self.assertEqual(grid.action_queue, [((1,1),(0,1),Action_type.INTERACT)])
 
 
     def test_publish_movement_action(self):
         grid = Grid(3)
         grid.add_agent((1,1)) 
         agent = grid.agents[(1,1)]
-        agent.publish_movement_action(Direction.UP, grid, (1,1))
-        agent.publish_movement_action(Direction.RIGHT, grid, (1,1))
-        agent.publish_movement_action(Direction.DOWN, grid, (1,1))
-        agent.publish_movement_action(Direction.LEFT, grid, (1,1))
+        agent.direction = Direction.UP
+        grid.publish_movement_action(Direction.UP, agent, (1,1))
+        grid.publish_movement_action(Direction.RIGHT, agent, (1,1))
+        grid.publish_movement_action(Direction.DOWN, agent, (1,1))
+        grid.publish_movement_action(Direction.LEFT, agent, (1,1))
         self.assertEqual(grid.action_queue, [((1,1),(1,0),Action_type.MOVE),((1,1),(2,1),Action_type.MOVE),((1,1),(1,2),Action_type.MOVE),((1,1),(0,1),Action_type.MOVE)])
         agent.direction = Direction.RIGHT
         grid.action_queue = []
-        agent.publish_movement_action(Direction.UP, grid, (1,1))
-        agent.publish_movement_action(Direction.RIGHT, grid, (1,1))
-        agent.publish_movement_action(Direction.DOWN, grid, (1,1))
-        agent.publish_movement_action(Direction.LEFT, grid, (1,1))
+        grid.publish_movement_action(Direction.UP, agent, (1,1))
+        grid.publish_movement_action(Direction.RIGHT, agent, (1,1))
+        grid.publish_movement_action(Direction.DOWN, agent, (1,1))
+        grid.publish_movement_action(Direction.LEFT, agent, (1,1))
         self.assertEqual(grid.action_queue, [((1,1),(2,1),Action_type.MOVE),((1,1),(1,2),Action_type.MOVE),((1,1),(0,1),Action_type.MOVE),((1,1),(1,0),Action_type.MOVE)])
         agent.direction = Direction.DOWN
         grid.action_queue = []
-        agent.publish_movement_action(Direction.UP, grid, (1,1))
-        agent.publish_movement_action(Direction.RIGHT, grid, (1,1))
-        agent.publish_movement_action(Direction.DOWN, grid, (1,1))
-        agent.publish_movement_action(Direction.LEFT, grid, (1,1))
+        grid.publish_movement_action(Direction.UP, agent, (1,1))
+        grid.publish_movement_action(Direction.RIGHT, agent, (1,1))
+        grid.publish_movement_action(Direction.DOWN, agent, (1,1))
+        grid.publish_movement_action(Direction.LEFT, agent, (1,1))
         self.assertEqual(grid.action_queue, [((1,1),(1,2),Action_type.MOVE),((1,1),(0,1),Action_type.MOVE),((1,1),(1,0),Action_type.MOVE),((1,1),(2,1),Action_type.MOVE)])
         agent.direction = Direction.LEFT
         grid.action_queue = []
-        agent.publish_movement_action(Direction.UP, grid, (1,1))
-        agent.publish_movement_action(Direction.RIGHT, grid, (1,1))
-        agent.publish_movement_action(Direction.DOWN, grid, (1,1))
-        agent.publish_movement_action(Direction.LEFT, grid, (1,1))
+        grid.publish_movement_action(Direction.UP, agent, (1,1))
+        grid.publish_movement_action(Direction.RIGHT, agent, (1,1))
+        grid.publish_movement_action(Direction.DOWN, agent, (1,1))
+        grid.publish_movement_action(Direction.LEFT, agent, (1,1))
         self.assertEqual(grid.action_queue, [((1,1),(0,1),Action_type.MOVE),((1,1),(1,0),Action_type.MOVE),((1,1),(2,1),Action_type.MOVE),((1,1),(1,2),Action_type.MOVE)])
 
     def test_apply_direction_offset(self): #sometimes it is fun to be fastidious with test cases

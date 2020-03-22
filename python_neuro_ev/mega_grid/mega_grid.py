@@ -308,7 +308,42 @@ class Grid():
 
 
 			#public to action_queue
-				
+
+	###
+	# moves the agent if there is no physical obstruction in the world, updating both the the agent's and the world's info for the new frame of time. 
+	###
+	def publish_movement_action(self , relative_direction, agent, coords):
+		move_direction = agent.apply_direction_offset(relative_direction)
+		if move_direction == Direction.UP:
+			new_coords = (coords[0], coords[1]-1)
+			self.action_queue.append((coords, new_coords , Action_type.MOVE))
+		elif move_direction == Direction.RIGHT:
+			new_coords = (coords[0]+1, coords[1])
+			self.action_queue.append((coords, new_coords,Action_type.MOVE))
+		elif move_direction == Direction.DOWN:
+			new_coords = (coords[0], coords[1]+1)
+			self.action_queue.append((coords, new_coords,Action_type.MOVE))
+		elif move_direction == Direction.LEFT:
+			new_coords = (coords[0]-1, coords[1])
+			self.action_queue.append((coords, new_coords,Action_type.MOVE))
+
+
+	def publish_interact_action(self,agent,coords):
+		if agent.direction == Direction.UP:
+			new_coords = (coords[0], coords[1]-1)
+			self.action_queue.append((coords, new_coords , Action_type.INTERACT))
+		elif agent.direction == Direction.RIGHT:
+			new_coords = (coords[0]+1, coords[1])
+			self.action_queue.append((coords, new_coords,Action_type.INTERACT))
+		elif agent.direction == Direction.DOWN:
+			new_coords = (coords[0], coords[1]+1)
+			self.action_queue.append((coords, new_coords,Action_type.INTERACT))
+		elif agent.direction == Direction.LEFT:
+			new_coords = (coords[0]-1, coords[1])
+			self.action_queue.append((coords, new_coords,Action_type.INTERACT))
+
+
+
 
 class Agent():
 	def __init__(self, brain):
@@ -332,44 +367,10 @@ class Agent():
 
 	def mutate(self):
 		self.brain.default_mutation(6,7)
-
-	###
-	# moves the agent if there is no physical obstruction in the world, updating both the the agent's and the world's info for the new frame of time. 
-	###
-	def publish_movement_action(self , relative_direction, grid, coords):
-		move_direction = self.apply_direction_offset(relative_direction)
-		if move_direction == Direction.UP:
-			new_coords = (coords[0], coords[1]-1)
-			grid.action_queue.append((coords, new_coords , Action_type.MOVE))
-		elif move_direction == Direction.RIGHT:
-			new_coords = (coords[0]+1, coords[1])
-			grid.action_queue.append((coords, new_coords,Action_type.MOVE))
-		elif move_direction == Direction.DOWN:
-			new_coords = (coords[0], coords[1]+1)
-			grid.action_queue.append((coords, new_coords,Action_type.MOVE))
-		elif move_direction == Direction.LEFT:
-			new_coords = (coords[0]-1, coords[1])
-			grid.action_queue.append((coords, new_coords,Action_type.MOVE))
 		
-
-	def publish_interact_action(self,grid,coords):
-		if self.direction == Direction.UP:
-			new_coords = (coords[0], coords[1]-1)
-			grid.action_queue.append((coords, new_coords , Action_type.INTERACT))
-		elif self.direction == Direction.RIGHT:
-			new_coords = (coords[0]+1, coords[1])
-			grid.action_queue.append((coords, new_coords,Action_type.INTERACT))
-		elif self.direction == Direction.DOWN:
-			new_coords = (coords[0], coords[1]+1)
-			grid.action_queue.append((coords, new_coords,Action_type.INTERACT))
-		elif self.direction == Direction.LEFT:
-			new_coords = (coords[0]-1, coords[1])
-			grid.action_queue.append((coords, new_coords,Action_type.INTERACT))
-
-
-		##
-		# should only be called with Direction.LEFT or Direction.RIGHT
-		##
+	##
+	# should only be called with Direction.LEFT or Direction.RIGHT
+	##
 	def turn(self, turn_direction):
 		self.direction = self.apply_direction_offset(turn_direction)
 
@@ -383,16 +384,22 @@ class Agent():
 		elif selection == 2:
 			self.turn(Direction.RIGHT)
 		elif selection == 4:
-			self.publish_movement_action(Direction.UP, grid, coords)
+			grid.publish_movement_action(Direction.UP, self, coords)
 		elif selection == 8:
-			self.publish_movement_action(Direction.RIGHT, grid, coords)
+			grid.publish_movement_action(Direction.RIGHT, self, coords)
 		elif selection == 16:
-			self.publish_movement_action(Direction.DOWN, grid, coords)
+			grid.publish_movement_action(Direction.DOWN, self, coords)
 		elif selection == 32:
-			self.publish_movement_action(Direction.LEFT, grid, coords)
+			grid.publish_movement_action(Direction.LEFT, self, coords)
 		elif selection == 64:
-			self.publish_interact_action(grid,coords)
+			grid.publish_interact_action(self,coords)
 		
+		
+class Strider():
+	def __init__(self):
+		self.brain = brain.load_brain_from_file("./topologies/sologrid/save.5") # this is a temporary solution
+		self.direction = Direction.UP
+	
 	
 
 #phases of a world-frame
