@@ -172,7 +172,8 @@ class Grid():
 			self.add_agent(target_location)
 			self.agents[target_location].brain = brain_replica
 			if uniform(0,1) < self.mutation_probability:
-				self.agents[target_location].mutate()			
+				self.agents[target_location].mutate()
+				self.agents[target_location].mutations = agent.mutations + 1			
 
 
 	###
@@ -263,6 +264,7 @@ class Grid():
 		for key in agent_keys: #useful to note here that each 'key' is a tuple containing agent location in (x,y) format
 			agent = self.agents[key]
 			assert(self.grid[key[1]][key[0]] == Object_type.AGENT)
+			agent.age += 1
 			if agent.energy <= 0:
 				self.remove_agent(key)
 				continue
@@ -313,7 +315,13 @@ class Agent():
 		self.brain = brain
 		self.direction = Direction.UP
 		self.energy = 20
-	
+		self.age = 0
+		self.mutations = 0 # this gets incremented only for offspring with a mutation
+
+	def	__repr__(self):
+		return "<Agent age:%s, mutations:%s>" % (self.age, self.mutations)
+
+
 	## sensing calculate sensory data
 	## evaluation decide on action
 	## active physics(actuation phase)
@@ -385,8 +393,7 @@ class Agent():
 		elif selection == 64:
 			self.publish_interact_action(grid,coords)
 		
-			
-
+	
 
 #phases of a world-frame
 #passive physics phase:
@@ -402,23 +409,27 @@ if __name__ == '__main__':
 
 		init_mega_grid_params()
 		grid = Grid(40)
-		grid.baseline_densities = {	Object_type.EMPTY : 0.8, 
+		grid.baseline_densities = {	Object_type.EMPTY : 0.90, 
 									Object_type.STRIDER: 0.0,
-									Object_type.CAPSULE : 0.2
+									Object_type.CAPSULE : 0.10
 								}
-		for i in range(1):
+		for i in range(20):
 			location = (randrange(0,40),randrange(0,40))
 			grid.add_agent(location)
 			grid.agents[location].brain = copy.deepcopy(starter_brain)
 
 
-		for i in range(999999999):
+		for i in range(4000):
+
+
 			grid.passive_physics()
 			grid.advance_agents(visualization.Visualization_flags.VISUALIZATION_OFF)
 			grid.active_physics()
 			grid.visualize_detailed_grid()
 			pprint.pprint(grid.info)
+			print("WORLD AGE: " + str(i))
 			clear(0)
+		print(grid.agents)
 
 
 
