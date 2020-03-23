@@ -40,6 +40,12 @@ def init_mega_grid_params():
 	brain.Mutation_params.lower_input_bounds = [-.0000001] * 6
 
 
+def default_policy(grid_instance):
+	if grid.info[Object_type.AGENT] > 50:
+		grid.baseline_densities[Object_type.STRIDER] = (grid.info[Object_type.AGENT] - 50)/ 100
+	else:
+		grid.baseline_densities[Object_type.STRIDER] = .004
+
 
 class Object_type(IntEnum):
 	EMPTY = 0
@@ -232,7 +238,6 @@ class Grid():
 			self.remove_object(dest)
 		elif  Object_type(self.grid[start[1]][start[0]]) == Object_type.STRIDER and Object_type(self.grid[dest[1]][dest[0]]) == Object_type.AGENT:
 			self.remove_object(dest)
-			print("AGENT KILLED")
 		elif  Object_type(self.grid[start[1]][start[0]]) == Object_type.STRIDER and Object_type(self.grid[dest[1]][dest[0]]) == Object_type.CAPSULE:
 			self.remove_object(dest)
 	
@@ -578,12 +583,13 @@ if __name__ == '__main__':
 			location = (randrange(0,40),randrange(0,40))
 			grid.add_object(location, Object_type.STRIDER)
 
-		for i in range(2500):
+		for i in range(10000):
 
 			grid.passive_physics()
 			grid.advance_agents(visualization.Visualization_flags.VISUALIZATION_OFF)
 			grid.advance_striders(visualization.Visualization_flags.VISUALIZATION_OFF)
 			grid.active_physics()
+			default_policy(grid)
 			grid.visualize_detailed_grid()
 			pprint.pprint(grid.info)
 			print("WORLD AGE: " + str(i))
