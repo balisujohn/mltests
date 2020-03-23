@@ -16,7 +16,8 @@ def clear(sleep_time):
 		_ = system('clear') 
 	sleep(sleep_time)
 
-
+def comma_join_int(int1, int2):
+	return str(int1) + ',' +  str(int2)
 
 def observation_frequency_analysis(world_name, frames):
 	env = gym.make(world_name)

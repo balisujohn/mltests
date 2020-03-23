@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 
 import sys
 import os
@@ -8,27 +10,34 @@ import random
 import copy
 from random import uniform,shuffle,randrange
 from enum import IntEnum, Enum
-from utils import clear, decimal_to_binary_array
+from utils import clear, decimal_to_binary_array, comma_join_int
 import pprint
 import brain
 import visualization
 import utils 
+import json
+import functools
 
 
 
 def init_mega_grid_params():
 	brain.Mutation_params.set_mutation_to_default_1(brain.Mutation_params)
 	brain.Mutation_params.neuron_start_count = 1
-	brain.Mutation_params.neuron_count_bias = .4
+	brain.Mutation_params.neuron_count_bias = .5
 	brain.Mutation_params.target_count_bias = .5
-	brain.Mutation_params.neuron_count_prob = .5
+	brain.Mutation_params.neuron_count_prob = .05
+	brain.Mutation_params.target_count_prob = .05
+	brain.Mutation_params.potential_prob = .05
+	brain.Mutation_params.threshold_prob = .05
+	brain.Mutation_params.sensory_prob = .05
+	brain.Mutation_params.actuating_prob = .05
+	brain.Mutation_params.hidden_prob = .05
 	brain.Mutation_params.input_count = 6
-	brain.Mutation_params.reflex_pair_prob = .1
+	brain.Mutation_params.reflex_pair_prob = 0
 	brain.Mutation_params.mutation_cycles = 1
 	brain.Mutation_params.output_count = 7
 	brain.Mutation_params.upper_input_bounds = [.0000001] * 6
 	brain.Mutation_params.lower_input_bounds = [-.0000001] * 6
-
 
 
 
@@ -51,8 +60,15 @@ class Direction(IntEnum):
 class Action_type (IntEnum):
 	PASS = 0
 	MOVE = 1
-	INTERACT = 2
+	BITE = 2
 
+
+
+
+
+def apply_direction_offset(direction, offset):
+		offset = int(offset)
+		return Direction((direction + offset) % 4)
 
 
 
@@ -66,11 +82,12 @@ class Grid():
 		sector_shape = (sector_size, sector_size)
 		self.grid = np.zeros(sector_shape)
 		self.agents = {}
+		self.striders = {}
 		self.action_queue = []
 		# for objects which may experience spontaneous generation and degeneration, these numbers
 		# describe as a percent the percent of occupied space generation and degeneration will trend 
 		# towards for each item. 
-		self.baseline_densities = { Object_type.EMPTY : .74, Object_type.STRIDER: .01 , Object_type.CAPSULE : .25}
+		self.baseline_densities = { Object_type.EMPTY : .74 , Object_type.STRIDER : .01, Object_type.CAPSULE : .25}
 		# specifies whether spontaneous degeneration is enabled for items.
 		self.degen_enabled = {Object_type.AGENT : False, Object_type.STRIDER: True , Object_type.CAPSULE : True ,Object_type.EMPTY : True}
 		self.sector_size = sector_size
@@ -82,6 +99,34 @@ class Grid():
 			for c in range(self.sector_size):
 				print(int(self.grid[i][c]), end = "")
 			print()
+
+	def print_grid_to_json(self, string = True):
+		log = {}
+		log['info'] = self.info
+		log['grid'] = self.grid.tolist()
+		log['agents'] = {}
+		for key in self.agents:
+			log['agents'][functools.reduce(comma_join_int,key)] = self.agents[key].print_agent_to_json()
+		log['striders'] = {}
+		for key in self.striders:
+			log['striders'][functools.reduce(comma_join_int,key)] = self.striders[key].print_strider_to_json()
+		log['action_queue'] = self.action_queue
+		log['baseline_densities'] = self.baseline_densities
+		log['degen_enabled'] = self.degen_enabled
+		log['sector_size'] = self.sector_size
+		log['capsule_energy_content'] = self.capsule_energy_content
+		log['mutation_probability'] = self.mutation_probability
+		
+		if string:
+			return json.dumps(log, indent = 4)
+		else:
+			return log
+		
+	def save_grid_to_file(self):
+		output = self.print_grid_to_json()
+		output_file = open('log.txt', 'w')
+		output_file.write(output)
+		output_file.close()
 
 	def visualize_detailed_grid(self):
 		for i in range(self.sector_size):
@@ -95,27 +140,58 @@ class Grid():
 						print('v' , end = "")
 					if self.agents[(c,i)].direction == Direction.LEFT:
 						print('<' , end = "")
+				elif self.grid[i][c] == int(Object_type.STRIDER):
+					if self.striders[(c,i)].direction == Direction.UP:
+						print('A' , end = "")
+					if self.striders[(c,i)].direction == Direction.RIGHT:
+						print(')' , end = "")
+					if self.striders[(c,i)].direction == Direction.DOWN:
+						print('U' , end = "")
+					if self.striders[(c,i)].direction == Direction.LEFT:
+						print('(' , end = "")
 				else:
 					print(int(self.grid[i][c]), end = "")
 			print()
 
 
-	def add_agent(self, coords): #todo add new brain 
-		if self.grid[coords[1]][coords[0]] != int(Object_type.AGENT):
+	def add_object(self, coords, object_type): #todo add new brain 
+		if not (self.grid[coords[1]][coords[0]] == int(Object_type.EMPTY)):
+			return 
+		if object_type == Object_type.AGENT:
 			self.info[Object_type.AGENT] += 1
-			self.info[Object_type(self.grid[coords[1]][coords[0]])] -= 1
-		self.grid[coords[1]][coords[0]] = int(Object_type.AGENT)
-		brain_instance = brain.Brain()
-		self.agents[coords] = Agent(brain_instance)
+			self.info[Object_type.EMPTY] -= 1
+			self.grid[coords[1]][coords[0]] = int(Object_type.AGENT)
+			brain_instance = brain.Brain()
+			self.agents[coords] = Agent(brain_instance)
+		if object_type == Object_type.STRIDER:
+			self.info[Object_type.STRIDER] += 1
+			self.info[Object_type.EMPTY] -= 1
+			self.grid[coords[1]][coords[0]] = int(Object_type.STRIDER)
+			self.striders[coords] = Strider()
+		if object_type == Object_type.CAPSULE:
+			self.info[Object_type.CAPSULE] += 1
+			self.info[Object_type.EMPTY] -= 1
+			self.grid[coords[1]][coords[0]] = int(Object_type.CAPSULE)
 
-
-	def remove_agent(self, coords):
-		if self.grid[coords[1]][coords[0]] != int(Object_type.AGENT):
+	def remove_object(self, coords):
+		if self.grid[coords[1]][coords[0]] == int(Object_type.EMPTY):
 			return
-		self.grid[coords[1]][coords[0]] = int(Object_type.EMPTY)
-		del self.agents[coords]
-		self.info[Object_type.AGENT] -= 1
-		self.info[Object_type.EMPTY] += 1
+		elif self.grid[coords[1]][coords[0]] == int(Object_type.AGENT):
+			self.grid[coords[1]][coords[0]] = int(Object_type.EMPTY)
+			del self.agents[coords]
+			self.info[Object_type.AGENT] -= 1
+			self.info[Object_type.EMPTY] += 1
+		elif self.grid[coords[1]][coords[0]] == int(Object_type.STRIDER):
+			self.grid[coords[1]][coords[0]] = int(Object_type.EMPTY)
+			del self.striders[coords]
+			self.info[Object_type.STRIDER] -= 1
+			self.info[Object_type.EMPTY] += 1
+		elif self.grid[coords[1]][coords[0]] == int(Object_type.CAPSULE):
+			self.grid[coords[1]][coords[0]] = int(Object_type.EMPTY)
+			self.info[Object_type.CAPSULE] -= 1
+			self.info[Object_type.EMPTY] += 1
+		
+
 
 
 
@@ -135,21 +211,30 @@ class Grid():
 	def move(self, start, dest):
 		if not self.check_movement(dest):
 			return
-		if Object_type(self.grid[dest[1]][dest[0]]) == Object_type.EMPTY:
-			self.grid[dest[1]][dest[0]] = self.grid[start[1]][start[0]]
-			self.grid[start[1]][start[0]] = int(Object_type.EMPTY)
-			assert(start in self.agents.keys())
-			agent = self.agents.pop(start)
-			self.agents[dest] = agent 
+		if Object_type(self.grid[start[1]][start[0]]) == Object_type.AGENT:
+				self.grid[dest[1]][dest[0]] = self.grid[start[1]][start[0]]
+				self.grid[start[1]][start[0]] = int(Object_type.EMPTY)
+				assert(start in self.agents.keys())
+				agent = self.agents.pop(start)
+				self.agents[dest] = agent 
+		if Object_type(self.grid[start[1]][start[0]]) == Object_type.STRIDER:
+				self.grid[dest[1]][dest[0]] = self.grid[start[1]][start[0]]
+				self.grid[start[1]][start[0]] = int(Object_type.EMPTY)
+				assert(start in self.striders.keys())
+				strider = self.striders.pop(start)
+				self.striders[dest] = strider 
 
-	def interact(self, agent, other):
-		if not self.check_bounds(other):
+	def bite(self, start, dest):
+		if not self.check_bounds(dest):
 			return
-		if Object_type(self.grid[other[1]][other[0]]) == Object_type.CAPSULE:
-			self.grid[other[1]][other[0]] = int(Object_type.EMPTY)
-			self.agents[agent].energy += self.capsule_energy_content
-			self.info[Object_type.CAPSULE] -= 1
-			self.info[Object_type.EMPTY] += 1
+		if  Object_type(self.grid[start[1]][start[0]]) == Object_type.AGENT and Object_type(self.grid[dest[1]][dest[0]]) == Object_type.CAPSULE:
+			self.agents[start].energy += self.capsule_energy_content
+			self.remove_object(dest)
+		elif  Object_type(self.grid[start[1]][start[0]]) == Object_type.STRIDER and Object_type(self.grid[dest[1]][dest[0]]) == Object_type.AGENT:
+			self.remove_object(dest)
+			print("AGENT KILLED")
+		elif  Object_type(self.grid[start[1]][start[0]]) == Object_type.STRIDER and Object_type(self.grid[dest[1]][dest[0]]) == Object_type.CAPSULE:
+			self.remove_object(dest)
 	
 	def get_rear_cell(self, coords):
 		agent = self.agents[coords]
@@ -169,7 +254,7 @@ class Grid():
 		target_location = self.get_rear_cell(coords)
 		if self.check_movement(target_location):
 			brain_replica = copy.deepcopy(agent.brain)
-			self.add_agent(target_location)
+			self.add_object(target_location, Object_type.AGENT)
 			self.agents[target_location].brain = brain_replica
 			if uniform(0,1) < self.mutation_probability:
 				self.agents[target_location].mutate()
@@ -225,10 +310,10 @@ class Grid():
 	def populate_to_percent(self, object_type, density):
 		for i in range(self.sector_size):
 			for c in range(self.sector_size):
-				if uniform(0,1) <= density and self.grid[i][c] != int(Object_type.AGENT): # This function is not allowed to overwrite agents
-					self.info[Object_type(self.grid[i][c])] -= 1
-					self.grid[i][c] = int(object_type)
-					self.info[Object_type.CAPSULE] += 1
+				if uniform(0,1) <= density and self.grid[i][c] != int(object_type):
+					self.remove_object((c,i))
+					self.add_object((c,i), object_type)
+				
 
 
 
@@ -252,9 +337,9 @@ class Grid():
 			for c in range(self.sector_size):
 				sym = self.passive_cell_update(self.grid[i][c],offsets, self.baseline_densities)
 				if int(sym) != self.grid[i][c]:
-					self.info[Object_type(self.grid[i][c])] -= 1
-					self.info[sym] += 1
-					self.grid[i][c] = int(sym)
+					self.remove_object((c,i))
+					self.add_object((c,i), sym)
+			
 
 
 	def advance_agents(self,visualization_mode):
@@ -266,7 +351,7 @@ class Grid():
 			assert(self.grid[key[1]][key[0]] == Object_type.AGENT)
 			agent.age += 1
 			if agent.energy <= 0:
-				self.remove_agent(key)
+				self.remove_object(key)
 				continue
 			elif agent.energy > 200:
 				self.reproduce_agent(key)
@@ -295,14 +380,43 @@ class Grid():
 
 			agent.generate_action(numerical_result, self, key)
 
+	def advance_striders(self,visualization_mode):
+		## get randomly ordered list of striders, sense, run, harvest actuation and publish to action_queue
+		strider_keys = list(self.striders.keys())
+		shuffle(strider_keys)
+		for key in strider_keys: #useful to note here that each 'key' is a tuple containing strider location in (x,y) format
+			strider = self.striders[key]
+			assert(self.grid[key[1]][key[0]] == Object_type.STRIDER)
+	
 			
+			#sense
+			observations = self.sense(key, strider.direction)	
+
+			if observations[:3] == (1,0,0):
+				observations = (0,0,1) + observations[3:]
+
+
+
+			output = []
+			strider.brain.update_input_bounds(observations)		
+
+			result = strider.brain.advance_n_with_mode(observations, 	brain.Mutation_params.output_count , 10, visualization_mode)
+						
+			numerical_result = utils.binary_array_to_decimal(result)
+			if visualization_mode == visualization.Visualization_flags.VISUALIZATION_ON:
+				print("OUTPUT:\n" + str(result))
+				print("INPUT:\n" + str(observations))
+
+			strider.generate_action(numerical_result, self, key)
+
+
 	def active_physics(self):
 		for action in self.action_queue:
 			if (action[2] == Action_type.MOVE):
 				self.move(action[0], action[1])
-			elif (action[2] == Action_type.INTERACT):
+			elif (action[2] == Action_type.BITE):
 			#	print("CHOMP")
-				self.interact(action[0], action[1])
+				self.bite(action[0], action[1])
 		self.action_queue = []
 
 
@@ -313,7 +427,7 @@ class Grid():
 	# moves the agent if there is no physical obstruction in the world, updating both the the agent's and the world's info for the new frame of time. 
 	###
 	def publish_movement_action(self , relative_direction, agent, coords):
-		move_direction = agent.apply_direction_offset(relative_direction)
+		move_direction = apply_direction_offset(agent.direction,relative_direction)
 		if move_direction == Direction.UP:
 			new_coords = (coords[0], coords[1]-1)
 			self.action_queue.append((coords, new_coords , Action_type.MOVE))
@@ -328,19 +442,19 @@ class Grid():
 			self.action_queue.append((coords, new_coords,Action_type.MOVE))
 
 
-	def publish_interact_action(self,agent,coords):
+	def publish_bite_action(self,agent,coords):
 		if agent.direction == Direction.UP:
 			new_coords = (coords[0], coords[1]-1)
-			self.action_queue.append((coords, new_coords , Action_type.INTERACT))
+			self.action_queue.append((coords, new_coords , Action_type.BITE))
 		elif agent.direction == Direction.RIGHT:
 			new_coords = (coords[0]+1, coords[1])
-			self.action_queue.append((coords, new_coords,Action_type.INTERACT))
+			self.action_queue.append((coords, new_coords,Action_type.BITE))
 		elif agent.direction == Direction.DOWN:
 			new_coords = (coords[0], coords[1]+1)
-			self.action_queue.append((coords, new_coords,Action_type.INTERACT))
+			self.action_queue.append((coords, new_coords,Action_type.BITE))
 		elif agent.direction == Direction.LEFT:
 			new_coords = (coords[0]-1, coords[1])
-			self.action_queue.append((coords, new_coords,Action_type.INTERACT))
+			self.action_queue.append((coords, new_coords,Action_type.BITE))
 
 
 
@@ -361,9 +475,14 @@ class Agent():
 	## evaluation decide on action
 	## active physics(actuation phase)
 
-	def apply_direction_offset(self, direction):
-		offset = int(direction)
-		return Direction((self.direction + offset) % 4)
+	def print_agent_to_json(self):
+		result = {}
+		result['brain'] = brain.print_brain_to_json(self.brain, string = False)
+		result['direction'] = self.direction
+		result['energy'] = self.energy
+		result['age'] = self.age
+		result['mutations'] = self.mutations
+		return result
 
 	def mutate(self):
 		self.brain.default_mutation(6,7)
@@ -372,7 +491,7 @@ class Agent():
 	# should only be called with Direction.LEFT or Direction.RIGHT
 	##
 	def turn(self, turn_direction):
-		self.direction = self.apply_direction_offset(turn_direction)
+		self.direction = apply_direction_offset(self.direction,turn_direction)
 
 	
 	def generate_action(self, selection, grid, coords):
@@ -392,15 +511,45 @@ class Agent():
 		elif selection == 32:
 			grid.publish_movement_action(Direction.LEFT, self, coords)
 		elif selection == 64:
-			grid.publish_interact_action(self,coords)
+			grid.publish_bite_action(self,coords)
 		
 		
 class Strider():
 	def __init__(self):
-		self.brain = brain.load_brain_from_file("./topologies/sologrid/save.5") # this is a temporary solution
+		self.brain = brain.load_brain_from_file("./topologies/sologrid/save.6") # this is a temporary solution
 		self.direction = Direction.UP
 	
-	
+	##
+	# should only be called with Direction.LEFT or Direction.RIGHT
+	##
+	def turn(self, turn_direction):
+		self.direction = apply_direction_offset(self.direction,turn_direction)
+
+
+	def generate_action(self, selection, grid, coords):
+		#print(selection)
+		if selection == 0:
+			pass ## no action (no action will also be applied if no elif is triggered)
+		elif selection == 1:
+			self.turn(Direction.LEFT)
+		elif selection == 2:
+			self.turn(Direction.RIGHT)
+		elif selection == 4:
+			grid.publish_movement_action(Direction.UP, self, coords)
+		elif selection == 8:
+			grid.publish_movement_action(Direction.RIGHT, self, coords)
+		elif selection == 16:
+			grid.publish_movement_action(Direction.DOWN, self, coords)
+		elif selection == 32:
+			grid.publish_movement_action(Direction.LEFT, self, coords)
+		elif selection == 64:
+			grid.publish_bite_action(self,coords)
+
+	def print_strider_to_json(self):
+		result = {}
+		result['direction'] = self.direction
+		return result
+
 
 #phases of a world-frame
 #passive physics phase:
@@ -416,28 +565,34 @@ if __name__ == '__main__':
 
 		init_mega_grid_params()
 		grid = Grid(40)
-		grid.baseline_densities = {	Object_type.EMPTY : 0.90, 
-									Object_type.STRIDER: 0.0,
-									Object_type.CAPSULE : 0.10
+		grid.baseline_densities = {	Object_type.EMPTY : 0.60, 
+									Object_type.CAPSULE : 0.396,
+									Object_type.STRIDER : .004
 								}
 		for i in range(20):
 			location = (randrange(0,40),randrange(0,40))
-			grid.add_agent(location)
+			grid.add_object(location, Object_type.AGENT)
 			grid.agents[location].brain = copy.deepcopy(starter_brain)
 
+		for i in range(5):
+			location = (randrange(0,40),randrange(0,40))
+			grid.add_object(location, Object_type.STRIDER)
 
-		for i in range(4000):
-
+		for i in range(2500):
 
 			grid.passive_physics()
 			grid.advance_agents(visualization.Visualization_flags.VISUALIZATION_OFF)
+			grid.advance_striders(visualization.Visualization_flags.VISUALIZATION_OFF)
 			grid.active_physics()
 			grid.visualize_detailed_grid()
 			pprint.pprint(grid.info)
 			print("WORLD AGE: " + str(i))
 			clear(0)
-		print(grid.agents)
+		grid.save_grid_to_file()
 
+
+
+		
 
 
 

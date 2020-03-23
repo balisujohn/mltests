@@ -88,22 +88,22 @@ class test_grid(unittest.TestCase):
 
 
 
-    def test_add_agent(self):
+    def test_add_object(self):
         grid = Grid(3)
-        grid.add_agent((0,1))
+        grid.add_object((0,1), Object_type.AGENT)
         self.assertEqual(grid.grid[1][0] , Object_type.AGENT)
         self.assertEqual(list(grid.agents.keys())[0], (0,1))
         self.assertEqual(grid.info[Object_type.AGENT], 1)
         self.assertEqual(grid.info[Object_type.EMPTY], 8)
 
 
-    def test_remove_agent(self):
+    def test_remove_object(self):
         grid = Grid(3)
         grid.grid[1][0] = int(Object_type.AGENT)
         grid.agents[(0,1)] = {"dummy": "object"}
         grid.info[Object_type.EMPTY] = 8
         grid.info[Object_type.AGENT]= 1
-        grid.remove_agent((0,1))
+        grid.remove_object((0,1))
         self.assertEqual(grid.grid[1][0] , Object_type.EMPTY)
         self.assertTrue((0,1) not in grid.agents)
         self.assertEqual(grid.info[Object_type.AGENT], 0)
@@ -127,30 +127,30 @@ class test_grid(unittest.TestCase):
         self.assertEqual(grid.check_movement((3,3)), False)
 
 
-    def test_publish_interact_action(self):
+    def test_publish_bite_action(self):
         grid = Grid(3)
-        grid.add_agent((1,1)) 
+        grid.add_object((1,1), Object_type.AGENT) 
         agent = grid.agents[(1,1)]
         agent.direction = Direction.UP
-        grid.publish_interact_action(agent, (1,1))
-        self.assertEqual(grid.action_queue, [((1,1),(1,0),Action_type.INTERACT)])
+        grid.publish_bite_action(agent, (1,1))
+        self.assertEqual(grid.action_queue, [((1,1),(1,0),Action_type.BITE)])
         agent.direction = Direction.RIGHT
         grid.action_queue = []
-        grid.publish_interact_action(agent, (1,1))
-        self.assertEqual(grid.action_queue, [((1,1),(2,1),Action_type.INTERACT)])
+        grid.publish_bite_action(agent, (1,1))
+        self.assertEqual(grid.action_queue, [((1,1),(2,1),Action_type.BITE)])
         agent.direction = Direction.DOWN
         grid.action_queue = []
-        grid.publish_interact_action(agent, (1,1))
-        self.assertEqual(grid.action_queue, [((1,1),(1,2),Action_type.INTERACT)])
+        grid.publish_bite_action(agent, (1,1))
+        self.assertEqual(grid.action_queue, [((1,1),(1,2),Action_type.BITE)])
         agent.direction = Direction.LEFT
         grid.action_queue = []
-        grid.publish_interact_action( agent, (1,1))
-        self.assertEqual(grid.action_queue, [((1,1),(0,1),Action_type.INTERACT)])
+        grid.publish_bite_action( agent, (1,1))
+        self.assertEqual(grid.action_queue, [((1,1),(0,1),Action_type.BITE)])
 
 
     def test_publish_movement_action(self):
         grid = Grid(3)
-        grid.add_agent((1,1)) 
+        grid.add_object((1,1), Object_type.AGENT) 
         agent = grid.agents[(1,1)]
         agent.direction = Direction.UP
         grid.publish_movement_action(Direction.UP, agent, (1,1))
@@ -184,34 +184,34 @@ class test_grid(unittest.TestCase):
         dummy_brain = {}
         agent = Agent(dummy_brain)
         agent.direction = Direction.UP
-        self.assertEqual(agent.apply_direction_offset(Direction.LEFT), Direction.LEFT)
-        self.assertEqual(agent.apply_direction_offset(Direction.RIGHT), Direction.RIGHT)
-        self.assertEqual(agent.apply_direction_offset(Direction.DOWN), Direction.DOWN)
-        self.assertEqual(agent.apply_direction_offset(Direction.UP), Direction.UP)
+        self.assertEqual(apply_direction_offset(Direction.UP,Direction.LEFT), Direction.LEFT)
+        self.assertEqual(apply_direction_offset(Direction.UP,Direction.RIGHT), Direction.RIGHT)
+        self.assertEqual(apply_direction_offset(Direction.UP,Direction.DOWN), Direction.DOWN)
+        self.assertEqual(apply_direction_offset(Direction.UP,Direction.UP), Direction.UP)
         agent.direction = Direction.LEFT
-        self.assertEqual(agent.apply_direction_offset(Direction.LEFT), Direction.DOWN)
-        self.assertEqual(agent.apply_direction_offset(Direction.RIGHT), Direction.UP)
-        self.assertEqual(agent.apply_direction_offset(Direction.DOWN), Direction.RIGHT)
-        self.assertEqual(agent.apply_direction_offset(Direction.UP), Direction.LEFT)
+        self.assertEqual(apply_direction_offset(Direction.LEFT,Direction.LEFT), Direction.DOWN)
+        self.assertEqual(apply_direction_offset(Direction.LEFT,Direction.RIGHT), Direction.UP)
+        self.assertEqual(apply_direction_offset(Direction.LEFT,Direction.DOWN), Direction.RIGHT)
+        self.assertEqual(apply_direction_offset(Direction.LEFT,Direction.UP), Direction.LEFT)
         agent.direction = Direction.DOWN
-        self.assertEqual(agent.apply_direction_offset(Direction.LEFT), Direction.RIGHT)
-        self.assertEqual(agent.apply_direction_offset(Direction.RIGHT), Direction.LEFT)
-        self.assertEqual(agent.apply_direction_offset(Direction.DOWN), Direction.UP)
-        self.assertEqual(agent.apply_direction_offset(Direction.UP), Direction.DOWN)
+        self.assertEqual(apply_direction_offset(Direction.DOWN,Direction.LEFT), Direction.RIGHT)
+        self.assertEqual(apply_direction_offset(Direction.DOWN,Direction.RIGHT), Direction.LEFT)
+        self.assertEqual(apply_direction_offset(Direction.DOWN,Direction.DOWN), Direction.UP)
+        self.assertEqual(apply_direction_offset(Direction.DOWN,Direction.UP), Direction.DOWN)
         agent.direction = Direction.RIGHT
-        self.assertEqual(agent.apply_direction_offset(Direction.LEFT), Direction.UP)
-        self.assertEqual(agent.apply_direction_offset(Direction.RIGHT), Direction.DOWN)
-        self.assertEqual(agent.apply_direction_offset(Direction.DOWN), Direction.LEFT)
-        self.assertEqual(agent.apply_direction_offset(Direction.UP), Direction.RIGHT)
+        self.assertEqual(apply_direction_offset(Direction.RIGHT,Direction.LEFT), Direction.UP)
+        self.assertEqual(apply_direction_offset(Direction.RIGHT,Direction.RIGHT), Direction.DOWN)
+        self.assertEqual(apply_direction_offset(Direction.RIGHT,Direction.DOWN), Direction.LEFT)
+        self.assertEqual(apply_direction_offset(Direction.RIGHT,Direction.UP), Direction.RIGHT)
 
-    @patch('mega_grid.Agent.apply_direction_offset')
+    @patch('mega_grid.apply_direction_offset')
     def test_turn(self, mock_apply_direction_offset):
         dummy_brain = {}
         agent = Agent(dummy_brain)
         agent.direction = Direction.LEFT
         mock_apply_direction_offset.side_effect = [Direction.DOWN]
         agent.turn(Direction.LEFT)
-        expected_call_stack = [call.mock_apply_direction_offset(Direction.LEFT)]
+        expected_call_stack = [call.mock_apply_direction_offset(Direction.LEFT,Direction.LEFT)]
         self.assertEqual(agent.direction, Direction.DOWN )
         self.assertEqual(mock_apply_direction_offset.mock_calls, expected_call_stack)
         
@@ -219,7 +219,7 @@ class test_grid(unittest.TestCase):
     def test_move(self, mock_check_movement):
         mock_check_movement.return_value = True
         grid = Grid(3)
-        grid.add_agent((1,1)) 
+        grid.add_object((1,1), Object_type.AGENT) 
         agent = grid.agents[(1,1)]
         self.assertTrue( (1,1) in grid.agents.keys() )
         grid.move((1,1),(2,1))
