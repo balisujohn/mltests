@@ -420,9 +420,9 @@ def evaluate_biped_performance(test_brain, visualization_mode):
 
 	best_score = 0
 	desired_score = 1000
-	trials = 100
+	trials = 1
 	output_count = 8
-	brain_speed = 5
+	brain_speed = 1
 	for i in range(trials):
 		
 
@@ -432,6 +432,7 @@ def evaluate_biped_performance(test_brain, visualization_mode):
 		score = 0
 		counter = 0
 		while counter < 1000:
+
 			counter += 1
 			#score += 1
 			if visualization_mode == visualization.Visualization_flags.VISUALIZATION_ON:
@@ -452,8 +453,8 @@ def evaluate_biped_performance(test_brain, visualization_mode):
 			raw_output = []
 			for i in range(brain_speed):
 				raw_output.append ( test_instance.advance(observations, output_count))
-				#if visualization_mode == visualization.Visualization_flags.VISUALIZATION_ON: 
-				#	visualization.visualize_brain(brain.print_brain_to_json(test_instance))	
+				if visualization_mode == visualization.Visualization_flags.VISUALIZATION_ON: 
+					visualization.visualize_brain(brain.print_brain_to_json(test_instance))	
 
 			for i in range(int(output_count/2)):
 				for c in range(brain_speed):	
@@ -475,7 +476,7 @@ def evaluate_biped_performance(test_brain, visualization_mode):
 		
 			observations,reward,done,info = env.step(action)
 			#if reward > 0:			
-			score += reward
+			score += max(reward,0)
 			if done:
 				break
 		best_score += score
