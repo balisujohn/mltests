@@ -53,6 +53,15 @@ docker ps -a
 
 ````
 
+
+
+If the Docker session you are starting needs graphical windows, you will need the following line:
+
+````
+xhost +SI:localuser:root
+````
+
+
 Then to start the session (with changes saved) type:
 
 ````
