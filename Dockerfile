@@ -43,7 +43,7 @@ RUN apt-key adv --keyserver keys.openpgp.org --recv-key 612DEFB798507F25
 
 #installing graph-tool
 RUN apt-get update
-RUN apt-get  --yes install python3-graph-tool=2.29-1
+RUN apt-get  --yes install python3-graph-tool
 
 
 # installing git and cloning the project repo
