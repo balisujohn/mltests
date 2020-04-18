@@ -47,6 +47,37 @@ def default_policy(grid_instance):
 		grid.baseline_densities[Object_type.STRIDER] = .004
 
 
+		
+def save_grid_to_file(grid, file_name = 'log.txt'):
+	output = print_grid_to_json(grid)
+	output_file = open(file_name, 'w')
+	output_file.write(output)
+	output_file.close()
+
+def print_grid_to_json(grid,  string = True):
+	log = {}
+	log['info'] = grid.info
+	log['grid'] = grid.grid.tolist()
+	log['agents'] = {}
+	for key in grid.agents:
+		log['agents'][functools.reduce(comma_join_int,key)] = grid.agents[key].print_agent_to_json()
+	log['striders'] = {}
+	for key in grid.striders:
+		log['striders'][functools.reduce(comma_join_int,key)] = grid.striders[key].print_strider_to_json()
+	log['action_queue'] = grid.action_queue
+	log['baseline_densities'] = grid.baseline_densities
+	log['degen_enabled'] = grid.degen_enabled
+	log['sector_size'] = grid.sector_size
+	log['capsule_energy_content'] = grid.capsule_energy_content
+	log['mutation_probability'] = grid.mutation_probability
+	
+	if string:
+		return json.dumps(log, indent = 4)
+	else:
+		return log
+
+
+
 class Object_type(IntEnum):
 	EMPTY = 0
 	AGENT = 1
@@ -105,34 +136,7 @@ class Grid():
 			for c in range(self.sector_size):
 				print(int(self.grid[i][c]), end = "")
 			print()
-
-	def print_grid_to_json(self, string = True):
-		log = {}
-		log['info'] = self.info
-		log['grid'] = self.grid.tolist()
-		log['agents'] = {}
-		for key in self.agents:
-			log['agents'][functools.reduce(comma_join_int,key)] = self.agents[key].print_agent_to_json()
-		log['striders'] = {}
-		for key in self.striders:
-			log['striders'][functools.reduce(comma_join_int,key)] = self.striders[key].print_strider_to_json()
-		log['action_queue'] = self.action_queue
-		log['baseline_densities'] = self.baseline_densities
-		log['degen_enabled'] = self.degen_enabled
-		log['sector_size'] = self.sector_size
-		log['capsule_energy_content'] = self.capsule_energy_content
-		log['mutation_probability'] = self.mutation_probability
-		
-		if string:
-			return json.dumps(log, indent = 4)
-		else:
-			return log
-		
-	def save_grid_to_file(self):
-		output = self.print_grid_to_json()
-		output_file = open('log.txt', 'w')
-		output_file.write(output)
-		output_file.close()
+	
 
 	def visualize_detailed_grid(self):
 		for i in range(self.sector_size):
@@ -583,7 +587,7 @@ if __name__ == '__main__':
 			location = (randrange(0,40),randrange(0,40))
 			grid.add_object(location, Object_type.STRIDER)
 
-		for i in range(10000):
+		for i in range(20000):
 
 			grid.passive_physics()
 			grid.advance_agents(visualization.Visualization_flags.VISUALIZATION_OFF)
@@ -594,7 +598,7 @@ if __name__ == '__main__':
 			pprint.pprint(grid.info)
 			print("WORLD AGE: " + str(i))
 			clear(0)
-		grid.save_grid_to_file()
+		save_grid_to_file(grid)
 
 
 

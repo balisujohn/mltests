@@ -677,31 +677,34 @@ def print_brain_to_file(brain):
 
 
 
+def load_brain_from_json(brain_json):
+	load_brain = Brain()
+	load_brain.neurons = []
+	load_brain.neuron_count = brain_json['neuronCount']
+	for neuron_json in brain_json['neurons']:
+		new_neuron = Neuron()
+		new_neuron.targets = neuron_json['targets']
+
+		new_neuron.potential_weights = neuron_json['weights'] 
+		new_neuron.activation_potential = neuron_json['thresh'] 
+		new_neuron.target_count = neuron_json['targetCount']
+
+		new_neuron.type = Brain_flags[neuron_json['neuronType']] 
+		new_neuron.sensor_type = Brain_flags[neuron_json['sensorType']]
+
+
+
+		new_neuron.external_index = neuron_json['externalIndex'] 
+		new_neuron.external_thresh =neuron_json['externalThreshold'] 
+		new_neuron.external_bit = neuron_json['externalBit'] 
+		load_brain.neurons.append(new_neuron)
+	return load_brain
+
 
 def load_brain_from_file(file_name):
 	with open(file_name) as json_file:
 		brain_json = json.load(json_file)
-		load_brain = Brain()
-		load_brain.neurons = []
-		load_brain.neuron_count = brain_json['neuronCount']
-		for neuron_json in brain_json['neurons']:
-			new_neuron = Neuron()
-			new_neuron.targets = neuron_json['targets']
-
-			new_neuron.potential_weights = neuron_json['weights'] 
-			new_neuron.activation_potential = neuron_json['thresh'] 
-			new_neuron.target_count = neuron_json['targetCount']
-
-			new_neuron.type = Brain_flags[neuron_json['neuronType']] 
-			new_neuron.sensor_type = Brain_flags[neuron_json['sensorType']]
-
-
-
-			new_neuron.external_index = neuron_json['externalIndex'] 
-			new_neuron.external_thresh =neuron_json['externalThreshold'] 
-			new_neuron.external_bit = neuron_json['externalBit'] 
-			load_brain.neurons.append(new_neuron)
-		return load_brain
+		return load_brain_from_json(brain_json)
 			 	
 
 
